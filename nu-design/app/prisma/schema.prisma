@@ -1,0 +1,32 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Client {
+  id          String        @id @default(uuid())
+  companyName String        @unique // Reconocimiento clave por empresa
+  contactName String
+  phone       String        @unique
+  email       String        @unique
+  countryCity String
+  createdAt   DateTime      @default(now())
+  quotes      QuoteRecord[]
+}
+
+model QuoteRecord {
+  id            String   @id @default(uuid())
+  clientId      String
+  client        Client   @relation(fields: [clientId], references: [id])
+  serviceName   String
+  subService    String
+  price         String
+  deliveryTime  String
+  channel       String   // 'whatsapp' o 'correo'
+  status        String   @default("PENDING") // PENDING, SENT, MANUAL_REVIEW
+  createdAt     DateTime @default(now())
+}
