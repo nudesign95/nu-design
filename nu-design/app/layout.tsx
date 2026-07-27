@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
-      <body className={`${poppins.variable} font-sans min-h-screen flex flex-col justify-between selection:bg-red-500 selection:text-white`}>
+      <body className={`${poppins.variable} font-sans min-h-screen flex flex-col justify-between bg-[#050000] text-zinc-100 selection:bg-red-500 selection:text-white antialiased`}>
         {children}
       </body>
     </html>

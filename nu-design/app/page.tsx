@@ -44,6 +44,7 @@ export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [currentLang, setCurrentLang] = useState<'ES' | 'EN' | 'FR'>('ES');
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   
   const langMenuRef = useRef<HTMLDivElement>(null);
@@ -79,7 +80,7 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-[110vh] flex flex-col justify-between transition-colors duration-700 relative overflow-hidden py-6 ${theme === 'dark' ? 'bg-[#050000] text-zinc-100' : 'bg-[#e8e2dc] text-zinc-800'}`}>
+    <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-700 relative overflow-x-hidden py-4 md:py-6 ${theme === 'dark' ? 'bg-[#050000] text-zinc-100' : 'bg-[#e8e2dc] text-zinc-800'}`}>
       
       {/* Fondo con brillo ambiental animado */}
       <motion.div 
@@ -90,36 +91,41 @@ export default function Home() {
       >
         {theme === 'dark' ? (
           <>
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-175 bg-linear-to-tr from-red-700/30 via-red-900/20 to-transparent rounded-full blur-[140px]"></div>
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-96 md:w-175 h-80 sm:h-96 md:h-175 bg-linear-to-tr from-red-700/30 via-red-900/20 to-transparent rounded-full blur-[80px] md:blur-[140px]"></div>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-transparent via-[#050000]/60 to-[#030000]"></div>
           </>
         ) : (
-          <div className="absolute top-1/4 right-1/4 w-150 h-150 bg-orange-200/50 rounded-full blur-[120px]"></div>
+          <div className="absolute top-1/4 right-1/4 w-80 sm:w-96 md:w-150 h-80 sm:h-96 md:h-150 bg-orange-200/50 rounded-full blur-[80px] md:blur-[120px]"></div>
         )}
       </motion.div>
 
-      {/* Top Navigation */}
+      {/* Top Navigation Bar */}
       <motion.header 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full px-10 py-4 flex items-center justify-between z-20"
+        className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40"
       >
-        <nav className="flex items-center space-x-10 text-base font-medium">
-          <div className="relative flex flex-col items-start cursor-pointer group py-1">
-            <span className="hover:opacity-75 transition-opacity tracking-wide">{t.inicio}</span>
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-current rounded-full"></div>
-          </div>
-          
-          <Link href="/portafolio" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.portafolio}</Link>
-          <Link href="/contratar" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.contratar}</Link>
-          <Link href="/contacto" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.contacto}</Link>
-        </nav>
+        {/* LOGO O NOMBRE EN MÓVIL Y NAVEGACIÓN EN ESCRITORIO */}
+        <div className="flex items-center space-x-2">
+          <span className="md:hidden font-bold text-sm tracking-widest uppercase">NU-DESIGN</span>
+          <nav className="hidden md:flex items-center space-x-10 text-base font-medium">
+            <div className="relative flex flex-col items-start cursor-pointer group py-1">
+              <span className="hover:opacity-75 transition-opacity tracking-wide">{t.inicio}</span>
+              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-current rounded-full"></div>
+            </div>
+            
+            <Link href="/portafolio" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.portafolio}</Link>
+            <Link href="/contratar" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.contratar}</Link>
+            <Link href="/contacto" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.contacto}</Link>
+          </nav>
+        </div>
 
-        <div className="flex items-center space-x-5">
+        {/* ACCIONES Y MENÚS */}
+        <div className="flex items-center space-x-3 md:space-x-5">
           
-          {/* Selector de Idiomas Desplegable */}
-          <div className="relative" ref={langMenuRef}>
+          {/* Selector de Idiomas (Escritorio) */}
+          <div className="relative hidden md:block" ref={langMenuRef}>
             <button 
               onClick={() => setIsLangOpen(!isLangOpen)}
               className="text-xs uppercase tracking-widest opacity-70 hover:opacity-100 font-semibold px-3 py-1.5 transition-opacity flex items-center space-x-1 focus:outline-none"
@@ -136,24 +142,15 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute right-0 mt-2 w-36 backdrop-blur-2xl bg-black/80 dark:bg-zinc-900/90 border border-white/15 rounded-xl shadow-2xl overflow-hidden z-50 py-1"
+                  className="absolute right-0 mt-2 w-36 backdrop-blur-2xl bg-black/90 dark:bg-zinc-900/90 border border-white/15 rounded-xl shadow-2xl overflow-hidden z-50 py-1"
                 >
-                  <button 
-                    onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} 
-                    className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 transition-colors ${currentLang === 'ES' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}
-                  >
+                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'ES' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}>
                     <span>Español</span> {currentLang === 'ES' && <i className="fa-solid fa-check text-[10px]"></i>}
                   </button>
-                  <button 
-                    onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} 
-                    className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 transition-colors ${currentLang === 'EN' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}
-                  >
+                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'EN' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}>
                     <span>English</span> {currentLang === 'EN' && <i className="fa-solid fa-check text-[10px]"></i>}
                   </button>
-                  <button 
-                    onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} 
-                    className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 transition-colors ${currentLang === 'FR' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}
-                  >
+                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'FR' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}>
                     <span>Français</span> {currentLang === 'FR' && <i className="fa-solid fa-check text-[10px]"></i>}
                   </button>
                 </motion.div>
@@ -161,51 +158,128 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
+          {/* Botón WhatsApp (Escritorio) */}
           <motion.a 
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             href="https://wa.me/18294608316" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-6 py-2 rounded-full text-sm font-normal flex items-center space-x-2.5 shadow-lg hover:bg-white/20 transition-colors"
+            className="hidden sm:flex backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-4 md:px-6 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 shadow-lg hover:bg-white/20 transition-colors"
           >
-            <i className="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
+            <i className="fa-brands fa-whatsapp text-emerald-400 text-base md:text-lg"></i>
             <span>{t.whatsapp}</span>
           </motion.a>
           
-          {/* BOTÓN DE COTIZACIÓN BLINDADO Y CORREGIDO */}
+          {/* Botón Cotización */}
           <motion.div 
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-7 py-2 rounded-full text-sm font-normal shadow-lg hover:bg-white/20 transition-colors cursor-pointer"
+            className="backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-4 md:px-7 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-normal shadow-lg hover:bg-white/20 transition-colors cursor-pointer"
           >
             <Link href="/cotizacion" className="w-full h-full block">
               {t.cotizacion}
             </Link>
           </motion.div>
+
+          {/* BOTÓN HAMBURGUESA PARA MÓVIL */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50"
+            aria-label="Abrir Menú"
+          >
+            <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+          </button>
         </div>
       </motion.header>
+
+      {/* MENÚ MÓVIL DESPLEGABLE (OVERLAY COMPLETO) */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-30 bg-black/95 dark:bg-[#050000]/95 backdrop-blur-2xl flex flex-col justify-between p-8 pt-24 md:hidden"
+          >
+            <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-white/10 pb-3 flex justify-between items-center">
+                <span>{t.inicio}</span>
+                <i className="fa-solid fa-arrow-right text-sm"></i>
+              </Link>
+              <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-white/10 pb-3 flex justify-between items-center">
+                <span>{t.portafolio}</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+              <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-white/10 pb-3 flex justify-between items-center">
+                <span>{t.contratar}</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+              <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-white/10 pb-3 flex justify-between items-center">
+                <span>{t.contacto}</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+            </div>
+
+            {/* SELECCIÓN DE IDIOMAS EN MÓVIL */}
+            <div className="flex flex-col space-y-4 pt-6 border-t border-white/10">
+              <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-white/20 text-zinc-400'}`}
+                >
+                  Español
+                </button>
+                <button 
+                  onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-white/20 text-zinc-400'}`}
+                >
+                  English
+                </button>
+                <button 
+                  onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-white/20 text-zinc-400'}`}
+                >
+                  Français
+                </button>
+              </div>
+
+              <a 
+                href="https://wa.me/18294608316" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="mt-4 w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 py-3 rounded-full flex items-center justify-center space-x-2 text-sm"
+              >
+                <i className="fa-brands fa-whatsapp text-lg"></i>
+                <span>{t.whatsapp}</span>
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Theme Switcher (Fixed Right Side) */}
       <motion.div 
         initial={{ x: 20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-3 z-30"
+        className="fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-2 md:space-y-3 z-30"
       >
-        <button onClick={() => setTheme('light')} className="w-8 h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
-        <button onClick={() => setTheme('dark')} className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
+        <button onClick={() => setTheme('light')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
+        <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-900 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
       </motion.div>
 
       {/* Main Hero Section */}
-      <main className="w-full max-w-5xl mx-auto px-4 flex flex-col items-center text-center my-auto z-10 space-y-10 py-10">
+      <main className="w-full max-w-5xl mx-auto px-4 flex flex-col items-center text-center my-auto z-10 space-y-6 md:space-y-10 py-6">
         
         {/* Icono superior */}
         <motion.div 
           initial={{ scale: 0.8, opacity: 0, y: 15 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative group cursor-pointer w-28 h-28 flex items-center justify-center"
+          className="relative group cursor-pointer w-20 h-20 md:w-28 md:h-28 flex items-center justify-center"
         >
           <Image 
             src={theme === 'dark' ? '/icon-dark.svg' : '/icon-light.svg'} 
@@ -222,7 +296,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="w-72 md:w-88 flex items-center justify-center"
+          className="w-56 sm:w-64 md:w-88 flex items-center justify-center"
         >
           <Image 
             src={theme === 'dark' ? '/wordmark-dark.svg' : '/wordmark-light.svg'} 
@@ -239,7 +313,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.35 }}
-          className="flex items-center space-x-8 text-xl opacity-80"
+          className="flex items-center flex-wrap justify-center gap-4 sm:gap-6 md:space-x-8 text-base sm:text-lg md:text-xl opacity-80"
         >
           <i onClick={() => handleServiceClick("Idea y Concepto")} className="fa-solid fa-lightbulb hover:text-red-500 transition-colors cursor-pointer" title="Idea & Concept"></i>
           <i onClick={() => handleServiceClick("Branding")} className="fa-solid fa-pen-nib hover:text-red-500 transition-colors cursor-pointer" title="Branding"></i>
@@ -255,35 +329,35 @@ export default function Home() {
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-3xl backdrop-blur-2xl bg-white/3 dark:bg-black/30 border border-white/20 dark:border-white/15 rounded-full px-10 py-5 flex items-center justify-between shadow-[0_20px_40px_rgba(0,0,0,0.4)] focus-within:border-white/60 focus-within:shadow-[0_25px_50px_rgba(255,255,255,0.15)] transition-all"
+          className="w-full max-w-3xl backdrop-blur-2xl bg-white/5 dark:bg-black/30 border border-white/20 dark:border-white/15 rounded-full px-4 sm:px-6 md:px-10 py-3 md:py-5 flex items-center justify-between shadow-[0_20px_40px_rgba(0,0,0,0.4)] focus-within:border-white/60 transition-all"
         >
           <input 
             type="text" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t.searchPlaceholder} 
-            className="w-full bg-transparent border-none outline-none text-lg font-normal tracking-wide placeholder-zinc-400 dark:placeholder-zinc-500" 
+            className="w-full bg-transparent border-none outline-none text-xs sm:text-sm md:text-lg font-normal tracking-wide placeholder-zinc-400 dark:placeholder-zinc-500" 
           />
-          <button type="submit" className="opacity-70 hover:opacity-100 transition-opacity ml-4 cursor-pointer" title="Buscar servicio">
-            <i className="fa-solid fa-magnifying-glass text-2xl"></i>
+          <button type="submit" className="opacity-70 hover:opacity-100 transition-opacity ml-2 sm:ml-4 cursor-pointer" title="Buscar servicio">
+            <i className="fa-solid fa-magnifying-glass text-lg md:text-2xl"></i>
           </button>
         </motion.form>
 
         {/* Bloque de Texto de Servicios */}
-        <div className="w-full max-w-3xl text-xs md:text-sm font-light leading-relaxed px-4 text-center opacity-75 pt-4">
-          <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Branding")}>Branding</span> • <span>PNG</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Logotipos")}>Logotipos</span> • <span>Creatividad</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("UX/UI")}>UX/UI</span> • <span>PDF</span> • <span>Diseño Editorial</span> • <span>RGB</span> • <br />
-          <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Landing Page")}>Landing Page</span> • <span>Vectorización</span> • <span>Calidad Premium</span> • <span>SVG</span> • <span>Flyers</span> • <span>AI</span>
+        <div className="w-full max-w-3xl text-[10px] sm:text-xs md:text-sm font-light leading-relaxed px-2 text-center opacity-75 pt-2">
+          <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Branding")}>Branding</span> • <span>PNG</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Logotipos")}>Logotipos</span> • <span>Creatividad</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("UX/UI")}>UX/UI</span> • <span>PDF</span> • <span>Diseño Editorial</span> • <span>RGB</span> • 
+          <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors ml-1" onClick={() => handleServiceClick("Landing Page")}>Landing Page</span> • <span>Vectorización</span> • <span>Calidad Premium</span> • <span>SVG</span> • <span>Flyers</span> • <span>AI</span>
         </div>
 
       </main>
 
       {/* Footer Section */}
-      <footer className="w-full px-10 py-7 flex flex-col items-center space-y-4 z-25 mt-12">
-        <div className="flex items-center justify-center gap-8 text-lg opacity-85">
+      <footer className="w-full px-4 md:px-10 py-4 flex flex-col items-center space-y-3 z-25 mt-4 md:mt-8">
+        <div className="flex items-center justify-center gap-5 md:gap-8 text-sm sm:text-base md:text-lg opacity-85">
           <a href="https://www.facebook.com/share/18szd7DaVA/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors" title="Facebook"><i className="fa-brands fa-facebook-f"></i></a>
           
           <a href="https://x.com/nudesign_02?s=11" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors flex items-center justify-center" title="X (Twitter)">
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 md:w-4 md:h-4 fill-current" viewBox="0 0 24 24">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
             </svg>
           </a>
@@ -294,7 +368,7 @@ export default function Home() {
           <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors" title="WhatsApp"><i className="fa-brands fa-whatsapp"></i></a>
         </div>
 
-        <div className="text-xs opacity-50 font-light tracking-wide">
+        <div className="text-[10px] md:text-xs opacity-50 font-light tracking-wide text-center">
           {t.rights}
         </div>
       </footer>
@@ -304,7 +378,7 @@ export default function Home() {
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.8, type: "spring", stiffness: 200 }}
-        className="fixed bottom-6 right-6 z-30"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-30"
       >
         <motion.a 
           whileHover={{ scale: 1.07 }}
@@ -312,9 +386,9 @@ export default function Home() {
           href="https://wa.me/18294608316" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-5 py-3 rounded-full flex items-center space-x-3 shadow-2xl transition-colors group"
+          className="backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-3.5 sm:px-4 md:px-5 py-2 md:py-3 rounded-full flex items-center space-x-2 md:space-x-2.5 shadow-2xl transition-colors group"
         >
-          <div className="w-7 h-7 flex items-center justify-center">
+          <div className="w-5 h-5 md:w-7 md:h-7 flex items-center justify-center">
             <Image 
               src={theme === 'dark' ? '/icon-dark.svg' : '/icon-light.svg'} 
               alt="Chat Icon" 
@@ -323,7 +397,7 @@ export default function Home() {
               className="w-full h-full object-contain transition-transform group-hover:rotate-12" 
             />
           </div>
-          <span className="text-sm font-normal tracking-wide">{t.chat}</span>
+          <span className="text-xs md:text-sm font-normal tracking-wide">{t.chat}</span>
         </motion.a>
       </motion.div>
 
