@@ -48,11 +48,11 @@ export default function ContactoPage() {
       >
         {theme === 'dark' ? (
           <>
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-225 h-225 bg-linear-to-tr from-red-700/30 via-red-950/15 to-transparent rounded-full blur-[160px]"></div>
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-linear-to-tr from-red-700/30 via-red-950/15 to-transparent rounded-full blur-[160px]"></div>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-transparent via-[#050000]/70 to-[#030000]"></div>
           </>
         ) : (
-          <div className="absolute top-1/4 right-1/4 w-175 h-175 bg-orange-200/50 rounded-full blur-[130px]"></div>
+          <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-orange-200/50 rounded-full blur-[130px]"></div>
         )}
       </motion.div>
 
@@ -122,7 +122,7 @@ export default function ContactoPage() {
       {/* Contenido Principal de Contacto */}
       <main className="w-full max-w-4xl mx-auto px-6 py-12 z-10 flex flex-col items-center">
         
-        {/* Cabecera Cinemática con tu Foto Integrada */}
+        {/* Cabecera Cinemática con Foto Integrada */}
         <div className="flex flex-col items-center text-center mb-14 space-y-5">
           
           {/* Foto de Perfil Premium con brillo ambiental */}

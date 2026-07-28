@@ -34,6 +34,7 @@ const sampleProjects = [
     title: "Nexus Tech Branding", 
     category: "Branding", 
     year: "2026",
+    altSEO: "Diseño de branding e identidad visual para empresa de tecnología Nexus Tech por Nu-Design",
     detail: "De mi participación: Crear la línea gráfica de dicha empresa, hacer la investigación para entender la marca a fondo y así dar el mejor resultado, estableciendo un sistema visual imponente y minimalista.",
     images: [
       "/project-1.jpg",
@@ -50,6 +51,7 @@ const sampleProjects = [
     title: "Aura Corporate Identity", 
     category: "Identidad Corporativa", 
     year: "2026",
+    altSEO: "Desarrollo de identidad corporativa, isotipo y manual de marca Aura por Garic Edume Nu-Design",
     detail: "Desarrollo integral de identidad corporativa, conceptualización de isotipo, paleta de colores exclusiva y manual de normas corporativas de alto impacto.",
     images: [
       "/project-2.jpg",
@@ -66,6 +68,7 @@ const sampleProjects = [
     title: "Luxe Papelería Set", 
     category: "Papelería Corporativa", 
     year: "2026",
+    altSEO: "Diseño de papelería corporativa de lujo con acabados especiales en foil dorado Nu-Design",
     detail: "Diseño y diagramación de papelería de alta gama con acabados especiales en foil dorado y texturas táctiles sofisticadas.",
     images: [
       "/project-3.jpg",
@@ -82,6 +85,7 @@ const sampleProjects = [
     title: "Vanguard Packaging", 
     category: "Packaging", 
     year: "2026",
+    altSEO: "Diseño de empaque y packaging personalizado troquelado con barniz UV Nu-Design Agency",
     detail: "Creación de estructura de empaque personalizada, diseño troquelado y acabados en barniz selectivo UV para destacar en anaquel.",
     images: [
       "/project-4.jpg",
@@ -95,9 +99,10 @@ const sampleProjects = [
   },
   { 
     id: 5, 
-    title: "Eco Etquetas Pro", 
+    title: "Eco Etiquetas Pro", 
     category: "Etiquetas", 
     year: "2026",
+    altSEO: "Diseño de etiquetas adhesivas para productos ecológicos premium por Nu-Design",
     detail: "Diseño de etiquetas adhesivas en rollo con acabados mate y tipografía ultra limpia orientada al mercado ecológico premium.",
     images: [
       "/project-5.jpg",
@@ -114,6 +119,7 @@ const sampleProjects = [
     title: "Urban Editorial Mag", 
     category: "Diseño Editorial", 
     year: "2026",
+    altSEO: "Diagramación editorial y dirección de arte para revista de arquitectura y diseño Nu-Design",
     detail: "Dirección de arte y diagramación editorial completa para revista de arquitectura y diseño urbano minimalista.",
     images: [
       "/project-6.jpg",
@@ -175,11 +181,11 @@ export default function PortfolioPage() {
       >
         {theme === 'dark' ? (
           <>
-            <div className="absolute top-1/4 left-1/3 -translate-x-1/2 w-225 h-225 bg-linear-to-tr from-red-700/25 via-red-950/15 to-transparent rounded-full blur-[160px]"></div>
+            <div className="absolute top-1/4 left-1/3 -translate-x-1/2 w-96 h-96 bg-linear-to-tr from-red-700/25 via-red-950/15 to-transparent rounded-full blur-[160px]"></div>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-transparent via-[#050000]/70 to-[#030000]"></div>
           </>
         ) : (
-          <div className="absolute top-1/4 right-1/4 w-175 h-175 bg-orange-200/50 rounded-full blur-[130px]"></div>
+          <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-orange-200/50 rounded-full blur-[130px]"></div>
         )}
       </motion.div>
 
@@ -196,12 +202,11 @@ export default function PortfolioPage() {
             <span className="opacity-100 tracking-wide font-semibold">portafolio</span>
             <div className="absolute bottom-0 left-0 w-full h-0.5 bg-current rounded-full"></div>
           </div>
-          <Link href="/#contratar" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">contratar</Link>
-          <Link href="/#contacto" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">contacto</Link>
+          <Link href="/contratar" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">contratar</Link>
+          <Link href="/contacto" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">contacto</Link>
         </nav>
 
         <div className="flex items-center space-x-5">
-          {/* Selector de Idiomas */}
           <div className="relative" ref={langMenuRef}>
             <button 
               onClick={() => setIsLangOpen(!isLangOpen)}
@@ -234,20 +239,20 @@ export default function PortfolioPage() {
             <span>Whatsapp</span>
           </a>
           
-          <a href="https://wa.me/18294608316?text=Hola,%20deseo%20una%20cotizaci%C3%B3n" target="_blank" rel="noopener noreferrer" className="backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-7 py-2 rounded-full text-sm font-normal shadow-lg hover:bg-white/20 transition-colors">
+          <Link href="/cotizacion" className="backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-7 py-2 rounded-full text-sm font-normal shadow-lg hover:bg-white/20 transition-colors">
             Cotización
-          </a>
+          </Link>
         </div>
       </motion.header>
 
-      {/* Theme Switcher (Fixed Right Side) */}
+      {/* Theme Switcher */}
       <div className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-3 z-30">
         <button onClick={() => setTheme('light')} className="w-8 h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
         <button onClick={() => setTheme('dark')} className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
       </div>
 
       {/* Main Portfolio Content */}
-      <main className="w-full max-w-368 mx-auto px-6 py-10 z-10 flex flex-col items-center">
+      <main className="w-full max-w-7xl mx-auto px-6 py-10 z-10 flex flex-col items-center">
         
         <AnimatePresence mode="wait">
           {!activeProject ? (
@@ -260,7 +265,6 @@ export default function PortfolioPage() {
               transition={{ duration: 0.5 }}
               className="w-full flex flex-col items-center"
             >
-              {/* Cabecera Cinemática Premium */}
               <div className="flex flex-col items-center text-center mb-14 space-y-4">
                 <motion.div 
                   initial={{ scale: 0.8, opacity: 0, y: -10 }}
@@ -271,7 +275,7 @@ export default function PortfolioPage() {
                   <div className="absolute inset-0 bg-red-600/20 rounded-full blur-2xl animate-pulse"></div>
                   <Image 
                     src={theme === 'dark' ? '/icon-dark.svg' : '/icon-light.svg'} 
-                    alt="NU-Design Icon" 
+                    alt="Agencia de Diseño Gráfico Nu-Design Garic Edume" 
                     width={96} 
                     height={96} 
                     className="w-full h-full object-contain relative z-10 drop-shadow-[0_10px_25px_rgba(255,0,0,0.3)] transition-transform duration-500 group-hover:scale-110" 
@@ -293,13 +297,11 @@ export default function PortfolioPage() {
                 </motion.div>
               </div>
 
-              {/* Layout expandido: Filtro a la izquierda + Galería */}
               <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                {/* Panel Lateral de Filtros */}
+                {/* Panel Lateral */}
                 <aside className={`w-full lg:col-span-3 backdrop-blur-xl border rounded-2xl p-5 shadow-xl space-y-5 sticky top-6 ${theme === 'dark' ? 'bg-black/20 border-white/10' : 'bg-white/40 border-zinc-300'}`}>
                   
-                  {/* Mini Buscador */}
                   <div className="relative">
                     <input 
                       type="text" 
@@ -311,10 +313,9 @@ export default function PortfolioPage() {
                     <i className="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-xs opacity-60"></i>
                   </div>
 
-                  {/* Lista de Categorías */}
                   <div className="space-y-2">
                     <span className="text-[11px] font-semibold uppercase tracking-widest opacity-60 block mb-2 px-1">Categorías</span>
-                    <div className="flex flex-col space-y-1 max-h-130 overflow-y-auto pr-1 custom-scrollbar">
+                    <div className="flex flex-col space-y-1 max-h-120 overflow-y-auto pr-1 custom-scrollbar">
                       {categories.map((cat, index) => (
                         <button 
                           key={index}
@@ -330,7 +331,7 @@ export default function PortfolioPage() {
 
                 </aside>
 
-                {/* Cuadrícula de Galería Moderna */}
+                {/* Cuadrícula de Galería */}
                 <div className="w-full lg:col-span-9">
                   <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <AnimatePresence>
@@ -345,16 +346,19 @@ export default function PortfolioPage() {
                             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                             whileHover={{ y: -8, scale: 1.02 }}
                             onClick={() => setActiveProject(proj)}
-                            className={`group relative h-80 rounded-2xl overflow-hidden backdrop-blur-xl border shadow-2xl cursor-pointer flex items-center justify-center transition-colors ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-red-500/80 hover:shadow-[0_20px_40px_rgba(255,0,0,0.2)]' : 'bg-white/50 border-zinc-300 hover:border-red-600/80 hover:shadow-[0_20px_40px_rgba(220,38,38,0.15)]'}`}
+                            className={`group relative h-80 rounded-2xl overflow-hidden backdrop-blur-xl border shadow-2xl cursor-pointer flex items-center justify-center transition-colors ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-red-500/80' : 'bg-white/50 border-zinc-300 hover:border-red-600/80'}`}
                           >
-                            <div className="absolute inset-0 bg-linear-to-tr from-red-600/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <Image 
+                              src={proj.images[0]} 
+                              alt={proj.altSEO} 
+                              fill 
+                              className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                            />
                             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent z-10 opacity-75 group-hover:opacity-90 transition-opacity"></div>
-                            <div className="absolute inset-0 flex items-center justify-center text-zinc-400 font-light text-sm tracking-widest uppercase group-hover:scale-105 transition-transform duration-700">
-                              [ Proyecto Visual ]
-                            </div>
+                            
                             <div className="absolute bottom-0 left-0 w-full p-6 z-20 transform translate-y-1 group-hover:translate-y-0 transition-transform">
                               <span className="text-[10px] uppercase tracking-wider text-red-400 font-semibold block mb-1">{proj.category}</span>
-                              <h3 className="text-lg font-medium text-white">{proj.title}</h3>
+                              <h2 className="text-lg font-medium text-white">{proj.title}</h2>
                             </div>
                           </motion.div>
                         ))
@@ -379,7 +383,7 @@ export default function PortfolioPage() {
               </div>
             </motion.div>
           ) : (
-            /* ================= VISTA DE DETALLE DE PROYECTO (7 FOTOS ESTILO REVISTA) ================= */
+            /* ================= VISTA DE DETALLE DE PROYECTO ================= */
             <motion.div 
               key="detail"
               initial={{ opacity: 0, y: 30 }}
@@ -388,7 +392,6 @@ export default function PortfolioPage() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="w-full max-w-5xl flex flex-col items-center space-y-12"
             >
-              {/* Tarjeta de Encabezado de Proyecto */}
               <div className={`w-full backdrop-blur-2xl border rounded-3xl p-8 md:p-12 shadow-2xl text-center space-y-4 relative overflow-hidden ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/70 border-zinc-300'}`}>
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-32 bg-red-600/15 rounded-full blur-3xl pointer-events-none"></div>
                 <span className="text-xs uppercase tracking-widest text-red-500 font-bold block">
@@ -398,40 +401,46 @@ export default function PortfolioPage() {
                   {activeProject.title}
                 </h1>
                 <p className="text-xs md:text-sm font-light leading-relaxed max-w-2xl mx-auto opacity-80 pt-2">
-                  <strong className="font-medium">Detalle:</strong> {activeProject.detail}
+                  <strong className="font-medium">Caso de Estudio:</strong> {activeProject.detail}
                 </p>
               </div>
 
-              {/* Estructura Asimétrica de 7 Fotos de Alta Gama */}
+              {/* Estructura Asimétrica de Imágenes */}
               <div className="w-full space-y-6">
                 
-                {/* 1. Foto Principal (Grande Arriba) */}
+                {/* 1. Foto Principal */}
                 <div 
                   onClick={() => setLightboxImage(activeProject.images[0])}
                   className={`group relative h-105 rounded-3xl overflow-hidden backdrop-blur-xl border shadow-2xl cursor-pointer flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-red-500/80' : 'bg-white/50 border-zinc-300 hover:border-red-600/80'}`}
                 >
+                  <Image 
+                    src={activeProject.images[0]} 
+                    alt={`${activeProject.altSEO} - Vista Principal`} 
+                    fill 
+                    className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                  />
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10 opacity-70 group-hover:opacity-90 transition-opacity"></div>
-                  <div className="absolute inset-0 flex items-center justify-center text-zinc-500 font-light text-sm tracking-widest uppercase group-hover:scale-105 transition-transform duration-700">
-                    [ Foto Principal del Proyecto ]
-                  </div>
                   <div className="absolute bottom-6 left-6 z-20">
                     <span className="text-xs text-red-400 font-semibold uppercase tracking-wider">Vista Principal</span>
-                    <h3 className="text-xl font-medium text-white">Ejecución Gráfica Core</h3>
+                    <h2 className="text-xl font-medium text-white">Ejecución Gráfica Core</h2>
                   </div>
                 </div>
 
-                {/* 2. Fila con 2 Fotos Medianas Equilibradas */}
+                {/* 2. Fila con 2 Fotos Medianas */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {[activeProject.images[1], activeProject.images[2]].map((img, idx) => (
                     <div 
                       key={idx}
                       onClick={() => setLightboxImage(img)}
-                      className={`group relative h-80 rounded-3xl overflow-hidden backdrop-blur-xl border shadow-2xl cursor-pointer flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-red-500/80' : 'bg-white/50 border-zinc-300 hover:border-red-600/80'}`}
+                      className={`group relative h-80 rounded-3xl overflow-hidden backdrop-blur-xl border shadow-2xl cursor-pointer transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-red-500/80' : 'bg-white/50 border-zinc-300 hover:border-red-600/80'}`}
                     >
-                      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10 opacity-70 group-hover:opacity-90 transition-opacity"></div>
-                      <div className="absolute inset-0 flex items-center justify-center text-zinc-500 font-light text-sm tracking-widest uppercase group-hover:scale-105 transition-transform duration-700">
-                        [ Foto Detalle 0{idx + 2} ]
-                      </div>
+                      <Image 
+                        src={img} 
+                        alt={`${activeProject.altSEO} - Vista Detalle 0${idx + 2}`} 
+                        fill 
+                        className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10 opacity-60 group-hover:opacity-80 transition-opacity"></div>
                     </div>
                   ))}
                 </div>
@@ -442,12 +451,15 @@ export default function PortfolioPage() {
                     <div 
                       key={idx}
                       onClick={() => setLightboxImage(img)}
-                      className={`group relative h-56 rounded-2xl overflow-hidden backdrop-blur-xl border shadow-xl cursor-pointer flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-red-500/80' : 'bg-white/50 border-zinc-300 hover:border-red-600/80'}`}
+                      className={`group relative h-56 rounded-2xl overflow-hidden backdrop-blur-xl border shadow-xl cursor-pointer transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-red-500/80' : 'bg-white/50 border-zinc-300 hover:border-red-600/80'}`}
                     >
-                      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10 opacity-70 group-hover:opacity-90 transition-opacity"></div>
-                      <div className="absolute inset-0 flex items-center justify-center text-zinc-500 font-light text-xs tracking-widest uppercase group-hover:scale-105 transition-transform duration-700">
-                        [ F-0{idx + 4} ]
-                      </div>
+                      <Image 
+                        src={img} 
+                        alt={`${activeProject.altSEO} - Vista Galería 0${idx + 4}`} 
+                        fill 
+                        className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10 opacity-60 group-hover:opacity-80 transition-opacity"></div>
                     </div>
                   ))}
                 </div>
@@ -473,7 +485,7 @@ export default function PortfolioPage() {
 
       </main>
 
-      {/* Lightbox Modal para ver fotos en pantalla completa */}
+      {/* Lightbox Modal */}
       <AnimatePresence>
         {lightboxImage && (
           <motion.div 
@@ -483,16 +495,19 @@ export default function PortfolioPage() {
             onClick={() => setLightboxImage(null)}
             className="fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl flex items-center justify-center p-6 cursor-pointer"
           >
-            <div className="relative max-w-5xl w-full h-[80vh] flex items-center justify-center">
+            <div className="relative max-w-5xl w-full h-[80vh]">
               <button 
                 onClick={() => setLightboxImage(null)}
                 className="absolute top-4 right-4 text-white bg-white/10 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors z-50"
               >
                 <i className="fa-solid fa-xmark text-lg"></i>
               </button>
-              <div className="text-zinc-400 font-light text-sm tracking-widest uppercase">
-                [ Vista Ampliada en Pantalla Completa ]
-              </div>
+              <Image 
+                src={lightboxImage} 
+                alt="Vista ampliada proyecto Nu-Design" 
+                fill 
+                className="object-contain" 
+              />
             </div>
           </motion.div>
         )}

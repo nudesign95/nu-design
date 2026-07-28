@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Diccionario de Traducciones
 const translations = {
   ES: {
     inicio: 'inicio',
@@ -157,7 +156,6 @@ const translations = {
   }
 };
 
-// Listado de Países Permitidos
 const allowedCountries = [
   { name: "República Dominicana", code: "+1", cities: ["Santo Domingo", "Santiago", "La Romana", "Punta Cana", "San Francisco de Macorís"] },
   { name: "Estados Unidos (USA)", code: "+1", cities: ["Miami", "New York", "Orlando", "Boston", "Los Angeles"] },
@@ -174,7 +172,6 @@ const allowedCountries = [
   { name: "Jamaica", code: "+1", cities: ["Kingston", "Montego Bay", "Spanish Town"] }
 ];
 
-// Catálogo Maestro
 const masterCatalog: { 
   [category: string]: { 
     name: string; 
@@ -312,7 +309,6 @@ export default function CotizacionPage() {
   
   const t = translations[currentLang];
 
-  // Estados del Formulario
   const [clientType, setClientType] = useState<'nuevo' | 'existente'>('nuevo');
   const [identifier, setIdentifier] = useState('');
   
@@ -410,7 +406,6 @@ export default function CotizacionPage() {
     }
   };
 
-  // NUEVA FUNCIÓN HANDLE SUBMIT CONECTADA A LA API DE ENVÍO Y WHATSAPP
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -487,11 +482,11 @@ export default function CotizacionPage() {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {theme === 'dark' ? (
           <>
-            <div className="absolute top-1/4 left-1/3 -translate-x-1/2 w-225 h-225 bg-linear-to-tr from-red-700/25 via-red-950/15 to-transparent rounded-full blur-[160px]"></div>
+            <div className="absolute top-1/4 left-1/3 -translate-x-1/2 w-96 h-96 bg-linear-to-tr from-red-700/25 via-red-950/15 to-transparent rounded-full blur-[160px]"></div>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-transparent via-[#050000]/70 to-[#030000]"></div>
           </>
         ) : (
-          <div className="absolute top-1/4 right-1/4 w-175 h-175 bg-orange-200/50 rounded-full blur-[130px]"></div>
+          <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-orange-200/50 rounded-full blur-[130px]"></div>
         )}
       </motion.div>
 

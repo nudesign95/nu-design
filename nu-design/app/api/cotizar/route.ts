@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const data = await request.json();
-    
+    const body = await request.json();
+
     const {
       companyName,
       contactName,
@@ -19,50 +19,56 @@ export async function POST(request: Request) {
       timeQuantity2,
       timeUnit2,
       needsPhysicalSample,
-      receiveChannel
-    } = data;
+      receiveChannel,
+    } = body;
 
-    // Construir el texto profesional del resumen
-    const resumenMensaje = `*¡Nueva Cotización Recibida - Nu-Design!* 🚀\n\n` +
-      `🏢 *Empresa:* ${companyName || 'No especificada'}\n` +
-      `👤 *Responsable:* ${contactName || 'No especificado'}\n` +
-      `📍 *Ubicación:* ${selectedCity}, ${selectedCountry}\n` +
-      `📞 *Contacto:* ${countryCode} ${contactPhone}\n` +
-      `📧 *Correo:* ${contactEmail}\n\n` +
-      `🛠️ *Renglón:* ${selectedMainService}\n` +
-      `📌 *Servicio:* ${selectedSubService}\n` +
-      `⏳ *Tiempo estimado:* ${timeQuantity} ${timeUnit} ${timeQuantity2 > 0 ? `y ${timeQuantity2} ${timeUnit2}` : ''}\n` +
-      `📦 *Muestra física:* ${needsPhysicalSample.toUpperCase()}\n` +
-      `📨 *Canal preferido:* ${receiveChannel.toUpperCase()}`;
+    // Tu número de WhatsApp de destino (en formato internacional sin símbolos)
+    const targetWhatsAppNumber = '18294608316';
 
-    // Si el usuario eligió WhatsApp, generamos el enlace de redirección directa con el mensaje listo
-    if (receiveChannel === 'whatsapp') {
-      const cleanPhone = contactPhone.replace(/\D/g, '');
-      const fullPhone = `${countryCode.replace('+', '')}${cleanPhone}`;
-      const whatsappUrl = `https://wa.me/${fullPhone}?text=${encodeURIComponent(resumenMensaje)}`;
-
-      return NextResponse.json({
-        success: true,
-        channel: 'whatsapp',
-        redirectUrl: whatsappUrl,
-        message: 'Cotización procesada para WhatsApp.'
-      });
+    // Construcción del tiempo estimado
+    let timeString = `${timeQuantity} ${timeUnit}`;
+    if (timeQuantity2 && timeQuantity2 !== '0' && timeUnit2 && timeUnit2 !== 'ninguno') {
+      timeString += ` y ${timeQuantity2} ${timeUnit2}`;
     }
 
-    // Si el usuario eligió Correo Electrónico (Simulación de envío de correo exitoso)
-    if (receiveChannel === 'correo') {
-      // Aquí puedes integrar Resend o Nodemailer más adelante si lo deseas
-      return NextResponse.json({
-        success: true,
-        channel: 'correo',
-        message: `Cotización enviada exitosamente al correo ${contactEmail}.`
-      });
-    }
+    // Armar el mensaje formateado para WhatsApp
+    const message = `*NUEVA SOLICITUD DE COTIZACIÓN - NU-DESIGN* 🚀
+----------------------------------------
+📌 *CLIENTE / EMPRESA*
+• *Empresa:* ${companyName || 'No especificado'}
+• *Responsable:* ${contactName || 'No especificado'}
+• *Ubicación:* ${selectedCity}, ${selectedCountry}
+• *Teléfono:* ${countryCode} ${contactPhone}
+• *Correo:* ${contactEmail}
 
-    return NextResponse.json({ success: false, message: 'Canal no válido' }, { status: 400 });
+🎯 *SERVICIO SOLICITADO*
+• *Categoría:* ${selectedMainService}
+• *Específico:* ${selectedSubService}
+• *Muestra física:* ${needsPhysicalSample === 'si' ? 'Sí (Impresa)' : 'No (100% Digital)'}
 
+⏱️ *TIEMPO REQUERIDO*
+• ${timeString}
+
+📩 *CANAL DE PREFERENCIA*
+• ${receiveChannel === 'whatsapp' ? 'WhatsApp' : 'Correo Electrónico'}
+----------------------------------------
+_Generado automáticamente desde nudesign.agency_`;
+
+    // Codificar el mensaje para la URL de WhatsApp
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${targetWhatsAppNumber}?text=${encodedMessage}`;
+
+    return NextResponse.json({
+      success: true,
+      channel: receiveChannel,
+      redirectUrl: whatsappUrl,
+      message: 'Cotización procesada exitosamente.',
+    });
   } catch (error) {
-    console.error('Error en API cotizar:', error);
-    return NextResponse.json({ success: false, message: 'Error interno del servidor' }, { status: 500 });
+    console.error('Error al procesar cotización:', error);
+    return NextResponse.json(
+      { success: false, error: 'Error interno al procesar la cotización' },
+      { status: 500 }
+    );
   }
 }
