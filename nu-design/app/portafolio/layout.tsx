@@ -27,6 +27,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PortafolioLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+export default function PortafolioPage() {
+  return (
+    <div>
+      {/* Tu contenido del portafolio */}
+    </div>
+  );
 }
