@@ -40,6 +40,15 @@ const translations = {
   }
 };
 
+const serviceIcons = [
+  { name: "Idea y Concepto", icon: "fa-lightbulb", label: "Idea & Concept" },
+  { name: "Branding", icon: "fa-pen-nib", label: "Branding" },
+  { name: "Diseño Gráfico", icon: "fa-palette", label: "Graphic Design" },
+  { name: "Diseño UI/UX", icon: "fa-desktop", label: "UI/UX Design" },
+  { name: "Layout y Diagramación", icon: "fa-layer-group", label: "Layout" },
+  { name: "Desarrollo Web", icon: "fa-laptop-code", label: "Web Dev" },
+];
+
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [currentLang, setCurrentLang] = useState<'ES' | 'EN' | 'FR'>('ES');
@@ -134,21 +143,19 @@ export default function Home() {
       >
         {theme === 'dark' ? (
           <>
-            {/* Gradiente Rojo Suave Cinemático */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-162.5 md:w-225 h-112.5 md:h-150 bg-linear-to-tr from-red-950/45 via-red-800/25 to-red-600/10 rounded-full blur-[120px] md:blur-[180px] transform -rotate-12"></div>
             <div className="absolute top-1/4 left-1/3 w-87.5 h-87.5 bg-red-900/15 rounded-full blur-[140px]"></div>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#040001_85%)]"></div>
           </>
         ) : (
           <>
-            {/* Studio Lighting Style (Gris/Plateado Apple) */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 md:w-250 h-125 md:h-175 bg-linear-to-b from-white via-zinc-200/80 to-zinc-300/40 rounded-full blur-[100px] md:blur-[150px]"></div>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#d9d9d9_90%)]"></div>
           </>
         )}
       </motion.div>
 
-      {/* Top Navigation Bar */}
+      {/* Top Navigation Bar con Luces Neón al Pasar el Mouse */}
       <motion.header 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -157,28 +164,52 @@ export default function Home() {
       >
         <div className="flex items-center space-x-2">
           <span className="md:hidden font-bold text-sm tracking-widest uppercase">NU-DESIGN</span>
-          <nav className="hidden md:flex items-center space-x-10 text-base font-medium">
-            <div className="relative flex flex-col items-start cursor-pointer group py-1">
-              <span className="hover:opacity-75 transition-opacity tracking-wide">{t.inicio}</span>
-              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-current rounded-full"></div>
-            </div>
+          
+          <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
+            {/* 1. Botón INICIO */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/" className="px-4 py-2 rounded-full backdrop-blur-md bg-white/5 border border-red-500/30 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all">
+                {t.inicio}
+              </Link>
+            </motion.div>
             
-            <Link href="/portafolio" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.portafolio}</Link>
-            <Link href="/contratar" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.contratar}</Link>
-            <Link href="/contacto" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.contacto}</Link>
+            {/* 2. Botón PORTAFOLIO */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/portafolio" className="px-4 py-2 rounded-full backdrop-blur-md bg-white/0 border border-transparent hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all opacity-80 hover:opacity-100">
+                {t.portafolio}
+              </Link>
+            </motion.div>
+
+            {/* 3. Botón CONTRATAR */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/contratar" className="px-4 py-2 rounded-full backdrop-blur-md bg-white/0 border border-transparent hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all opacity-80 hover:opacity-100">
+                {t.contratar}
+              </Link>
+            </motion.div>
+
+            {/* 4. Botón CONTACTO */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/contacto" className="px-4 py-2 rounded-full backdrop-blur-md bg-white/0 border border-transparent hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all opacity-80 hover:opacity-100">
+                {t.contacto}
+              </Link>
+            </motion.div>
           </nav>
         </div>
 
-        <div className="flex items-center space-x-3 md:space-x-5">
+        <div className="flex items-center space-x-3 md:space-x-4">
+          
+          {/* 5. Selector de IDIOMAS con Luz */}
           <div className="relative hidden md:block" ref={langMenuRef}>
-            <button 
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="text-xs uppercase tracking-widest opacity-70 hover:opacity-100 font-semibold px-3 py-1.5 transition-opacity flex items-center space-x-1 focus:outline-none"
+              className="text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full backdrop-blur-md bg-white/5 border border-white/10 hover:border-red-500/40 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)] transition-all flex items-center space-x-1 focus:outline-none"
             >
               <span>IDIOMAS</span>
-              <span className="text-red-500 font-bold">({currentLang})</span>
+              <span className="text-red-500 font-bold ml-1">({currentLang})</span>
               <i className={`fa-solid fa-chevron-down text-[10px] ml-1 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`}></i>
-            </button>
+            </motion.button>
 
             <AnimatePresence>
               {isLangOpen && (
@@ -203,26 +234,25 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          {/* Botón WhatsApp con Liquid Glass */}
+          {/* 6. Botón WHATSAPP con Luz Verde */}
           <motion.a 
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             href="https://wa.me/18294608316" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="hidden sm:flex backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/30 dark:border-white/15 px-4 md:px-6 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 shadow-[0_8px_32px_0_rgba(0,0,0,0.2)] hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)] transition-all"
+            className="hidden sm:flex backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/20 hover:border-emerald-500/60 px-5 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all"
           >
             <i className="fa-brands fa-whatsapp text-emerald-400 text-base md:text-lg"></i>
             <span>{t.whatsapp}</span>
           </motion.a>
           
-          {/* Botón Cotización con Liquid Glass */}
+          {/* 7. Botón COTIZACIÓN con Luz Roja */}
           <motion.div 
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/30 dark:border-white/15 px-4 md:px-7 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-normal shadow-[0_8px_32px_0_rgba(0,0,0,0.2)] hover:border-red-500/50 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)] transition-all cursor-pointer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <Link href="/cotizacion" className="w-full h-full block">
+            <Link href="/cotizacion" className="block backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/20 hover:border-red-500/60 px-5 py-2 rounded-full text-xs md:text-sm font-normal hover:shadow-[0_0_20px_rgba(239,68,68,0.3)] transition-all">
               {t.cotizacion}
             </Link>
           </motion.div>
@@ -303,7 +333,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Theme Switcher con Liquid Glass (Fixed Right Side) */}
+      {/* Theme Switcher con Liquid Glass */}
       <motion.div 
         initial={{ x: 20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
@@ -315,7 +345,7 @@ export default function Home() {
       </motion.div>
 
       {/* Main Hero Section */}
-      <main className="w-full max-w-5xl mx-auto px-4 flex flex-col items-center text-center my-auto z-10 space-y-6 md:space-y-10 py-6">
+      <main className="w-full max-w-5xl mx-auto px-4 flex flex-col items-center text-center my-auto z-10 space-y-6 md:space-y-8 py-6">
         
         {/* Icono superior */}
         <motion.div 
@@ -351,22 +381,28 @@ export default function Home() {
           />
         </motion.div>
 
-        {/* Sub-icons row interactivos */}
+        {/* ICONOS INTERACTIVOS (SUSTITUYEN EL TEXTO - FOTO 3) */}
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.35 }}
-          className="flex items-center flex-wrap justify-center gap-4 sm:gap-6 md:space-x-8 text-base sm:text-lg md:text-xl opacity-80"
+          className="flex items-center flex-wrap justify-center gap-3 sm:gap-5 md:gap-8 pt-2"
         >
-          <i onClick={() => handleServiceClick("Idea y Concepto")} className="fa-solid fa-lightbulb hover:text-red-500 transition-colors cursor-pointer" title="Idea & Concept"></i>
-          <i onClick={() => handleServiceClick("Branding")} className="fa-solid fa-pen-nib hover:text-red-500 transition-colors cursor-pointer" title="Branding"></i>
-          <i onClick={() => handleServiceClick("Diseño Gráfico")} className="fa-solid fa-palette hover:text-red-500 transition-colors cursor-pointer" title="Graphic Design"></i>
-          <i onClick={() => handleServiceClick("Diseño UI/UX")} className="fa-solid fa-desktop hover:text-red-500 transition-colors cursor-pointer" title="UI/UX Design"></i>
-          <i onClick={() => handleServiceClick("Layout y Diagramación")} className="fa-solid fa-layer-group hover:text-red-500 transition-colors cursor-pointer" title="Layout Design"></i>
-          <i onClick={() => handleServiceClick("Desarrollo Web")} className="fa-solid fa-laptop-code hover:text-red-500 transition-colors cursor-pointer" title="Web Development"></i>
+          {serviceIcons.map((service, index) => (
+            <motion.button
+              key={index}
+              whileHover={{ scale: 1.15, y: -4 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleServiceClick(service.name)}
+              title={service.name}
+              className="w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 rounded-2xl backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/15 flex items-center justify-center text-lg sm:text-xl md:text-2xl opacity-90 hover:opacity-100 hover:text-red-500 hover:border-red-500/60 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all group relative cursor-pointer"
+            >
+              <i className={`fa-solid ${service.icon} group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]`}></i>
+            </motion.button>
+          ))}
         </motion.div>
 
-        {/* Buscador Interactivo con LIQUID GLASS Y BRILLO PERIMETRAL */}
+        {/* Buscador Interactivo con Liquid Glass */}
         <motion.form 
           onSubmit={handleSearchSubmit}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -388,7 +424,7 @@ export default function Home() {
         </motion.form>
 
         {/* Bloque de Texto de Servicios */}
-        <div className="w-full max-w-3xl text-[10px] sm:text-xs md:text-sm font-light leading-relaxed px-2 text-center opacity-75 pt-2">
+        <div className="w-full max-w-3xl text-[10px] sm:text-xs md:text-sm font-light leading-relaxed px-2 text-center opacity-75 pt-1">
           <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Branding")}>Branding</span> • <span>PNG</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Logotipos")}>Logotipos</span> • <span>Creatividad</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("UX/UI")}>UX/UI</span> • <span>PDF</span> • <span>Diseño Editorial</span> • <span>RGB</span> • 
           <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors ml-1" onClick={() => handleServiceClick("Landing Page")}>Landing Page</span> • <span>Vectorización</span> • <span>Calidad Premium</span> • <span>SVG</span> • <span>Flyers</span> • <span>AI</span>
         </div>
@@ -417,7 +453,7 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Floating Chat Now Button */}
+      {/* Floating Chat Now Button (Ligeramente Agrandado) */}
       <motion.div 
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -425,23 +461,23 @@ export default function Home() {
         className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-30"
       >
         <motion.a 
-          whileHover={{ scale: 1.07 }}
+          whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.95 }}
           href="https://wa.me/18294608316" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="backdrop-blur-3xl bg-white/15 dark:bg-white/10 border border-white/40 dark:border-white/20 px-3.5 sm:px-4 md:px-5 py-2 md:py-3 rounded-full flex items-center space-x-2 md:space-x-2.5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:border-red-500/50 transition-all group"
+          className="backdrop-blur-3xl bg-white/15 dark:bg-white/10 border border-white/40 dark:border-white/20 px-4 sm:px-5 md:px-6 py-2.5 md:py-3.5 rounded-full flex items-center space-x-2.5 shadow-[0_10px_30px_rgba(0,0,0,0.4)] hover:border-red-500/60 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all group"
         >
-          <div className="w-5 h-5 md:w-7 md:h-7 flex items-center justify-center">
+          <div className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
             <Image 
               src={theme === 'dark' ? '/icon-dark.svg' : '/icon-light.svg'} 
               alt="Chat Icon" 
-              width={28} 
-              height={28} 
+              width={32} 
+              height={32} 
               className="w-full h-full object-contain transition-transform group-hover:rotate-12" 
             />
           </div>
-          <span className="text-xs md:text-sm font-normal tracking-wide">{t.chat}</span>
+          <span className="text-xs md:text-base font-medium tracking-wide">{t.chat}</span>
         </motion.a>
       </motion.div>
 
