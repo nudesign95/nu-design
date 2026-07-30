@@ -125,7 +125,7 @@ export default function Home() {
     <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-1000 relative overflow-x-hidden py-4 md:py-6 ${
       theme === 'dark' 
         ? 'bg-[#040001] text-zinc-100' 
-        : 'bg-[#e3e3e3] text-zinc-850'
+        : 'bg-[#e3e3e3] text-zinc-900'
     }`}>
       
       {/* Datos Estructurados Schema.org para Google */}
@@ -155,7 +155,7 @@ export default function Home() {
         )}
       </motion.div>
 
-      {/* Top Navigation Bar con Luces Neón al Pasar el Mouse */}
+      {/* Top Navigation Bar */}
       <motion.header 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -168,28 +168,56 @@ export default function Home() {
           <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
             {/* 1. Botón INICIO */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="/" className="px-4 py-2 rounded-full backdrop-blur-md bg-white/5 border border-red-500/30 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all">
+              <Link 
+                href="/" 
+                className={`px-4 py-2 rounded-full backdrop-blur-md shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all ${
+                  theme === 'dark' 
+                    ? 'bg-white/10 border border-red-500/40 text-white' 
+                    : 'bg-black/10 border border-red-500/50 text-zinc-900 font-semibold'
+                }`}
+              >
                 {t.inicio}
               </Link>
             </motion.div>
             
             {/* 2. Botón PORTAFOLIO */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="/portafolio" className="px-4 py-2 rounded-full backdrop-blur-md bg-white/0 border border-transparent hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all opacity-80 hover:opacity-100">
+              <Link 
+                href="/portafolio" 
+                className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
+                  theme === 'dark' 
+                    ? 'bg-white/0 text-white/80 hover:text-white hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]' 
+                    : 'bg-black/0 text-zinc-800 hover:text-black hover:border-black/20 hover:bg-black/5 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)]'
+                }`}
+              >
                 {t.portafolio}
               </Link>
             </motion.div>
 
             {/* 3. Botón CONTRATAR */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="/contratar" className="px-4 py-2 rounded-full backdrop-blur-md bg-white/0 border border-transparent hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all opacity-80 hover:opacity-100">
+              <Link 
+                href="/contratar" 
+                className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
+                  theme === 'dark' 
+                    ? 'bg-white/0 text-white/80 hover:text-white hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]' 
+                    : 'bg-black/0 text-zinc-800 hover:text-black hover:border-black/20 hover:bg-black/5 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)]'
+                }`}
+              >
                 {t.contratar}
               </Link>
             </motion.div>
 
             {/* 4. Botón CONTACTO */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="/contacto" className="px-4 py-2 rounded-full backdrop-blur-md bg-white/0 border border-transparent hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all opacity-80 hover:opacity-100">
+              <Link 
+                href="/contacto" 
+                className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
+                  theme === 'dark' 
+                    ? 'bg-white/0 text-white/80 hover:text-white hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]' 
+                    : 'bg-black/0 text-zinc-800 hover:text-black hover:border-black/20 hover:bg-black/5 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)]'
+                }`}
+              >
                 {t.contacto}
               </Link>
             </motion.div>
@@ -198,13 +226,17 @@ export default function Home() {
 
         <div className="flex items-center space-x-3 md:space-x-4">
           
-          {/* 5. Selector de IDIOMAS con Luz */}
+          {/* 5. Selector de IDIOMAS con Adaptación a Light Mode */}
           <div className="relative hidden md:block" ref={langMenuRef}>
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full backdrop-blur-md bg-white/5 border border-white/10 hover:border-red-500/40 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)] transition-all flex items-center space-x-1 focus:outline-none"
+              className={`text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center space-x-1 focus:outline-none ${
+                theme === 'dark'
+                  ? 'bg-white/5 border border-white/10 text-white hover:border-red-500/40 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)]'
+                  : 'bg-black/5 border border-black/10 text-zinc-900 hover:border-red-500/40 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)]'
+              }`}
             >
               <span>IDIOMAS</span>
               <span className="text-red-500 font-bold ml-1">({currentLang})</span>
@@ -218,15 +250,19 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute right-0 mt-2 w-36 backdrop-blur-2xl bg-black/90 dark:bg-zinc-900/90 border border-white/15 rounded-xl shadow-2xl overflow-hidden z-50 py-1"
+                  className={`absolute right-0 mt-2 w-36 backdrop-blur-2xl border rounded-xl shadow-2xl overflow-hidden z-50 py-1 ${
+                    theme === 'dark' 
+                      ? 'bg-black/90 border-white/15 text-zinc-200' 
+                      : 'bg-white/95 border-black/10 text-zinc-800'
+                  }`}
                 >
-                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'ES' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}>
+                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-red-500/10 ${currentLang === 'ES' ? 'text-red-500 font-bold' : ''}`}>
                     <span>Español</span> {currentLang === 'ES' && <i className="fa-solid fa-check text-[10px]"></i>}
                   </button>
-                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'EN' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}>
+                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-red-500/10 ${currentLang === 'EN' ? 'text-red-500 font-bold' : ''}`}>
                     <span>English</span> {currentLang === 'EN' && <i className="fa-solid fa-check text-[10px]"></i>}
                   </button>
-                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'FR' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}>
+                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-red-500/10 ${currentLang === 'FR' ? 'text-red-500 font-bold' : ''}`}>
                     <span>Français</span> {currentLang === 'FR' && <i className="fa-solid fa-check text-[10px]"></i>}
                   </button>
                 </motion.div>
@@ -234,25 +270,36 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          {/* 6. Botón WHATSAPP con Luz Verde */}
+          {/* 6. Botón WHATSAPP */}
           <motion.a 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             href="https://wa.me/18294608316" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="hidden sm:flex backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/20 hover:border-emerald-500/60 px-5 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all"
+            className={`hidden sm:flex backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 transition-all ${
+              theme === 'dark'
+                ? 'bg-white/10 border border-white/20 text-white hover:border-emerald-500/60 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]'
+                : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]'
+            }`}
           >
-            <i className="fa-brands fa-whatsapp text-emerald-400 text-base md:text-lg"></i>
+            <i className="fa-brands fa-whatsapp text-emerald-500 text-base md:text-lg"></i>
             <span>{t.whatsapp}</span>
           </motion.a>
           
-          {/* 7. Botón COTIZACIÓN con Luz Roja */}
+          {/* 7. Botón COTIZACIÓN */}
           <motion.div 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link href="/cotizacion" className="block backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/20 hover:border-red-500/60 px-5 py-2 rounded-full text-xs md:text-sm font-normal hover:shadow-[0_0_20px_rgba(239,68,68,0.3)] transition-all">
+            <Link 
+              href="/cotizacion" 
+              className={`block backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal transition-all ${
+                theme === 'dark'
+                  ? 'bg-white/10 border border-white/20 text-white hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]'
+                  : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]'
+              }`}
+            >
               {t.cotizacion}
             </Link>
           </motion.div>
@@ -275,45 +322,47 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-30 bg-black/95 dark:bg-[#040001]/95 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden"
+            className={`fixed inset-0 z-30 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden ${
+              theme === 'dark' ? 'bg-black/95 text-white' : 'bg-white/95 text-zinc-900'
+            }`}
           >
             <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-white/10 pb-3 flex justify-between items-center">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>{t.inicio}</span>
                 <i className="fa-solid fa-arrow-right text-sm"></i>
               </Link>
-              <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-white/10 pb-3 flex justify-between items-center">
+              <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>{t.portafolio}</span>
                 <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
               </Link>
-              <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-white/10 pb-3 flex justify-between items-center">
+              <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>{t.contratar}</span>
                 <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
               </Link>
-              <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-white/10 pb-3 flex justify-between items-center">
+              <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>{t.contacto}</span>
                 <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
               </Link>
             </div>
 
-            <div className="flex flex-col space-y-4 pt-6 border-t border-white/10">
+            <div className="flex flex-col space-y-4 pt-6 border-t border-zinc-500/20">
               <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
               <div className="flex items-center gap-3">
                 <button 
                   onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-white/20 text-zinc-400'}`}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}
                 >
                   Español
                 </button>
                 <button 
                   onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-white/20 text-zinc-400'}`}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}
                 >
                   English
                 </button>
                 <button 
                   onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-white/20 text-zinc-400'}`}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}
                 >
                   Français
                 </button>
@@ -323,7 +372,7 @@ export default function Home() {
                 href="https://wa.me/18294608316" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="mt-4 w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 py-3 rounded-full flex items-center justify-center space-x-2 text-sm"
+                className="mt-4 w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 py-3 rounded-full flex items-center justify-center space-x-2 text-sm font-medium"
               >
                 <i className="fa-brands fa-whatsapp text-lg"></i>
                 <span>{t.whatsapp}</span>
@@ -338,7 +387,9 @@ export default function Home() {
         initial={{ x: 20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-2 md:space-y-3 z-30 p-1.5 rounded-full backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 shadow-2xl"
+        className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-2 md:space-y-3 z-30 p-1.5 rounded-full backdrop-blur-xl border shadow-2xl ${
+          theme === 'dark' ? 'bg-white/10 border-white/20' : 'bg-black/5 border-black/10'
+        }`}
       >
         <button onClick={() => setTheme('light')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
         <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
@@ -381,7 +432,7 @@ export default function Home() {
           />
         </motion.div>
 
-        {/* ICONOS INTERACTIVOS (SUSTITUYEN EL TEXTO - FOTO 3) */}
+        {/* ICONOS INTERACTIVOS CON ADAPTACIÓN MODO CLARO Y OSCURO */}
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -395,28 +446,40 @@ export default function Home() {
               whileTap={{ scale: 0.95 }}
               onClick={() => handleServiceClick(service.name)}
               title={service.name}
-              className="w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 rounded-2xl backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/15 flex items-center justify-center text-lg sm:text-xl md:text-2xl opacity-90 hover:opacity-100 hover:text-red-500 hover:border-red-500/60 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all group relative cursor-pointer"
+              className={`w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 rounded-2xl backdrop-blur-2xl border flex items-center justify-center text-lg sm:text-xl md:text-2xl transition-all group relative cursor-pointer ${
+                theme === 'dark'
+                  ? 'bg-white/10 border-white/15 text-white hover:text-red-500 hover:border-red-500/60 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)]'
+                  : 'bg-black/5 border-black/10 text-zinc-900 hover:text-red-600 hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]'
+              }`}
             >
               <i className={`fa-solid ${service.icon} group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]`}></i>
             </motion.button>
           ))}
         </motion.div>
 
-        {/* Buscador Interactivo con Liquid Glass */}
+        {/* Buscador Interactivo con Adaptación de Colores */}
         <motion.form 
           onSubmit={handleSearchSubmit}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-3xl backdrop-blur-3xl bg-white/10 dark:bg-black/40 border border-white/40 dark:border-white/20 rounded-full px-4 sm:px-6 md:px-10 py-3 md:py-5 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] focus-within:border-red-500/60 focus-within:shadow-[0_0_30px_rgba(239,68,68,0.25)] transition-all duration-500 relative overflow-hidden"
+          className={`w-full max-w-3xl backdrop-blur-3xl border rounded-full px-4 sm:px-6 md:px-10 py-3 md:py-5 flex items-center justify-between shadow-2xl focus-within:border-red-500/60 focus-within:shadow-[0_0_30px_rgba(239,68,68,0.25)] transition-all duration-500 relative overflow-hidden ${
+            theme === 'dark'
+              ? 'bg-black/40 border-white/20 text-white'
+              : 'bg-white/60 border-black/15 text-zinc-900'
+          }`}
         >
-          <div className="absolute top-0 left-1/4 w-1/2 h-px bg-linear-to-r from-transparent via-white/40 to-transparent"></div>
+          <div className="absolute top-0 left-1/4 w-1/2 h-px bg-linear-to-r from-transparent via-red-500/40 to-transparent"></div>
           <input 
             type="text" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t.searchPlaceholder} 
-            className="w-full bg-transparent border-none outline-none text-xs sm:text-sm md:text-lg font-normal tracking-wide placeholder-zinc-500 dark:placeholder-zinc-400 z-10" 
+            className={`w-full bg-transparent border-none outline-none text-xs sm:text-sm md:text-lg font-normal tracking-wide z-10 ${
+              theme === 'dark' 
+                ? 'placeholder-zinc-400 text-white' 
+                : 'placeholder-zinc-600 text-zinc-900'
+            }`} 
           />
           <button type="submit" className="opacity-70 hover:opacity-100 transition-opacity ml-2 sm:ml-4 cursor-pointer z-10" title="Buscar servicio">
             <i className="fa-solid fa-magnifying-glass text-lg md:text-2xl"></i>
@@ -424,7 +487,9 @@ export default function Home() {
         </motion.form>
 
         {/* Bloque de Texto de Servicios */}
-        <div className="w-full max-w-3xl text-[10px] sm:text-xs md:text-sm font-light leading-relaxed px-2 text-center opacity-75 pt-1">
+        <div className={`w-full max-w-3xl text-[10px] sm:text-xs md:text-sm font-light leading-relaxed px-2 text-center pt-1 ${
+          theme === 'dark' ? 'text-zinc-300 opacity-80' : 'text-zinc-800 opacity-90'
+        }`}>
           <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Branding")}>Branding</span> • <span>PNG</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Logotipos")}>Logotipos</span> • <span>Creatividad</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("UX/UI")}>UX/UI</span> • <span>PDF</span> • <span>Diseño Editorial</span> • <span>RGB</span> • 
           <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors ml-1" onClick={() => handleServiceClick("Landing Page")}>Landing Page</span> • <span>Vectorización</span> • <span>Calidad Premium</span> • <span>SVG</span> • <span>Flyers</span> • <span>AI</span>
         </div>
@@ -433,7 +498,9 @@ export default function Home() {
 
       {/* Footer Section */}
       <footer className="w-full px-4 md:px-10 py-4 flex flex-col items-center space-y-3 z-25 mt-4 md:mt-8">
-        <div className="flex items-center justify-center gap-5 md:gap-8 text-sm sm:text-base md:text-lg opacity-85">
+        <div className={`flex items-center justify-center gap-5 md:gap-8 text-sm sm:text-base md:text-lg ${
+          theme === 'dark' ? 'text-zinc-200' : 'text-zinc-800'
+        }`}>
           <a href="https://www.facebook.com/share/18szd7DaVA/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors" title="Facebook"><i className="fa-brands fa-facebook-f"></i></a>
           
           <a href="https://x.com/nudesign_02?s=11" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors flex items-center justify-center" title="X (Twitter)">
@@ -448,12 +515,14 @@ export default function Home() {
           <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors" title="WhatsApp"><i className="fa-brands fa-whatsapp"></i></a>
         </div>
 
-        <div className="text-[10px] md:text-xs opacity-50 font-light tracking-wide text-center">
+        <div className={`text-[10px] md:text-xs font-light tracking-wide text-center ${
+          theme === 'dark' ? 'text-zinc-400 opacity-60' : 'text-zinc-700 opacity-80'
+        }`}>
           {t.rights}
         </div>
       </footer>
 
-      {/* Floating Chat Now Button (Ligeramente Agrandado) */}
+      {/* Floating Chat Now Button */}
       <motion.div 
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -466,7 +535,11 @@ export default function Home() {
           href="https://wa.me/18294608316" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="backdrop-blur-3xl bg-white/15 dark:bg-white/10 border border-white/40 dark:border-white/20 px-4 sm:px-5 md:px-6 py-2.5 md:py-3.5 rounded-full flex items-center space-x-2.5 shadow-[0_10px_30px_rgba(0,0,0,0.4)] hover:border-red-500/60 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all group"
+          className={`backdrop-blur-3xl border px-4 sm:px-5 md:px-6 py-2.5 md:py-3.5 rounded-full flex items-center space-x-2.5 shadow-2xl hover:border-red-500/60 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all group ${
+            theme === 'dark'
+              ? 'bg-white/10 border-white/20 text-white'
+              : 'bg-white/80 border-black/15 text-zinc-900'
+          }`}
         >
           <div className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
             <Image 
