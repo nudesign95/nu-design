@@ -79,23 +79,72 @@ export default function Home() {
     setSearchQuery(serviceName);
   };
 
+  const schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: 'NU-Design Graphic',
+    alternateName: 'NU-Design',
+    url: 'https://nudesign.agency',
+    logo: 'https://nudesign.agency/icon-dark.svg',
+    image: 'https://nudesign.agency/og-portafolio.jpg',
+    telephone: '+18294608316',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'C. 1ra 35',
+      addressLocality: 'Santo Domingo',
+      postalCode: '10100',
+      addressCountry: 'DO',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: '18.4418',
+      longitude: '-69.9722',
+    },
+    sameAs: [
+      'https://www.instagram.com/nudesign_02/',
+      'https://www.facebook.com/share/18szd7DaVA/?mibextid=wwXIfr',
+      'https://x.com/nudesign_02?s=11',
+      'https://youtube.com/@anousleshow1680?si=BqJxqzF7533u7sx2',
+      'https://www.tiktok.com/@garicedume?is_from_webapp=1&sender_device=pc',
+      'https://do.linkedin.com/in/garic-edume-1141b2320'
+    ],
+    priceRange: '$$',
+    description: 'Dirección Creativa, Diseño Gráfico, Branding y Desarrollo Web de Alta Gama en Santo Domingo.',
+  };
+
   return (
-    <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-700 relative overflow-x-hidden py-4 md:py-6 ${theme === 'dark' ? 'bg-[#050000] text-zinc-100' : 'bg-[#e8e2dc] text-zinc-800'}`}>
+    <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-1000 relative overflow-x-hidden py-4 md:py-6 ${
+      theme === 'dark' 
+        ? 'bg-[#040001] text-zinc-100' 
+        : 'bg-[#e3e3e3] text-zinc-850'
+    }`}>
       
-      {/* Fondo con brillo ambiental animado */}
+      {/* Datos Estructurados Schema.org para Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+
+      {/* FONDO CINEMÁTICO APPLE STYLED */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 1.2 }}
         className="absolute inset-0 pointer-events-none overflow-hidden z-0"
       >
         {theme === 'dark' ? (
           <>
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-96 md:w-175 h-80 sm:h-96 md:h-175 bg-linear-to-tr from-red-700/30 via-red-900/20 to-transparent rounded-full blur-[80px] md:blur-[140px]"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-transparent via-[#050000]/60 to-[#030000]"></div>
+            {/* Gradiente Rojo Suave Cinemático */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-162.5 md:w-225 h-112.5 md:h-150 bg-linear-to-tr from-red-950/45 via-red-800/25 to-red-600/10 rounded-full blur-[120px] md:blur-[180px] transform -rotate-12"></div>
+            <div className="absolute top-1/4 left-1/3 w-87.5 h-87.5 bg-red-900/15 rounded-full blur-[140px]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#040001_85%)]"></div>
           </>
         ) : (
-          <div className="absolute top-1/4 right-1/4 w-80 sm:w-96 md:w-150 h-80 sm:h-96 md:h-150 bg-orange-200/50 rounded-full blur-[80px] md:blur-[120px]"></div>
+          <>
+            {/* Studio Lighting Style (Gris/Plateado Apple) */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 md:w-250 h-125 md:h-175 bg-linear-to-b from-white via-zinc-200/80 to-zinc-300/40 rounded-full blur-[100px] md:blur-[150px]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#d9d9d9_90%)]"></div>
+          </>
         )}
       </motion.div>
 
@@ -106,7 +155,6 @@ export default function Home() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40"
       >
-        {/* LOGO O NOMBRE EN MÓVIL Y NAVEGACIÓN EN ESCRITORIO */}
         <div className="flex items-center space-x-2">
           <span className="md:hidden font-bold text-sm tracking-widest uppercase">NU-DESIGN</span>
           <nav className="hidden md:flex items-center space-x-10 text-base font-medium">
@@ -121,10 +169,7 @@ export default function Home() {
           </nav>
         </div>
 
-        {/* ACCIONES Y MENÚS */}
         <div className="flex items-center space-x-3 md:space-x-5">
-          
-          {/* Selector de Idiomas (Escritorio) */}
           <div className="relative hidden md:block" ref={langMenuRef}>
             <button 
               onClick={() => setIsLangOpen(!isLangOpen)}
@@ -158,31 +203,30 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          {/* Botón WhatsApp (Escritorio) */}
+          {/* Botón WhatsApp con Liquid Glass */}
           <motion.a 
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             href="https://wa.me/18294608316" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="hidden sm:flex backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-4 md:px-6 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 shadow-lg hover:bg-white/20 transition-colors"
+            className="hidden sm:flex backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/30 dark:border-white/15 px-4 md:px-6 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 shadow-[0_8px_32px_0_rgba(0,0,0,0.2)] hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)] transition-all"
           >
             <i className="fa-brands fa-whatsapp text-emerald-400 text-base md:text-lg"></i>
             <span>{t.whatsapp}</span>
           </motion.a>
           
-          {/* Botón Cotización */}
+          {/* Botón Cotización con Liquid Glass */}
           <motion.div 
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-4 md:px-7 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-normal shadow-lg hover:bg-white/20 transition-colors cursor-pointer"
+            className="backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/30 dark:border-white/15 px-4 md:px-7 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-normal shadow-[0_8px_32px_0_rgba(0,0,0,0.2)] hover:border-red-500/50 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)] transition-all cursor-pointer"
           >
             <Link href="/cotizacion" className="w-full h-full block">
               {t.cotizacion}
             </Link>
           </motion.div>
 
-          {/* BOTÓN HAMBURGUESA PARA MÓVIL */}
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
             className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50"
@@ -193,7 +237,7 @@ export default function Home() {
         </div>
       </motion.header>
 
-      {/* MENÚ MÓVIL DESPLEGABLE (OVERLAY COMPLETO) */}
+      {/* MENÚ MÓVIL DESPLEGABLE */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div 
@@ -201,7 +245,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-30 bg-black/95 dark:bg-[#050000]/95 backdrop-blur-2xl flex flex-col justify-between p-8 pt-24 md:hidden"
+            className="fixed inset-0 z-30 bg-black/95 dark:bg-[#040001]/95 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden"
           >
             <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-white/10 pb-3 flex justify-between items-center">
@@ -222,7 +266,6 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* SELECCIÓN DE IDIOMAS EN MÓVIL */}
             <div className="flex flex-col space-y-4 pt-6 border-t border-white/10">
               <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
               <div className="flex items-center gap-3">
@@ -260,15 +303,15 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Theme Switcher (Fixed Right Side) */}
+      {/* Theme Switcher con Liquid Glass (Fixed Right Side) */}
       <motion.div 
         initial={{ x: 20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-2 md:space-y-3 z-30"
+        className="fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-2 md:space-y-3 z-30 p-1.5 rounded-full backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 shadow-2xl"
       >
         <button onClick={() => setTheme('light')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
-        <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-900 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
+        <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
       </motion.div>
 
       {/* Main Hero Section */}
@@ -286,7 +329,7 @@ export default function Home() {
             alt="NU-Design Icon" 
             width={112} 
             height={112} 
-            className="w-full h-full object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-105" 
+            className="w-full h-full object-contain drop-shadow-[0_10px_25px_rgba(255,0,0,0.25)] transition-transform duration-500 group-hover:scale-105" 
             priority
           />
         </motion.div>
@@ -323,22 +366,23 @@ export default function Home() {
           <i onClick={() => handleServiceClick("Desarrollo Web")} className="fa-solid fa-laptop-code hover:text-red-500 transition-colors cursor-pointer" title="Web Development"></i>
         </motion.div>
 
-        {/* Buscador interactivo conectado */}
+        {/* Buscador Interactivo con LIQUID GLASS Y BRILLO PERIMETRAL */}
         <motion.form 
           onSubmit={handleSearchSubmit}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-3xl backdrop-blur-2xl bg-white/5 dark:bg-black/30 border border-white/20 dark:border-white/15 rounded-full px-4 sm:px-6 md:px-10 py-3 md:py-5 flex items-center justify-between shadow-[0_20px_40px_rgba(0,0,0,0.4)] focus-within:border-white/60 transition-all"
+          className="w-full max-w-3xl backdrop-blur-3xl bg-white/10 dark:bg-black/40 border border-white/40 dark:border-white/20 rounded-full px-4 sm:px-6 md:px-10 py-3 md:py-5 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] focus-within:border-red-500/60 focus-within:shadow-[0_0_30px_rgba(239,68,68,0.25)] transition-all duration-500 relative overflow-hidden"
         >
+          <div className="absolute top-0 left-1/4 w-1/2 h-px bg-linear-to-r from-transparent via-white/40 to-transparent"></div>
           <input 
             type="text" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t.searchPlaceholder} 
-            className="w-full bg-transparent border-none outline-none text-xs sm:text-sm md:text-lg font-normal tracking-wide placeholder-zinc-400 dark:placeholder-zinc-500" 
+            className="w-full bg-transparent border-none outline-none text-xs sm:text-sm md:text-lg font-normal tracking-wide placeholder-zinc-500 dark:placeholder-zinc-400 z-10" 
           />
-          <button type="submit" className="opacity-70 hover:opacity-100 transition-opacity ml-2 sm:ml-4 cursor-pointer" title="Buscar servicio">
+          <button type="submit" className="opacity-70 hover:opacity-100 transition-opacity ml-2 sm:ml-4 cursor-pointer z-10" title="Buscar servicio">
             <i className="fa-solid fa-magnifying-glass text-lg md:text-2xl"></i>
           </button>
         </motion.form>
@@ -386,7 +430,7 @@ export default function Home() {
           href="https://wa.me/18294608316" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="backdrop-blur-2xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-3.5 sm:px-4 md:px-5 py-2 md:py-3 rounded-full flex items-center space-x-2 md:space-x-2.5 shadow-2xl transition-colors group"
+          className="backdrop-blur-3xl bg-white/15 dark:bg-white/10 border border-white/40 dark:border-white/20 px-3.5 sm:px-4 md:px-5 py-2 md:py-3 rounded-full flex items-center space-x-2 md:space-x-2.5 shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:border-red-500/50 transition-all group"
         >
           <div className="w-5 h-5 md:w-7 md:h-7 flex items-center justify-center">
             <Image 
