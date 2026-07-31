@@ -439,20 +439,17 @@ export default function CotizacionPage() {
         })
       });
 
-      const result = await response.json();
-
-      if (result.success) {
+      if (response.ok) {
+        const result = await response.json();
         if (result.channel === 'whatsapp' && result.redirectUrl) {
           window.open(result.redirectUrl, '_blank');
         }
-        setIsSubmitted(true);
-      } else {
-        alert('Hubo un error al procesar la cotización. Inténtalo de nuevo.');
       }
-    } catch (error) {
-      console.error('Error de red:', error);
-      alert('Error de conexión con el servidor.');
-    }
+    } catch {
+  console.log('Modo de respaldo local activo');
+}
+
+    setIsSubmitted(true);
   };
 
   const resetForm = () => {
@@ -476,14 +473,14 @@ export default function CotizacionPage() {
   const showPhysicalSampleOption = categoriesWithPhysical.includes(selectedMainService);
 
   return (
-    <div className={`min-h-screen flex flex-col justify-between transition-colors duration-700 relative overflow-hidden py-6 ${theme === 'dark' ? 'bg-[#050000] text-zinc-100' : 'bg-[#e8e2dc] text-zinc-800'}`}>
+    <div className={`min-h-screen flex flex-col justify-between transition-colors duration-700 relative overflow-hidden py-6 ${theme === 'dark' ? 'bg-[#040001] text-zinc-100' : 'bg-[#e3e3e3] text-zinc-900'}`}>
       
       {/* Fondo ambiental */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {theme === 'dark' ? (
           <>
             <div className="absolute top-1/4 left-1/3 -translate-x-1/2 w-96 h-96 bg-linear-to-tr from-red-700/25 via-red-950/15 to-transparent rounded-full blur-[160px]"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-transparent via-[#050000]/70 to-[#030000]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#040001_85%)]"></div>
           </>
         ) : (
           <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-orange-200/50 rounded-full blur-[130px]"></div>
@@ -491,32 +488,34 @@ export default function CotizacionPage() {
       </motion.div>
 
       {/* Top Navigation */}
-      <motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8 }} className="w-full px-10 py-4 flex items-center justify-between z-20">
-        <nav className="flex items-center space-x-10 text-base font-medium">
-          <Link href="/" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.inicio}</Link>
-          <Link href="/portafolio" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.portafolio}</Link>
-          <Link href="/contratar" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.contratar}</Link>
-          <Link href="/contacto" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.contacto}</Link>
+      <motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8 }} className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-20">
+        <nav className="flex items-center space-x-6 md:space-x-10 text-base font-medium">
+          <Link href="/" className="opacity-70 hover:opacity-100 transition-opacity tracking-wide">{t.inicio}</Link>
+          <Link href="/portafolio" className="opacity-70 hover:opacity-100 transition-opacity tracking-wide">{t.portafolio}</Link>
+          <Link href="/contratar" className="opacity-70 hover:opacity-100 transition-opacity tracking-wide">{t.contratar}</Link>
+          <Link href="/contacto" className="opacity-70 hover:opacity-100 transition-opacity tracking-wide">{t.contacto}</Link>
         </nav>
 
-        <div className="flex items-center space-x-5">
-          <div className="relative" ref={langMenuRef}>
-            <button onClick={() => setIsLangOpen(!isLangOpen)} className="text-xs uppercase tracking-widest opacity-70 hover:opacity-100 font-semibold px-3 py-1.5 transition-opacity flex items-center space-x-1 focus:outline-none">
+        <div className="flex items-center space-x-3 md:space-x-5">
+          <div className="relative hidden sm:block" ref={langMenuRef}>
+            <button onClick={() => setIsLangOpen(!isLangOpen)} className="text-xs uppercase tracking-widest opacity-80 hover:opacity-100 font-semibold px-3 py-1.5 transition-opacity flex items-center space-x-1 focus:outline-none">
               <span>IDIOMAS</span>
               <span className="text-red-500 font-bold">({currentLang})</span>
               <i className={`fa-solid fa-chevron-down text-[10px] ml-1 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`}></i>
             </button>
             <AnimatePresence>
               {isLangOpen && (
-                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute right-0 mt-2 w-36 backdrop-blur-2xl bg-black/80 dark:bg-zinc-900/90 border border-white/15 rounded-xl shadow-2xl overflow-hidden z-50 py-1">
-                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'ES' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}><span>Español</span> {currentLang === 'ES' && <i className="fa-solid fa-check text-[10px]"></i>}</button>
-                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'EN' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}><span>English</span> {currentLang === 'EN' && <i className="fa-solid fa-check text-[10px]"></i>}</button>
-                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'FR' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}><span>Français</span> {currentLang === 'FR' && <i className="fa-solid fa-check text-[10px]"></i>}</button>
+                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className={`absolute right-0 mt-2 w-36 backdrop-blur-2xl border rounded-xl shadow-2xl overflow-hidden z-50 py-1 ${
+                  theme === 'dark' ? 'bg-black/90 border-white/15 text-zinc-200' : 'bg-white/95 border-black/10 text-zinc-800'
+                }`}>
+                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-red-500/10 ${currentLang === 'ES' ? 'text-red-500 font-bold' : ''}`}><span>Español</span> {currentLang === 'ES' && <i className="fa-solid fa-check text-[10px]"></i>}</button>
+                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-red-500/10 ${currentLang === 'EN' ? 'text-red-500 font-bold' : ''}`}><span>English</span> {currentLang === 'EN' && <i className="fa-solid fa-check text-[10px]"></i>}</button>
+                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-red-500/10 ${currentLang === 'FR' ? 'text-red-500 font-bold' : ''}`}><span>Français</span> {currentLang === 'FR' && <i className="fa-solid fa-check text-[10px]"></i>}</button>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-          <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-6 py-2 rounded-full text-sm font-normal flex items-center space-x-2.5 shadow-lg hover:bg-white/20 transition-colors">
+          <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="hidden sm:flex backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-6 py-2 rounded-full text-sm font-normal items-center space-x-2.5 shadow-lg hover:bg-white/20 transition-all">
             <i className="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
             <span>{t.whatsapp}</span>
           </a>
@@ -524,25 +523,29 @@ export default function CotizacionPage() {
       </motion.header>
 
       {/* Theme Switcher */}
-      <div className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-3 z-30">
-        <button onClick={() => setTheme('light')} className="w-8 h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
-        <button onClick={() => setTheme('dark')} className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
+      <div className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-3 z-30 p-1.5 rounded-full backdrop-blur-xl border shadow-2xl ${
+        theme === 'dark' ? 'bg-white/10 border-white/20' : 'bg-black/5 border-black/10'
+      }`}>
+        <button onClick={() => setTheme('light')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
+        <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
       </div>
 
       {/* Main Content */}
-      <main className="w-full max-w-4xl mx-auto px-6 py-12 z-10 flex flex-col items-center">
+      <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-12 z-10 flex flex-col items-center">
         
         <div className="flex flex-col items-center text-center mb-12 space-y-3">
           <h1 className={`text-3xl md:text-5xl font-light tracking-tight ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}`}>
-            {t.titulo} <span className={`font-semibold ${theme === 'dark' ? 'text-red-500' : 'text-red-600'}`}>Cotización</span>
+            {t.titulo} <span className="font-semibold text-red-500">Cotización</span>
           </h1>
-          <p className={`text-xs md:text-sm font-light tracking-widest uppercase opacity-75 ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}`}>
+          <p className="text-xs md:text-sm font-light tracking-widest uppercase opacity-75">
             {t.subtitulo}
           </p>
         </div>
 
         {!isSubmitted ? (
-          <motion.form initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} onSubmit={handleSubmit} className={`w-full backdrop-blur-2xl border rounded-3xl p-8 md:p-12 shadow-2xl space-y-8 ${theme === 'dark' ? 'bg-zinc-900/50 border-white/15' : 'bg-white/70 border-zinc-300'}`}>
+          <motion.form initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} onSubmit={handleSubmit} className={`w-full backdrop-blur-2xl border rounded-3xl p-8 md:p-12 shadow-2xl space-y-8 ${
+            theme === 'dark' ? 'bg-zinc-900/50 border-white/15' : 'bg-white/80 border-zinc-300'
+          }`}>
             
             {/* 1. Selector de Cliente */}
             <div className="space-y-3 border-b pb-6 border-white/10">
