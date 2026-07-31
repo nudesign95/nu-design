@@ -4,10 +4,26 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const categories = [
+  'Todos',
+  'Branding',
+  'Diseño Web',
+  'Packaging',
+  'Diseño Editorial',
+  'Gran Formato',
+  'Redes Sociales'
+];
+
 const projects = [
-  { id: 1, title: 'Branding Identidad', category: 'Branding', image: '/og-portafolio.jpg' },
-  { id: 2, title: 'UI/UX Rediseño Web', category: 'Diseño Web', image: '/og-portafolio.jpg' },
-  { id: 3, title: 'Packaging Premium', category: 'Packaging', image: '/og-portafolio.jpg' },
+  { id: 1, title: 'Branding & Identidad Corporativa', category: 'Branding', image: '/og-portafolio.jpg' },
+  { id: 2, title: 'Rediseño Web UI/UX', category: 'Diseño Web', image: '/og-portafolio.jpg' },
+  { id: 3, title: 'Packaging Premium & Cajas', category: 'Packaging', image: '/og-portafolio.jpg' },
+  { id: 4, title: 'Diseño de Revista & Editorial', category: 'Diseño Editorial', image: '/og-portafolio.jpg' },
+  { id: 5, title: 'Lona Publicitaria & Gran Formato', category: 'Gran Formato', image: '/og-portafolio.jpg' },
+  { id: 6, title: 'Kit de Redes Sociales & Carruseles', category: 'Redes Sociales', image: '/og-portafolio.jpg' },
+  { id: 7, title: 'Isologo & Manual de Marca', category: 'Branding', image: '/og-portafolio.jpg' },
+  { id: 8, title: 'Landing Page de Alta Conversión', category: 'Diseño Web', image: '/og-portafolio.jpg' },
+  { id: 9, title: 'Etiquetas & Empaques Personalizados', category: 'Packaging', image: '/og-portafolio.jpg' }
 ];
 
 export default function PortafolioPage() {
@@ -19,7 +35,7 @@ export default function PortafolioPage() {
 
   const langMenuRef = useRef<HTMLDivElement>(null);
 
-  // Leer tema guardado al cargar
+  // Leer tema guardado
   useEffect(() => {
     const savedTheme = localStorage.getItem('nu_theme') as 'dark' | 'light' | null;
     if (savedTheme) {
@@ -46,6 +62,11 @@ export default function PortafolioPage() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Lógica de filtrado de proyectos
+  const filteredProjects = selectedCategory === 'Todos'
+    ? projects
+    : projects.filter(p => p.category === selectedCategory);
 
   return (
     <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-1000 relative overflow-x-hidden py-4 md:py-6 ${
@@ -130,7 +151,7 @@ export default function PortafolioPage() {
 
       {/* Main Portafolio */}
       <main className="w-full max-w-6xl mx-auto px-4 py-8 z-10 flex flex-col items-center">
-        <div className="text-center mb-10 space-y-2">
+        <div className="text-center mb-8 space-y-2">
           <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-3">
             <Image src={theme === 'dark' ? '/icon-dark.svg' : '/icon-light.svg'} alt="NU-Design" width={80} height={80} className="w-full h-full object-contain" />
           </div>
@@ -138,18 +159,49 @@ export default function PortafolioPage() {
           <p className="text-[10px] md:text-xs font-light tracking-widest uppercase opacity-75">Explora nuestra huella visual y ejecuciones de alta gama</p>
         </div>
 
-        {/* Grid de Proyectos */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-          {projects.map((p) => (
-            <div key={p.id} className={`rounded-2xl overflow-hidden border p-4 backdrop-blur-xl ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10' : 'bg-white/60 border-black/10'}`}>
-              <div className="relative w-full h-48 rounded-xl overflow-hidden mb-3">
-                <Image src={p.image} alt={p.title} fill className="object-cover" />
-              </div>
-              <h3 className="text-sm font-semibold">{p.title}</h3>
-              <span className="text-[10px] opacity-60 uppercase tracking-wider">{p.category}</span>
-            </div>
+        {/* Botones de Filtro de Categorías */}
+        <div className="flex items-center justify-center flex-wrap gap-2 sm:gap-3 mb-10 w-full">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all backdrop-blur-md border ${
+                selectedCategory === cat
+                  ? 'bg-red-600 border-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)]'
+                  : theme === 'dark'
+                  ? 'bg-white/5 border-white/10 text-zinc-300 hover:border-white/30 hover:bg-white/10'
+                  : 'bg-black/5 border-black/10 text-zinc-700 hover:border-black/30 hover:bg-black/10'
+              }`}
+            >
+              {cat}
+            </button>
           ))}
         </div>
+
+        {/* Grid de Proyectos Filtrados */}
+        <motion.div layout className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <AnimatePresence>
+            {filteredProjects.map((p) => (
+              <motion.div
+                key={p.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                className={`rounded-2xl overflow-hidden border p-4 backdrop-blur-xl transition-all hover:border-red-500/50 ${
+                  theme === 'dark' ? 'bg-zinc-900/40 border-white/10' : 'bg-white/60 border-black/10'
+                }`}
+              >
+                <div className="relative w-full h-48 rounded-xl overflow-hidden mb-3">
+                  <Image src={p.image} alt={p.title} fill className="object-cover" />
+                </div>
+                <h3 className="text-sm font-semibold">{p.title}</h3>
+                <span className="text-[10px] text-red-500 font-semibold uppercase tracking-wider block mt-1">{p.category}</span>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </main>
 
       {/* Footer Unificado en 1 Sola Línea */}
