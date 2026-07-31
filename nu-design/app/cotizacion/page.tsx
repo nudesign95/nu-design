@@ -3,6 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { createClient } from '@supabase/supabase-js';
+
+// Inicialización limpia y directa de Supabase sin importar de archivos externos
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://m3c3m0sc0kic0.supabase.co';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_ugAYPxVOmXe9lwvViLp6wA_Rytg9jDi';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const translations = {
   ES: {
@@ -347,7 +353,7 @@ export default function CotizacionPage() {
 
   const langMenuRef = useRef<HTMLDivElement>(null);
 
-  // 1. Cargar el tema guardado en localStorage al iniciar
+  // 1. Cargar el tema guardado al iniciar
   useEffect(() => {
     const savedTheme = localStorage.getItem('nu_theme') as 'dark' | 'light' | null;
     if (savedTheme) {
@@ -355,7 +361,7 @@ export default function CotizacionPage() {
     }
   }, []);
 
-  // 2. Guardar en localStorage cuando el usuario cambie el tema
+  // 2. Guardar cambio de tema
   useEffect(() => {
     localStorage.setItem('nu_theme', theme);
     if (theme === 'dark') {
@@ -384,10 +390,39 @@ export default function CotizacionPage() {
     }
   };
 
-  const handleClientLookup = (val: string) => {
+  // 🔍 BÚSQUEDA HÍBRIDA DE CLIENTES (Paso 1: Supabase / Paso 2: LocalStorage respaldo)
+  const handleClientLookup = async (val: string) => {
     setIdentifier(val);
     if (val.length > 2) {
       const searchKey = val.toLowerCase().trim();
+
+      // Búsqueda en Supabase
+      try {
+        if (supabase) {
+          const { data } = await supabase
+            .from('clients')
+            .select('*')
+            .or(`phone.ilike.%${searchKey}%,email.ilike.%${searchKey}%,company_name.ilike.%${searchKey}%`)
+            .limit(1);
+
+          if (data && data.length > 0) {
+            const client = data[0];
+            setCompanyName(client.company_name || '');
+            setContactName(client.contact_name || '');
+            setSelectedCountry(client.country || allowedCountries[0].name);
+            setSelectedCity(client.city || allowedCountries[0].cities[0]);
+            setCountryCode(client.country_code || allowedCountries[0].code);
+            setContactPhone(client.phone || '');
+            setContactEmail(client.email || '');
+            setIsLocked(true);
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Búsqueda en Supabase no disponible, usando respaldo local.", err);
+      }
+
+      // Respaldo LocalStorage si no encontró en Supabase
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key && key.startsWith('client_')) {
@@ -447,15 +482,31 @@ export default function CotizacionPage() {
       return;
     }
     
-    // Guardar cliente en almacenamiento local
+    // 💾 Guardar cliente en LocalStorage y Supabase
     if (clientType === 'nuevo' && (contactPhone || companyName)) {
       const clientData = { companyName, contactName, country: selectedCountry, city: selectedCity, code: countryCode, phone: contactPhone, email: contactEmail };
       if (contactPhone) localStorage.setItem(`client_${contactPhone}`, JSON.stringify(clientData));
       if (contactEmail) localStorage.setItem(`client_${contactEmail}`, JSON.stringify(clientData));
       if (companyName) localStorage.setItem(`client_${companyName.toLowerCase()}`, JSON.stringify(clientData));
+
+      try {
+        if (supabase) {
+          await supabase.from('clients').upsert({
+            company_name: companyName,
+            contact_name: contactName,
+            country: selectedCountry,
+            city: selectedCity,
+            country_code: countryCode,
+            phone: contactPhone,
+            email: contactEmail
+          }, { onConflict: 'phone' });
+        }
+      } catch (err) {
+        console.warn("No se pudo sincronizar en Supabase", err);
+      }
     }
 
-    // FLUJO COTIZACIÓN HABITUAL (WhatsApp / Email)
+    // FLUJO COTIZACIÓN HABITUAL
     try {
       const response = await fetch('/api/cotizar', {
         method: 'POST',
