@@ -44,12 +44,60 @@ const translations = {
 };
 
 const serviceIcons = [
-  { name: "Idea y Concepto", icon: "fa-lightbulb", label: "Idea & Concept" },
-  { name: "Branding", icon: "fa-pen-nib", label: "Branding" },
-  { name: "Diseño Gráfico", icon: "fa-palette", label: "Graphic Design" },
-  { name: "Diseño UI/UX", icon: "fa-desktop", label: "UI/UX Design" },
-  { name: "Layout y Diagramación", icon: "fa-layer-group", label: "Layout" },
-  { name: "Desarrollo Web", icon: "fa-laptop-code", label: "Web Dev" },
+  { 
+    name: "Idea y Concepto", 
+    label: "Idea & Concept",
+    svg: (
+      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+        <path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7zM9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1z"/>
+      </svg>
+    )
+  },
+  { 
+    name: "Branding", 
+    label: "Branding",
+    svg: (
+      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+      </svg>
+    )
+  },
+  { 
+    name: "Diseño Gráfico", 
+    label: "Graphic Design",
+    svg: (
+      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+        <path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10c1.38 0 2.5-1.12 2.5-2.5 0-.61-.23-1.21-.64-1.67-.38-.45-.6-.1-.6-.78 0-.55.45-1 1-1h1.74c3.31 0 6-2.69 6-6 0-4.96-4.49-9.05-10-9.05zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 8 6.5 8s1.5.67 1.5 1.5S7.33 11 6.5 11zm3-4C8.67 7 8 6.33 8 5.5S8.67 4 9.5 4s1.5.67 1.5 1.5S10.33 7 9.5 7zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 4 14.5 4s1.5.67 1.5 1.5S15.33 7 14.5 7zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 8 17.5 8s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+      </svg>
+    )
+  },
+  { 
+    name: "Diseño UI/UX", 
+    label: "UI/UX Design",
+    svg: (
+      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+        <path d="M20 3H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v2h8v-2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H4V5h16v12z"/>
+      </svg>
+    )
+  },
+  { 
+    name: "Layout y Diagramación", 
+    label: "Layout",
+    svg: (
+      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+        <path d="M4 11h5V5H4v6zm0 7h5v-5H4v6zm6 0h10v-5H10v6zm6-13v6h4V5h-4zm-6 6h4V5h-4v6z"/>
+      </svg>
+    )
+  },
+  { 
+    name: "Desarrollo Web", 
+    label: "Web Dev",
+    svg: (
+      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+        <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+      </svg>
+    )
+  },
 ];
 
 export default function Home() {
@@ -243,7 +291,7 @@ export default function Home() {
 
         <div className="flex items-center space-x-3 md:space-x-4">
           
-          {/* Selector de IDIOMAS con Adaptación a Light Mode */}
+          {/* Selector de IDIOMAS */}
           <div className="relative hidden md:block" ref={langMenuRef}>
             <motion.button 
               whileHover={{ scale: 1.05 }}
@@ -257,7 +305,6 @@ export default function Home() {
             >
               <span>IDIOMAS</span>
               <span className="text-red-500 font-bold ml-1">({currentLang})</span>
-              <i className={`fa-solid fa-chevron-down text-[10px] ml-1 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`}></i>
             </motion.button>
 
             <AnimatePresence>
@@ -274,13 +321,13 @@ export default function Home() {
                   }`}
                 >
                   <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-red-500/10 ${currentLang === 'ES' ? 'text-red-500 font-bold' : ''}`}>
-                    <span>Español</span> {currentLang === 'ES' && <i className="fa-solid fa-check text-[10px]"></i>}
+                    <span>Español</span>
                   </button>
                   <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-red-500/10 ${currentLang === 'EN' ? 'text-red-500 font-bold' : ''}`}>
-                    <span>English</span> {currentLang === 'EN' && <i className="fa-solid fa-check text-[10px]"></i>}
+                    <span>English</span>
                   </button>
                   <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-red-500/10 ${currentLang === 'FR' ? 'text-red-500 font-bold' : ''}`}>
-                    <span>Français</span> {currentLang === 'FR' && <i className="fa-solid fa-check text-[10px]"></i>}
+                    <span>Français</span>
                   </button>
                 </motion.div>
               )}
@@ -300,7 +347,6 @@ export default function Home() {
                 : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]'
             }`}
           >
-            <i className="fa-brands fa-whatsapp text-emerald-500 text-base md:text-lg"></i>
             <span>{t.whatsapp}</span>
           </motion.a>
           
@@ -323,10 +369,10 @@ export default function Home() {
 
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50"
+            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50 text-white"
             aria-label="Abrir Menú"
           >
-            <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+            ☰
           </button>
         </div>
       </motion.header>
@@ -346,58 +392,33 @@ export default function Home() {
             <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>{t.inicio}</span>
-                <i className="fa-solid fa-arrow-right text-sm"></i>
+                <span>→</span>
               </Link>
               <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>{t.portafolio}</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>{t.contratar}</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>{t.contacto}</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/utilidades" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>{t.utilidades}</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
             </div>
 
             <div className="flex flex-col space-y-4 pt-6 border-t border-zinc-500/20">
               <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
               <div className="flex items-center gap-3">
-                <button 
-                  onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}
-                >
-                  Español
-                </button>
-                <button 
-                  onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}
-                >
-                  English
-                </button>
-                <button 
-                  onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}
-                >
-                  Français
-                </button>
+                <button onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Español</button>
+                <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
+                <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
               </div>
-
-              <a 
-                href="https://wa.me/18294608316" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="mt-4 w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 py-3 rounded-full flex items-center justify-center space-x-2 text-sm font-medium"
-              >
-                <i className="fa-brands fa-whatsapp text-lg"></i>
-                <span>{t.whatsapp}</span>
-              </a>
             </div>
           </motion.div>
         )}
@@ -453,7 +474,7 @@ export default function Home() {
           />
         </motion.div>
 
-        {/* ICONOS INTERACTIVOS CON ADAPTACIÓN MODO CLARO Y OSCURO */}
+        {/* ICONOS INTERACTIVOS VISIBLES CON SVG NATIVO */}
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -467,18 +488,18 @@ export default function Home() {
               whileTap={{ scale: 0.95 }}
               onClick={() => handleServiceClick(service.name)}
               title={service.name}
-              className={`w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 rounded-2xl backdrop-blur-2xl border flex items-center justify-center text-lg sm:text-xl md:text-2xl transition-all group relative cursor-pointer ${
+              className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl backdrop-blur-2xl border flex items-center justify-center transition-all group relative cursor-pointer ${
                 theme === 'dark'
-                  ? 'bg-white/10 border-white/15 text-white hover:text-red-500 hover:border-red-500/60 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)]'
-                  : 'bg-black/5 border-black/10 text-zinc-900 hover:text-red-600 hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]'
+                  ? 'bg-white/10 border-white/20 text-white hover:text-red-500 hover:border-red-500/60 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)]'
+                  : 'bg-black/5 border-black/15 text-zinc-900 hover:text-red-600 hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]'
               }`}
             >
-              <i className={`fa-solid ${service.icon} group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]`}></i>
+              {service.svg}
             </motion.button>
           ))}
         </motion.div>
 
-        {/* Buscador Interactivo con Adaptación de Colores */}
+        {/* Buscador Interactivo */}
         <motion.form 
           onSubmit={handleSearchSubmit}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -490,7 +511,6 @@ export default function Home() {
               : 'bg-white/60 border-black/15 text-zinc-900'
           }`}
         >
-          <div className="absolute top-0 left-1/4 w-1/2 h-px bg-linear-to-r from-transparent via-red-500/40 to-transparent"></div>
           <input 
             type="text" 
             value={searchQuery}
@@ -502,9 +522,7 @@ export default function Home() {
                 : 'placeholder-zinc-600 text-zinc-900'
             }`} 
           />
-          <button type="submit" className="opacity-70 hover:opacity-100 transition-opacity ml-2 sm:ml-4 cursor-pointer z-10" title="Buscar servicio">
-            <i className="fa-solid fa-magnifying-glass text-lg md:text-2xl"></i>
-          </button>
+          <button type="submit" className="text-red-500 font-bold text-lg md:text-2xl ml-2">🔍</button>
         </motion.form>
 
         {/* Bloque de Texto de Servicios */}
@@ -519,23 +537,6 @@ export default function Home() {
 
       {/* Footer Section */}
       <footer className="w-full px-4 md:px-10 py-4 flex flex-col items-center space-y-3 z-25 mt-4 md:mt-8">
-        <div className={`flex items-center justify-center gap-5 md:gap-8 text-sm sm:text-base md:text-lg ${
-          theme === 'dark' ? 'text-zinc-200' : 'text-zinc-800'
-        }`}>
-          <a href="https://www.facebook.com/share/18szd7DaVA/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors" title="Facebook"><i className="fa-brands fa-facebook-f"></i></a>
-          
-          <a href="https://x.com/nudesign_02?s=11" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors flex items-center justify-center" title="X (Twitter)">
-            <svg className="w-3.5 h-3.5 md:w-4 md:h-4 fill-current" viewBox="0 0 24 24">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </a>
-
-          <a href="https://www.instagram.com/nudesign_02/" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors" title="Instagram"><i className="fa-brands fa-instagram"></i></a>
-          <a href="https://youtube.com/@anousleshow1680?si=BqJxqzF7533u7sx2" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors" title="YouTube"><i className="fa-brands fa-youtube"></i></a>
-          <a href="https://www.tiktok.com/@garicedume?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors" title="TikTok"><i className="fa-brands fa-tiktok"></i></a>
-          <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors" title="WhatsApp"><i className="fa-brands fa-whatsapp"></i></a>
-        </div>
-
         <div className={`text-[10px] md:text-xs font-light tracking-wide text-center ${
           theme === 'dark' ? 'text-zinc-400 opacity-60' : 'text-zinc-700 opacity-80'
         }`}>

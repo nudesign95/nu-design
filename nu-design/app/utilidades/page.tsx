@@ -14,10 +14,10 @@ interface Preset {
 }
 
 const PRESETS: Preset[] = [
-  { name: "Tarjeta de Presentación", width: 3.5, height: 2, unit: "pulg" },
   { name: "Carta (Letter)", width: 8.5, height: 11, unit: "pulg" },
   { name: "Oficio (Legal)", width: 8.5, height: 14, unit: "pulg" },
   { name: "Tabloide (11x17)", width: 11, height: 17, unit: "pulg" },
+  { name: "Super Tabloide (12x18)", width: 12, height: 18, unit: "pulg" },
   { name: "Poster Estándar", width: 18, height: 24, unit: "pulg" },
   { name: "Banner Grande (24x50)", width: 24, height: 50, unit: "pulg" },
   { name: "A4 Internacional", width: 21, height: 29.7, unit: "cm" }
@@ -29,13 +29,18 @@ export default function UtilidadesPage() {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Estados del Canvas / Lienzo
+  // 1. Hoja Principal (Pliego)
+  const [sheetWidth, setSheetWidth] = useState<number>(8.5);
+  const [sheetHeight, setSheetHeight] = useState<number>(11);
   const [unit, setUnit] = useState<UnitType>('pulg');
-  const [canvasWidth, setCanvasWidth] = useState<number>(8.5);
-  const [canvasHeight, setCanvasHeight] = useState<number>(11);
   const [selectedPreset, setSelectedPreset] = useState<string>("Carta (Letter)");
 
-  // Archivo y Referencia
+  // 2. Pieza / Elemento a imprimir (Ej. Tarjeta 3.5x2)
+  const [pieceWidth, setPieceWidth] = useState<number>(3.5);
+  const [pieceHeight, setPieceHeight] = useState<number>(2);
+  const [rotatePiece, setRotatePiece] = useState<boolean>(false);
+
+  // Archivo
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string>('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -60,24 +65,21 @@ export default function UtilidadesPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Manejador de Preajustes
   const handlePresetChange = (presetName: string) => {
     setSelectedPreset(presetName);
     const found = PRESETS.find(p => p.name === presetName);
     if (found) {
-      setCanvasWidth(found.width);
-      setCanvasHeight(found.height);
+      setSheetWidth(found.width);
+      setSheetHeight(found.height);
       setUnit(found.unit);
     }
   };
 
-  // Manejador de Archivos (Máximo 5 MB)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      const fileSizeMB = selectedFile.size / (1024 * 1024);
-      if (fileSizeMB > 5) {
-        setFileError('⚠️ El archivo supera el límite de 5 MB permitido. El sistema lo ha rechazado automáticamente.');
+      if (selectedFile.size / (1024 * 1024) > 5) {
+        setFileError('⚠️ Archivo mayor a 5 MB. Rechazado automáticamente.');
         setFile(null);
         setPreviewUrl(null);
       } else {
@@ -85,24 +87,37 @@ export default function UtilidadesPage() {
         setFile(selectedFile);
         if (selectedFile.type.startsWith('image/')) {
           setPreviewUrl(URL.createObjectURL(selectedFile));
-        } else {
-          setPreviewUrl(null);
         }
       }
     }
   };
 
-  // Cálculo de escala máxima para abarcar la pantalla
-  const maxDisplayWidth = 520;
-  const maxDisplayHeight = 420;
-  const aspectRatio = canvasWidth / (canvasHeight || 1);
+  // -------------------------------------------------------------
+  // CÁLCULO DE MULTIPLICACIÓN AUTOMÁTICA
+  // -------------------------------------------------------------
+  const actualPW = rotatePiece ? pieceHeight : pieceWidth;
+  const actualPH = rotatePiece ? pieceWidth : pieceHeight;
+
+  const cols = Math.floor(sheetWidth / (actualPW || 1));
+  const rows = Math.floor(sheetHeight / (actualPH || 1));
+  const totalItems = Math.max(0, cols * rows);
+
+  // Porcentaje de aprovechamiento del papel
+  const usedArea = totalItems * (actualPW * actualPH);
+  const totalArea = sheetWidth * sheetHeight;
+  const efficiencyPercentage = Math.min(100, Math.round((usedArea / (totalArea || 1)) * 100));
+
+  // Escala en pantalla
+  const maxDisplayWidth = 500;
+  const maxDisplayHeight = 400;
+  const sheetRatio = sheetWidth / (sheetHeight || 1);
   
   let displayWidth = maxDisplayWidth;
-  let displayHeight = maxDisplayWidth / aspectRatio;
+  let displayHeight = maxDisplayWidth / sheetRatio;
 
   if (displayHeight > maxDisplayHeight) {
     displayHeight = maxDisplayHeight;
-    displayWidth = maxDisplayHeight * aspectRatio;
+    displayWidth = maxDisplayHeight * sheetRatio;
   }
 
   return (
@@ -222,48 +237,64 @@ export default function UtilidadesPage() {
       {/* Main Content */}
       <main className="w-full max-w-7xl mx-auto px-4 md:px-6 py-10 z-10 flex flex-col items-center">
         
-        <div className="text-center mb-10 space-y-2">
+        <div className="text-center mb-8 space-y-2">
           <h1 className={`text-3xl md:text-5xl font-light tracking-tight ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}`}>
-            Simulador de <span className="font-semibold text-red-500">Medidas & Canvas</span>
+            Simulador de <span className="font-semibold text-red-500">Pliegos & Multi-Impresión</span>
           </h1>
           <p className="text-xs md:text-sm font-light tracking-widest uppercase opacity-75">
-            Visualiza la escala real de tu proyecto gráfico antes de cotizar
+            Calcula y visualiza la cantidad exacta de piezas que rinde tu pliego de papel
           </p>
         </div>
 
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Panel de Controles */}
-          <div className={`lg:col-span-4 p-6 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/80 border-zinc-300'}`}>
+          <div className={`lg:col-span-4 p-6 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-5 ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/80 border-zinc-300'}`}>
             
-            {/* Preajustes */}
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">Tamaños Estándar</label>
-              <select value={selectedPreset} onChange={(e) => handlePresetChange(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
-                <option value="Personalizado">Personalizado (Ingresar medidas)</option>
+            {/* 1. Medida del Pliego */}
+            <div className="space-y-3">
+              <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">1. Tamaño del Pliego / Hoja</label>
+              <select value={selectedPreset} onChange={(e) => handlePresetChange(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-2.5 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
+                <option value="Personalizado">Personalizado</option>
                 {PRESETS.map((p, idx) => (
                   <option key={idx} value={p.name} className="bg-zinc-900 text-white">{p.name} ({p.width} x {p.height} {p.unit})</option>
                 ))}
               </select>
-            </div>
 
-            {/* Medidas Personalizadas */}
-            <div className="space-y-3">
-              <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">Dimensiones Personalizadas</label>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <span className="text-[10px] uppercase opacity-60 block mb-1">Ancho</span>
-                  <input type="number" step="0.1" value={canvasWidth} onChange={(e) => { setCanvasWidth(Number(e.target.value)); setSelectedPreset("Personalizado"); }} className={`w-full bg-transparent border rounded-xl px-4 py-2.5 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
+                  <span className="text-[10px] uppercase opacity-60 block mb-1">Ancho Hoja</span>
+                  <input type="number" step="0.1" value={sheetWidth} onChange={(e) => { setSheetWidth(Number(e.target.value)); setSelectedPreset("Personalizado"); }} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase opacity-60 block mb-1">Alto</span>
-                  <input type="number" step="0.1" value={canvasHeight} onChange={(e) => { setCanvasHeight(Number(e.target.value)); setSelectedPreset("Personalizado"); }} className={`w-full bg-transparent border rounded-xl px-4 py-2.5 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
+                  <span className="text-[10px] uppercase opacity-60 block mb-1">Alto Hoja</span>
+                  <input type="number" step="0.1" value={sheetHeight} onChange={(e) => { setSheetHeight(Number(e.target.value)); setSelectedPreset("Personalizado"); }} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
                 </div>
               </div>
             </div>
 
-            {/* Selector de Unidades */}
-            <div className="space-y-2">
+            {/* 2. Medida de la Pieza */}
+            <div className="space-y-3 border-t pt-4 border-white/10">
+              <div className="flex justify-between items-center">
+                <label className="text-xs uppercase tracking-widest font-semibold opacity-70">2. Tamaño de la Pieza</label>
+                <button type="button" onClick={() => setRotatePiece(!rotatePiece)} className="text-[10px] font-semibold text-red-500 hover:underline">
+                  🔄 Rotar Pieza ({rotatePiece ? 'Vertical' : 'Horizontal'})
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <span className="text-[10px] uppercase opacity-60 block mb-1">Ancho Pieza</span>
+                  <input type="number" step="0.1" value={pieceWidth} onChange={(e) => setPieceWidth(Number(e.target.value))} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase opacity-60 block mb-1">Alto Pieza</span>
+                  <input type="number" step="0.1" value={pieceHeight} onChange={(e) => setPieceHeight(Number(e.target.value))} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
+                </div>
+              </div>
+            </div>
+
+            {/* Unidades */}
+            <div className="space-y-2 border-t pt-4 border-white/10">
               <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">Unidad de Medida</label>
               <div className="grid grid-cols-5 gap-1.5">
                 {(['pulg', 'cm', 'mm', 'pies', 'yardas'] as const).map((u) => (
@@ -275,57 +306,101 @@ export default function UtilidadesPage() {
             </div>
 
             {/* Cargar Archivo de Referencia */}
-            <div className="space-y-2 border-t pt-5 border-white/10">
-              <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">Adjuntar Arte/Referencia (Máx 5 MB)</label>
-              <input type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" onChange={handleFileChange} className="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-600 file:text-white hover:file:bg-red-700 cursor-pointer" />
-              {fileError && <p className="text-[11px] text-red-500 font-semibold leading-relaxed mt-2">{fileError}</p>}
-              {file && <p className="text-[11px] text-emerald-400 font-semibold mt-1">✓ Archivo cargado correctamente ({file.name})</p>}
+            <div className="space-y-2 border-t pt-4 border-white/10">
+              <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">Subir Arte para Multiplicar (Máx 5 MB)</label>
+              <input type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" onChange={handleFileChange} className="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-600 file:text-white cursor-pointer" />
+              {fileError && <p className="text-[11px] text-red-500 font-semibold mt-1">{fileError}</p>}
+              {file && <p className="text-[11px] text-emerald-400 font-semibold mt-1">✓ Arte cargado ({file.name})</p>}
             </div>
 
             {/* Botón Ir a Cotizar */}
             <div className="pt-2">
-              <Link href={`/cotizacion?w=${canvasWidth}&h=${canvasHeight}&unit=${unit}`} className="w-full py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl flex items-center justify-center space-x-2 transition-all">
-                <span>Cotizar con estas medidas</span>
+              <Link href={`/cotizacion?sheetW=${sheetWidth}&sheetH=${sheetHeight}&pieceW=${actualPW}&pieceH=${actualPH}&count=${totalItems}`} className="w-full py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl flex items-center justify-center space-x-2 transition-all">
+                <span>Cotizar esta tirada</span>
                 <i className="fa-solid fa-arrow-right"></i>
               </Link>
             </div>
 
           </div>
 
-          {/* VISUALIZADOR DE CANVA CON REGLAS TIPO PHOTOSHOP GIGANTE */}
-          <div className={`lg:col-span-8 p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl flex flex-col items-center justify-center relative min-h-125 overflow-hidden ${theme === 'dark' ? 'bg-black/50 border-white/15' : 'bg-white/60 border-zinc-300'}`}>
+          {/* ÁREA DE VISUALIZACIÓN CON TABLA Y MULTIPLICACIÓN */}
+          <div className="lg:col-span-8 space-y-6">
             
-            {/* Regla Horizontal Superior */}
-            <div className="w-full max-w-lg flex justify-between items-end border-b border-red-500/50 pb-1 mb-6 text-[10px] font-mono opacity-80 text-red-500">
-              <span>0 {unit}</span>
-              <span className="font-bold">{canvasWidth} {unit}</span>
+            {/* TABLA RESUMEN DE RENDIMIENTO DE IMPRENTA */}
+            <div className={`p-6 rounded-3xl border shadow-xl grid grid-cols-2 md:grid-cols-4 gap-4 text-center ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/80 border-zinc-300'}`}>
+              <div className="border-r border-white/10 pr-2">
+                <span className="text-[10px] uppercase opacity-60 block">Rendimiento Total</span>
+                <span className="text-2xl font-bold text-red-500">{totalItems} Piezas</span>
+                <span className="text-[9px] opacity-50 block">por hoja/pliego</span>
+              </div>
+              <div className="border-r border-white/10 pr-2">
+                <span className="text-[10px] uppercase opacity-60 block">Distribución Grid</span>
+                <span className="text-xl font-bold">{cols} × {rows}</span>
+                <span className="text-[9px] opacity-50 block">columnas × filas</span>
+              </div>
+              <div className="border-r border-white/10 pr-2">
+                <span className="text-[10px] uppercase opacity-60 block">Uso del Papel</span>
+                <span className="text-xl font-bold text-emerald-400">{efficiencyPercentage}%</span>
+                <span className="text-[9px] opacity-50 block">aprovechamiento</span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase opacity-60 block">Tamaño Pieza</span>
+                <span className="text-sm font-bold">{actualPW} × {actualPH} {unit}</span>
+                <span className="text-[9px] opacity-50 block">medida individual</span>
+              </div>
             </div>
 
-            <div className="flex items-center space-x-6">
-              {/* Regla Vertical Izquierda */}
-              <div className="h-80 flex flex-col justify-between items-end border-r border-red-500/50 pr-2 text-[10px] font-mono opacity-80 text-red-500">
-                <span>0</span>
-                <span className="font-bold">{canvasHeight}</span>
+            {/* CANVAS INTERACTIVO QUE DUPLICA LA IMAGEN EN TODA LA HOJA */}
+            <div className={`p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl flex flex-col items-center justify-center relative min-h-125 overflow-hidden ${theme === 'dark' ? 'bg-black/50 border-white/15' : 'bg-white/60 border-zinc-300'}`}>
+              
+              {/* Regla Superior */}
+              <div className="w-full max-w-lg flex justify-between items-end border-b border-red-500/50 pb-1 mb-6 text-[10px] font-mono opacity-80 text-red-500">
+                <span>0 {unit}</span>
+                <span className="font-bold">HOJA: {sheetWidth} {unit}</span>
               </div>
 
-              {/* El Canvas Dinámico Ampltud Máxima */}
-              <motion.div 
-                animate={{ width: displayWidth, height: displayHeight }}
-                transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                className="relative rounded-xl border-2 border-dashed border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.2)] flex flex-col items-center justify-center p-4 bg-red-500/5 overflow-hidden"
-              >
-                {previewUrl ? (
-                  <div className="relative w-full h-full">
-                    <Image src={previewUrl} alt="Vista Previa" fill className="object-contain rounded-lg" unoptimized />
-                  </div>
-                ) : (
-                  <div className="text-center space-y-1">
-                    <i className="fa-solid fa-expand text-3xl text-red-500/80 mb-2 block"></i>
-                    <span className="text-sm font-bold block">{canvasWidth} x {canvasHeight} {unit}</span>
-                    <span className="text-[10px] opacity-60 block">Escala Visual Proporcional</span>
-                  </div>
-                )}
-              </motion.div>
+              <div className="flex items-center space-x-6">
+                {/* Regla Lateral */}
+                <div className="h-80 flex flex-col justify-between items-end border-r border-red-500/50 pr-2 text-[10px] font-mono opacity-80 text-red-500">
+                  <span>0</span>
+                  <span className="font-bold">{sheetHeight}</span>
+                </div>
+
+                {/* DIBUJO DE LA HOJA MULTIPLICANDO LA IMAGEN N VECES */}
+                <motion.div 
+                  animate={{ width: displayWidth, height: displayHeight }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  className="relative rounded-2xl border-2 border-dashed border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.25)] p-2 bg-red-500/5 overflow-hidden grid gap-1.5"
+                  style={{
+                    gridTemplateColumns: `repeat(${cols || 1}, minmax(0, 1fr))`,
+                    gridTemplateRows: `repeat(${rows || 1}, minmax(0, 1fr))`
+                  }}
+                >
+                  {totalItems > 0 ? (
+                    Array.from({ length: totalItems }).map((_, idx) => (
+                      <div key={idx} className="relative border border-red-500/50 bg-red-500/20 rounded-md flex items-center justify-center overflow-hidden p-1 shadow-xs group">
+                        {previewUrl ? (
+                          <Image src={previewUrl} alt="Tarjeta Multiplicada" fill className="object-cover rounded-sm" unoptimized />
+                        ) : (
+                          <div className="text-center">
+                            <span className="text-[9px] font-mono font-bold text-red-400 block leading-none">
+                              #{idx + 1}
+                            </span>
+                            <span className="text-[8px] opacity-60 block mt-0.5">
+                              {actualPW}&quot;×{actualPH}&quot;
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="col-span-full flex items-center justify-center text-xs text-red-500 font-bold">
+                      La pieza supera las dimensiones del pliego.
+                    </div>
+                  )}
+                </motion.div>
+              </div>
+
             </div>
 
           </div>
