@@ -12,7 +12,7 @@ const translations = {
     utilidades: 'utilidades',
     whatsapp: 'Whatsapp',
     titulo: 'Solicita tu',
-    subtitulo: 'Diseño estratégico y producción a medida • Tu propuesta al instante',
+    subtitulo: 'Diseño strategic y producción a medida • Tu propuesta al instante',
     tipoCliente: 'Tipo de Cliente',
     nuevoCliente: 'Nuevo Cliente',
     soyCliente: 'Ya soy cliente',
@@ -346,17 +346,7 @@ export default function CotizacionPage() {
 
   const langMenuRef = useRef<HTMLDivElement>(null);
 
-  // Leer tema guardado al cargar
   useEffect(() => {
-    const savedTheme = localStorage.getItem('nu_theme') as 'dark' | 'light' | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-  }, []);
-
-  // Guardar y aplicar cambio de tema
-  useEffect(() => {
-    localStorage.setItem('nu_theme', theme);
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -465,7 +455,10 @@ export default function CotizacionPage() {
         const data = await response.json();
 
         if (data.success && data.url) {
-          window.location.assign(data.url);
+          if (data.success && data.url) {
+  window.location.assign(data.url);
+  return;
+}
           return;
         } else {
           alert('No se pudo procesar la pasarela de pago. Inténtalo de nuevo.');
@@ -557,8 +550,8 @@ export default function CotizacionPage() {
         className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
       >
         <div className="flex items-center space-x-2">
-          <Link href="/" className="md:hidden font-extrabold text-xs tracking-[0.25em] uppercase text-zinc-200">
-            AGENCY
+          <Link href="/" className="md:hidden font-bold text-sm tracking-widest uppercase">
+            NU-DESIGN
           </Link>
 
           <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
@@ -616,7 +609,7 @@ export default function CotizacionPage() {
 
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50 text-white"
+            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50"
             aria-label="Abrir Menú"
           >
             <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
@@ -945,12 +938,7 @@ export default function CotizacionPage() {
 
             {/* Botón de Enviar */}
             <div className="pt-4 flex justify-center">
-              <motion.button 
-                whileHover={{ scale: 1.05 }} 
-                whileTap={{ scale: 0.95 }} 
-                type="submit" 
-                className="w-full md:w-auto px-12 py-4 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl transition-all"
-              >
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} type="submit" className="w-full md:w-auto px-12 py-4 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl transition-all">
                 {isPriceFixed && paymentMethod === 'online' ? 'Proceder al Pago Seguro' : t.botonEnviar}
               </motion.button>
             </div>
@@ -1000,11 +988,9 @@ export default function CotizacionPage() {
         )}
       </AnimatePresence>
 
-      {/* Footer Unificado */}
-      <footer className="w-full px-4 py-4 flex flex-col items-center space-y-3 z-25 mt-12">
-        <div className={`text-[9px] sm:text-[11px] md:text-xs font-light tracking-tight sm:tracking-wide text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
-          theme === 'dark' ? 'text-zinc-400 opacity-70' : 'text-zinc-700 opacity-90'
-        }`}>
+      {/* Footer */}
+      <footer className="w-full px-10 py-7 flex flex-col items-center space-y-4 z-25 mt-12">
+        <div className="text-xs opacity-50 font-light tracking-wide">
           Nu-Design Derechos reservados 2026 - Design by Garic Edume
         </div>
       </footer>
