@@ -13,7 +13,17 @@ export default function ContactoPage() {
   
   const langMenuRef = useRef<HTMLDivElement>(null);
 
+  // 1. Cargar el tema guardado en localStorage al iniciar
   useEffect(() => {
+    const savedTheme = localStorage.getItem('nu_theme') as 'dark' | 'light' | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  // 2. Guardar en localStorage cuando el usuario cambie el tema
+  useEffect(() => {
+    localStorage.setItem('nu_theme', theme);
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -38,7 +48,9 @@ export default function ContactoPage() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col justify-between transition-colors duration-700 relative overflow-hidden py-6 ${theme === 'dark' ? 'bg-[#050000] text-zinc-100' : 'bg-[#e8e2dc] text-zinc-800'}`}>
+    <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-1000 relative overflow-x-hidden py-4 md:py-6 ${
+      theme === 'dark' ? 'bg-[#040001] text-zinc-100' : 'bg-[#e3e3e3] text-zinc-900'
+    }`}>
       
       {/* Fondo con brillo ambiental animado */}
       <motion.div 
@@ -57,7 +69,7 @@ export default function ContactoPage() {
         )}
       </motion.div>
 
-      {/* Top Navigation */}
+      {/* Top Navigation Bar Unificada */}
       <motion.header 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -65,8 +77,9 @@ export default function ContactoPage() {
         className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
       >
         <div className="flex items-center space-x-2">
-          <Link href="/" className="md:hidden font-bold text-sm tracking-widest uppercase">
-            NU-DESIGN
+          {/* Marca en esquina móvil cambiada a AGENCY */}
+          <Link href="/" className="md:hidden font-extrabold text-xs tracking-[0.25em] uppercase text-zinc-200">
+            AGENCY
           </Link>
 
           <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
@@ -78,6 +91,7 @@ export default function ContactoPage() {
                 ? 'bg-white/10 border border-red-500/40 text-red-500 font-semibold shadow-[0_0_15px_rgba(239,68,68,0.3)]' 
                 : 'bg-black/10 border border-red-500/50 text-red-600 font-semibold'
             }`}>contacto</Link>
+            <Link href="/utilidades" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">utilidades</Link>
           </nav>
         </div>
 
@@ -93,7 +107,6 @@ export default function ContactoPage() {
             >
               <span>IDIOMAS</span>
               <span className="text-red-500 font-bold ml-1">({currentLang})</span>
-              <i className={`fa-solid fa-chevron-down text-[10px] ml-1 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`}></i>
             </button>
 
             <AnimatePresence>
@@ -120,7 +133,6 @@ export default function ContactoPage() {
               ? 'bg-white/10 border border-white/20 text-white hover:border-emerald-500/60'
               : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60'
           }`}>
-            <i className="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
             <span>Whatsapp</span>
           </a>
           
@@ -132,17 +144,18 @@ export default function ContactoPage() {
             Cotización
           </Link>
 
+          {/* Botón de menú hamburguesa calcado de Inicio */}
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50"
+            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50 text-white"
             aria-label="Abrir Menú"
           >
-            <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+            ☰
           </button>
         </div>
       </motion.header>
 
-      {/* MENÚ MÓVIL DESPLEGABLE */}
+      {/* MENÚ MÓVIL DESPLEGABLE (Copia idéntica de la plantilla Inicio) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div 
@@ -157,19 +170,23 @@ export default function ContactoPage() {
             <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Inicio</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Portafolio</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Contratar</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Contacto</span>
-                <i className="fa-solid fa-arrow-right text-sm"></i>
+                <span>→</span>
+              </Link>
+              <Link href="/utilidades" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Utilidades</span>
+                <span>→</span>
               </Link>
             </div>
 
@@ -180,11 +197,6 @@ export default function ContactoPage() {
                 <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
                 <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
               </div>
-
-              <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="mt-4 w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 py-3 rounded-full flex items-center justify-center space-x-2 text-sm font-medium">
-                <i className="fa-brands fa-whatsapp text-lg"></i>
-                <span>Whatsapp</span>
-              </a>
             </div>
           </motion.div>
         )}
@@ -261,7 +273,6 @@ export default function ContactoPage() {
               onClick={copyEmail}
               className={`px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider transition-all border shadow-lg flex items-center space-x-2 ${theme === 'dark' ? 'border-white/20 hover:border-red-500 text-zinc-300' : 'border-zinc-400 hover:border-red-600 text-zinc-700'}`}
             >
-              <i className="fa-regular fa-copy"></i>
               <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
             </button>
           </div>
@@ -276,8 +287,8 @@ export default function ContactoPage() {
             rel="noopener noreferrer"
             className={`backdrop-blur-xl border rounded-2xl p-6 flex items-center space-x-4 shadow-xl transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-emerald-500/50' : 'bg-white/50 border-zinc-300 hover:border-emerald-600/50'}`}
           >
-            <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-2xl">
-              <i className="fa-brands fa-whatsapp"></i>
+            <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-xl font-bold">
+              WA
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-widest opacity-60 font-semibold block">Chat Directo</span>
@@ -292,8 +303,8 @@ export default function ContactoPage() {
             rel="noopener noreferrer"
             className={`backdrop-blur-xl border rounded-2xl p-6 flex items-center space-x-4 shadow-xl transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-pink-500/50' : 'bg-white/50 border-zinc-300 hover:border-pink-600/50'}`}
           >
-            <div className="w-12 h-12 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-400 text-2xl">
-              <i className="fa-brands fa-instagram"></i>
+            <div className="w-12 h-12 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-400 text-xl font-bold">
+              IG
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-widest opacity-60 font-semibold block">Visuales & Arte</span>
@@ -308,8 +319,8 @@ export default function ContactoPage() {
             rel="noopener noreferrer"
             className={`backdrop-blur-xl border rounded-2xl p-6 flex items-center space-x-4 shadow-xl transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-blue-500/50' : 'bg-white/50 border-zinc-300 hover:border-blue-600/50'}`}
           >
-            <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 text-2xl">
-              <i className="fa-brands fa-linkedin-in"></i>
+            <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 text-xl font-bold">
+              IN
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-widest opacity-60 font-semibold block">Perfil Profesional</span>
@@ -324,8 +335,8 @@ export default function ContactoPage() {
             rel="noopener noreferrer"
             className={`backdrop-blur-xl border rounded-2xl p-6 flex items-center space-x-4 shadow-xl transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-white/50' : 'bg-white/50 border-zinc-300 hover:border-zinc-800/50'}`}
           >
-            <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white text-xl">
-              <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white text-xl font-bold">
+              X
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-widest opacity-60 font-semibold block">Actualizaciones</span>
@@ -340,8 +351,8 @@ export default function ContactoPage() {
             rel="noopener noreferrer"
             className={`backdrop-blur-xl border rounded-2xl p-6 flex items-center space-x-4 shadow-xl transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-indigo-500/50' : 'bg-white/50 border-zinc-300 hover:border-indigo-600/50'}`}
           >
-            <div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 text-2xl">
-              <i className="fa-brands fa-facebook-f"></i>
+            <div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 text-xl font-bold">
+              FB
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-widest opacity-60 font-semibold block">Comunidad</span>
@@ -356,8 +367,8 @@ export default function ContactoPage() {
             rel="noopener noreferrer"
             className={`backdrop-blur-xl border rounded-2xl p-6 flex items-center space-x-4 shadow-xl transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-red-500/50' : 'bg-white/50 border-zinc-300 hover:border-red-600/50'}`}
           >
-            <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-2xl">
-              <i className="fa-brands fa-youtube"></i>
+            <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 text-xl font-bold">
+              YT
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-widest opacity-60 font-semibold block">Contenido Visual</span>
@@ -368,9 +379,11 @@ export default function ContactoPage() {
 
       </main>
 
-      {/* Footer */}
-      <footer className="w-full px-10 py-7 flex flex-col items-center space-y-4 z-25 mt-12">
-        <div className="text-xs opacity-50 font-light tracking-wide">
+      {/* Footer Unificado en 1 sola línea */}
+      <footer className="w-full px-4 py-4 flex flex-col items-center space-y-3 z-25 mt-6">
+        <div className={`text-[9px] sm:text-[11px] md:text-xs font-light tracking-tight sm:tracking-wide text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
+          theme === 'dark' ? 'text-zinc-400 opacity-70' : 'text-zinc-700 opacity-90'
+        }`}>
           Nu-Design Derechos reservados 2026 - Design by Garic Edume
         </div>
       </footer>

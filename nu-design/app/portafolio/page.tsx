@@ -19,7 +19,7 @@ export default function PortafolioPage() {
 
   const langMenuRef = useRef<HTMLDivElement>(null);
 
-  // Leer tema guardado
+  // 1. Cargar el tema guardado en localStorage al iniciar
   useEffect(() => {
     const savedTheme = localStorage.getItem('nu_theme') as 'dark' | 'light' | null;
     if (savedTheme) {
@@ -27,7 +27,7 @@ export default function PortafolioPage() {
     }
   }, []);
 
-  // Guardar cambio de tema
+  // 2. Guardar en localStorage cuando el usuario cambie el tema
   useEffect(() => {
     localStorage.setItem('nu_theme', theme);
     if (theme === 'dark') {
@@ -52,9 +52,10 @@ export default function PortafolioPage() {
       theme === 'dark' ? 'bg-[#040001] text-zinc-100' : 'bg-[#e3e3e3] text-zinc-900'
     }`}>
       
-      {/* Top Navigation Bar Unificada */}
+      {/* Top Navigation Bar Unificada con plantilla de Inicio */}
       <motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8 }} className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative">
         <div className="flex items-center space-x-2">
+          {/* Marca en esquina móvil cambiada a AGENCY */}
           <Link href="/" className="md:hidden font-extrabold text-xs tracking-[0.25em] uppercase text-zinc-200">
             AGENCY
           </Link>
@@ -88,24 +89,59 @@ export default function PortafolioPage() {
             Cotización
           </Link>
 
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50 text-white">
-            <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+          {/* Botón de menú hamburguesa calcado de Inicio */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50 text-white"
+            aria-label="Abrir Menú"
+          >
+            ☰
           </button>
         </div>
       </motion.header>
 
-      {/* MENÚ MÓVIL DESPLEGABLE */}
+      {/* MENÚ MÓVIL DESPLEGABLE (Copia idéntica de la plantilla Inicio) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className={`fixed inset-0 z-30 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden ${
-            theme === 'dark' ? 'bg-black/95 text-white' : 'bg-white/95 text-zinc-900'
-          }`}>
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className={`fixed inset-0 z-30 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden ${
+              theme === 'dark' ? 'bg-black/95 text-white' : 'bg-white/95 text-zinc-900'
+            }`}
+          >
             <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center"><span>Inicio</span><i className="fa-solid fa-arrow-right text-sm opacity-40"></i></Link>
-              <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-zinc-500/20 pb-3 flex justify-between items-center"><span>Portafolio</span><i className="fa-solid fa-arrow-right text-sm"></i></Link>
-              <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center"><span>Contratar</span><i className="fa-solid fa-arrow-right text-sm opacity-40"></i></Link>
-              <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center"><span>Contacto</span><i className="fa-solid fa-arrow-right text-sm opacity-40"></i></Link>
-              <Link href="/utilidades" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center"><span>Utilidades</span><i className="fa-solid fa-arrow-right text-sm opacity-40"></i></Link>
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Inicio</span>
+                <span>→</span>
+              </Link>
+              <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Portafolio</span>
+                <span>→</span>
+              </Link>
+              <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Contratar</span>
+                <span>→</span>
+              </Link>
+              <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Contacto</span>
+                <span>→</span>
+              </Link>
+              <Link href="/utilidades" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Utilidades</span>
+                <span>→</span>
+              </Link>
+            </div>
+
+            <div className="flex flex-col space-y-4 pt-6 border-t border-zinc-500/20">
+              <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
+              <div className="flex items-center gap-3">
+                <button onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Español</button>
+                <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
+                <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
+              </div>
             </div>
           </motion.div>
         )}
@@ -143,7 +179,7 @@ export default function PortafolioPage() {
         </div>
       </main>
 
-      {/* Footer Unificado en 1 Sola Línea */}
+      {/* Footer Unificado en 1 sola línea */}
       <footer className="w-full px-4 py-4 flex flex-col items-center space-y-3 z-25 mt-6">
         <div className={`text-[9px] sm:text-[11px] md:text-xs font-light tracking-tight sm:tracking-wide text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
           theme === 'dark' ? 'text-zinc-400 opacity-70' : 'text-zinc-700 opacity-90'

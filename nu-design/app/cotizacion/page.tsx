@@ -12,7 +12,7 @@ const translations = {
     utilidades: 'utilidades',
     whatsapp: 'Whatsapp',
     titulo: 'Solicita tu',
-    subtitulo: 'Diseño strategic y producción a medida • Tu propuesta al instante',
+    subtitulo: 'Diseño estratégico y producción a medida • Tu propuesta al instante',
     tipoCliente: 'Tipo de Cliente',
     nuevoCliente: 'Nuevo Cliente',
     soyCliente: 'Ya soy cliente',
@@ -346,7 +346,17 @@ export default function CotizacionPage() {
 
   const langMenuRef = useRef<HTMLDivElement>(null);
 
+  // 1. Cargar el tema guardado en localStorage al iniciar
   useEffect(() => {
+    const savedTheme = localStorage.getItem('nu_theme') as 'dark' | 'light' | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  // 2. Guardar en localStorage cuando el usuario cambie el tema
+  useEffect(() => {
+    localStorage.setItem('nu_theme', theme);
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -436,7 +446,7 @@ export default function CotizacionPage() {
       if (companyName) localStorage.setItem(`client_${companyName.toLowerCase()}`, JSON.stringify(clientData));
     }
 
-    // FLUJO 1: PAGO EN LÍNEA DIRECTO A PASARELA STRIPE (Apple/Google Pay/Tarjeta)
+    // FLUJO 1: PAGO EN LÍNEA DIRECTO A PASARELA STRIPE
     if (isPriceFixed && paymentMethod === 'online' && currentSubServiceDetails) {
       try {
         const rawPrice = currentSubServiceDetails.price.replace(/[^0-9]/g, '');
@@ -455,10 +465,7 @@ export default function CotizacionPage() {
         const data = await response.json();
 
         if (data.success && data.url) {
-          if (data.success && data.url) {
-  window.location.assign(data.url);
-  return;
-}
+          window.location.assign(data.url);
           return;
         } else {
           alert('No se pudo procesar la pasarela de pago. Inténtalo de nuevo.');
@@ -528,7 +535,9 @@ export default function CotizacionPage() {
   const showPhysicalSampleOption = categoriesWithPhysical.includes(selectedMainService);
 
   return (
-    <div className={`min-h-screen flex flex-col justify-between transition-colors duration-700 relative overflow-hidden py-6 ${theme === 'dark' ? 'bg-[#050000] text-zinc-100' : 'bg-[#e8e2dc] text-zinc-800'}`}>
+    <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-1000 relative overflow-x-hidden py-4 md:py-6 ${
+      theme === 'dark' ? 'bg-[#040001] text-zinc-100' : 'bg-[#e3e3e3] text-zinc-900'
+    }`}>
       
       {/* Fondo ambiental */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -542,7 +551,7 @@ export default function CotizacionPage() {
         )}
       </motion.div>
 
-      {/* Top Navigation Unificada */}
+      {/* Top Navigation Bar Unificada */}
       <motion.header 
         initial={{ y: -20, opacity: 0 }} 
         animate={{ y: 0, opacity: 1 }} 
@@ -550,8 +559,9 @@ export default function CotizacionPage() {
         className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
       >
         <div className="flex items-center space-x-2">
-          <Link href="/" className="md:hidden font-bold text-sm tracking-widest uppercase">
-            NU-DESIGN
+          {/* Marca en esquina móvil cambiada a AGENCY */}
+          <Link href="/" className="md:hidden font-extrabold text-xs tracking-[0.25em] uppercase text-zinc-200">
+            AGENCY
           </Link>
 
           <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
@@ -575,16 +585,15 @@ export default function CotizacionPage() {
             >
               <span>IDIOMAS</span>
               <span className="text-red-500 font-bold ml-1">({currentLang})</span>
-              <i className={`fa-solid fa-chevron-down text-[10px] ml-1 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`}></i>
             </button>
             <AnimatePresence>
               {isLangOpen && (
                 <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className={`absolute right-0 mt-2 w-36 backdrop-blur-2xl border rounded-xl shadow-2xl overflow-hidden z-50 py-1 ${
                   theme === 'dark' ? 'bg-black/90 border-white/15 text-zinc-200' : 'bg-white/95 border-black/10 text-zinc-800'
                 }`}>
-                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10">Español</button>
-                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10">English</button>
-                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10">Français</button>
+                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Español</button>
+                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">English</button>
+                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Français</button>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -595,7 +604,6 @@ export default function CotizacionPage() {
               ? 'bg-white/10 border border-white/20 text-white hover:border-emerald-500/60'
               : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60'
           }`}>
-            <i className="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
             <span>{t.whatsapp}</span>
           </a>
 
@@ -607,17 +615,18 @@ export default function CotizacionPage() {
             Cotización
           </Link>
 
+          {/* Botón de menú hamburguesa calcado de Inicio */}
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50"
+            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50 text-white"
             aria-label="Abrir Menú"
           >
-            <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+            ☰
           </button>
         </div>
       </motion.header>
 
-      {/* MENÚ MÓVIL DESPLEGABLE */}
+      {/* MENÚ MÓVIL DESPLEGABLE (Copia idéntica de la plantilla Inicio) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div 
@@ -632,23 +641,23 @@ export default function CotizacionPage() {
             <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Inicio</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Portafolio</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Contratar</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Contacto</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/utilidades" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Utilidades</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
             </div>
 
@@ -659,11 +668,6 @@ export default function CotizacionPage() {
                 <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
                 <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
               </div>
-
-              <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="mt-4 w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 py-3 rounded-full flex items-center justify-center space-x-2 text-sm font-medium">
-                <i className="fa-brands fa-whatsapp text-lg"></i>
-                <span>Whatsapp</span>
-              </a>
             </div>
           </motion.div>
         )}
@@ -888,24 +892,24 @@ export default function CotizacionPage() {
                 {isPriceFixed ? (
                   <div className="p-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 space-y-3">
                     <span className="text-xs font-semibold text-emerald-400 flex items-center gap-2">
-                      <i className="fa-solid fa-bolt"></i> Precio Fijo Automatizable Disponible
+                      Precio Fijo Automatizable Disponible
                     </span>
                     <p className="text-[11px] opacity-80 leading-relaxed">
                       Este servicio tiene una tarifa estandarizada. Puedes realizar tu pago en línea de forma segura con **Apple Pay, Google Pay o Tarjeta** o coordinar la orden por WhatsApp.
                     </p>
                     <div className="flex gap-4 pt-1">
                       <button type="button" onClick={() => setPaymentMethod('online')} className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${paymentMethod === 'online' ? 'bg-emerald-600 border-emerald-500 text-white shadow-lg' : 'border-white/20 opacity-70'}`}>
-                        <i className="fa-brands fa-apple mr-1"></i> Apple / Google Pay / Tarjeta
+                        Apple / Google Pay / Tarjeta
                       </button>
                       <button type="button" onClick={() => setPaymentMethod('acuerdo')} className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${paymentMethod === 'acuerdo' ? 'bg-red-600 border-red-500 text-white shadow-lg' : 'border-white/20 opacity-70'}`}>
-                        <i className="fa-brands fa-whatsapp mr-1"></i> Coordinar por WhatsApp
+                        Coordinar por WhatsApp
                       </button>
                     </div>
                   </div>
                 ) : (
                   <div className="p-4 rounded-2xl border border-red-500/30 bg-red-500/10 space-y-2">
                     <span className="text-xs font-semibold text-red-400 flex items-center gap-2">
-                      <i className="fa-solid fa-comments"></i> Requiere Evaluación & Acuerdo a Medida
+                      Requiere Evaluación & Acuerdo a Medida
                     </span>
                     <p className="text-[11px] opacity-80 leading-relaxed">
                       Este servicio requiere análisis de alcance. Al enviar el formulario, iniciaremos una conversación directa vía WhatsApp o correo para acordar los detalles y el presupuesto exacto.
@@ -938,7 +942,12 @@ export default function CotizacionPage() {
 
             {/* Botón de Enviar */}
             <div className="pt-4 flex justify-center">
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} type="submit" className="w-full md:w-auto px-12 py-4 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl transition-all">
+              <motion.button 
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }} 
+                type="submit" 
+                className="w-full md:w-auto px-12 py-4 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl transition-all"
+              >
                 {isPriceFixed && paymentMethod === 'online' ? 'Proceder al Pago Seguro' : t.botonEnviar}
               </motion.button>
             </div>
@@ -946,8 +955,8 @@ export default function CotizacionPage() {
           </motion.form>
         ) : (
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className={`w-full backdrop-blur-2xl border rounded-3xl p-12 text-center space-y-6 ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/70 border-zinc-300'}`}>
-            <div className="w-16 h-16 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl">
-              <i className="fa-solid fa-check"></i>
+            <div className="w-16 h-16 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
+              ✓
             </div>
             <h2 className="text-2xl md:text-3xl font-light">{t.exitoTitulo}</h2>
             <p className="text-xs md:text-sm font-light opacity-80 max-w-lg mx-auto leading-relaxed">
@@ -961,7 +970,7 @@ export default function CotizacionPage() {
 
       </main>
 
-      {/* MODAL DE TÉRMINOS Y CONDICIONES (PROVISIONAL MODIFICABLE) */}
+      {/* MODAL DE TÉRMINOS Y CONDICIONES */}
       <AnimatePresence>
         {showTermsModal && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
@@ -988,9 +997,11 @@ export default function CotizacionPage() {
         )}
       </AnimatePresence>
 
-      {/* Footer */}
-      <footer className="w-full px-10 py-7 flex flex-col items-center space-y-4 z-25 mt-12">
-        <div className="text-xs opacity-50 font-light tracking-wide">
+      {/* Footer Unificado en 1 sola línea */}
+      <footer className="w-full px-4 py-4 flex flex-col items-center space-y-3 z-25 mt-6">
+        <div className={`text-[9px] sm:text-[11px] md:text-xs font-light tracking-tight sm:tracking-wide text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
+          theme === 'dark' ? 'text-zinc-400 opacity-70' : 'text-zinc-700 opacity-90'
+        }`}>
           Nu-Design Derechos reservados 2026 - Design by Garic Edume
         </div>
       </footer>

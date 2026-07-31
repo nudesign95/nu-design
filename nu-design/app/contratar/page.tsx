@@ -9,10 +9,20 @@ export default function ContratarPage() {
   const [currentLang, setCurrentLang] = useState<'ES' | 'EN' | 'FR'>('ES');
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+
   const langMenuRef = useRef<HTMLDivElement>(null);
 
+  // 1. Cargar el tema guardado en localStorage al iniciar
   useEffect(() => {
+    const savedTheme = localStorage.getItem('nu_theme') as 'dark' | 'light' | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  // 2. Guardar en localStorage cuando el usuario cambie el tema
+  useEffect(() => {
+    localStorage.setItem('nu_theme', theme);
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -31,7 +41,9 @@ export default function ContratarPage() {
   }, []);
 
   return (
-    <div className={`min-h-screen flex flex-col justify-between transition-colors duration-700 relative overflow-hidden py-6 ${theme === 'dark' ? 'bg-[#050000] text-zinc-100' : 'bg-[#e8e2dc] text-zinc-800'}`}>
+    <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-1000 relative overflow-x-hidden py-4 md:py-6 ${
+      theme === 'dark' ? 'bg-[#040001] text-zinc-100' : 'bg-[#e3e3e3] text-zinc-900'
+    }`}>
       
       {/* Fondo ambiental */}
       <motion.div 
@@ -50,7 +62,7 @@ export default function ContratarPage() {
         )}
       </motion.div>
 
-      {/* Top Navigation */}
+      {/* Top Navigation Bar Unificada */}
       <motion.header 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -58,8 +70,9 @@ export default function ContratarPage() {
         className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
       >
         <div className="flex items-center space-x-2">
-          <Link href="/" className="md:hidden font-bold text-sm tracking-widest uppercase">
-            NU-DESIGN
+          {/* Marca en esquina móvil cambiada a AGENCY */}
+          <Link href="/" className="md:hidden font-extrabold text-xs tracking-[0.25em] uppercase text-zinc-200">
+            AGENCY
           </Link>
 
           <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
@@ -71,6 +84,7 @@ export default function ContratarPage() {
                 : 'bg-black/10 border border-red-500/50 text-red-600 font-semibold'
             }`}>contratar</Link>
             <Link href="/contacto" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">contacto</Link>
+            <Link href="/utilidades" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">utilidades</Link>
           </nav>
         </div>
 
@@ -86,7 +100,6 @@ export default function ContratarPage() {
             >
               <span>IDIOMAS</span>
               <span className="text-red-500 font-bold ml-1">({currentLang})</span>
-              <i className={`fa-solid fa-chevron-down text-[10px] ml-1 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`}></i>
             </button>
 
             <AnimatePresence>
@@ -113,7 +126,6 @@ export default function ContratarPage() {
               ? 'bg-white/10 border border-white/20 text-white hover:border-emerald-500/60'
               : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60'
           }`}>
-            <i className="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
             <span>Whatsapp</span>
           </a>
           
@@ -125,17 +137,18 @@ export default function ContratarPage() {
             Cotización
           </Link>
 
+          {/* Botón de menú hamburguesa calcado de Inicio */}
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50"
+            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50 text-white"
             aria-label="Abrir Menú"
           >
-            <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+            ☰
           </button>
         </div>
       </motion.header>
 
-      {/* MENÚ MÓVIL DESPLEGABLE */}
+      {/* MENÚ MÓVIL DESPLEGABLE (Copia idéntica de la plantilla Inicio) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div 
@@ -150,19 +163,23 @@ export default function ContratarPage() {
             <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Inicio</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Portafolio</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
               </Link>
               <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Contratar</span>
-                <i className="fa-solid fa-arrow-right text-sm"></i>
+                <span>→</span>
               </Link>
               <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>Contacto</span>
-                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+                <span>→</span>
+              </Link>
+              <Link href="/utilidades" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Utilidades</span>
+                <span>→</span>
               </Link>
             </div>
 
@@ -173,11 +190,6 @@ export default function ContratarPage() {
                 <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
                 <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
               </div>
-
-              <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="mt-4 w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 py-3 rounded-full flex items-center justify-center space-x-2 text-sm font-medium">
-                <i className="fa-brands fa-whatsapp text-lg"></i>
-                <span>Whatsapp</span>
-              </a>
             </div>
           </motion.div>
         )}
@@ -191,7 +203,7 @@ export default function ContratarPage() {
         <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
       </div>
 
-      {/* Contenido Principal */}
+      {/* Contenido Principal de Contratar */}
       <main className="w-full max-w-5xl mx-auto px-6 py-12 z-10 flex flex-col items-center">
         
         <div className="flex flex-col items-center text-center mb-16 space-y-4">
@@ -221,12 +233,12 @@ export default function ContratarPage() {
               Diseño de alto impacto, <span className={`font-semibold ${theme === 'dark' ? 'text-red-500' : 'text-red-600'}`}>sin fricción</span>
             </h1>
             <p className={`text-xs md:text-sm font-light tracking-widest uppercase opacity-75 ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}`}>
-              Elige cómo deseas colaborar con nosotros y elevate al siguiente nivel
+              Elige cómo deseas colaborar con nosotros y elévate al siguiente nivel
             </p>
           </motion.div>
         </div>
 
-        {/* Tarjetas */}
+        {/* Tarjetas de Servicios */}
         <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-16">
           <motion.div 
             whileHover={{ y: -8, scale: 1.02 }}
@@ -249,7 +261,7 @@ export default function ContratarPage() {
                 className={`w-full py-3 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all shadow-lg ${theme === 'dark' ? 'bg-white/10 hover:bg-red-600 hover:text-white text-white' : 'bg-zinc-900 text-white hover:bg-red-600'}`}
               >
                 <span>Iniciar Proyecto</span>
-                <i className="fa-solid fa-arrow-right text-[10px]"></i>
+                <span className="text-[10px]">→</span>
               </a>
             </div>
           </motion.div>
@@ -275,7 +287,7 @@ export default function ContratarPage() {
                 className="w-full py-3 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all bg-red-600 hover:bg-red-700 text-white shadow-xl"
               >
                 <span>Cotizar Producción</span>
-                <i className="fa-solid fa-arrow-right text-[10px]"></i>
+                <span className="text-[10px]">→</span>
               </a>
             </div>
           </motion.div>
@@ -301,13 +313,13 @@ export default function ContratarPage() {
                 className={`w-full py-3 rounded-full text-xs font-semibold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all shadow-lg ${theme === 'dark' ? 'bg-white/10 hover:bg-red-600 hover:text-white text-white' : 'bg-zinc-900 text-white hover:bg-red-600'}`}
               >
                 <span>Hablemos Directo</span>
-                <i className="fa-solid fa-arrow-right text-[10px]"></i>
+                <span className="text-[10px]">→</span>
               </a>
             </div>
           </motion.div>
         </div>
 
-        {/* Cierre */}
+        {/* Bloque Cierre WhatsApp */}
         <div className={`w-full backdrop-blur-2xl border rounded-3xl p-8 md:p-12 text-center space-y-6 ${theme === 'dark' ? 'bg-black/30 border-white/10' : 'bg-white/60 border-zinc-300'}`}>
           <h2 className="text-2xl md:text-3xl font-light">¿Tienes un requerimiento especial o urgente?</h2>
           <p className="text-xs md:text-sm font-light opacity-75 max-w-xl mx-auto">
@@ -320,7 +332,6 @@ export default function ContratarPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center space-x-3 bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold transition-all shadow-xl hover:scale-105"
             >
-              <i className="fa-brands fa-whatsapp text-lg"></i>
               <span>Escríbenos por WhatsApp</span>
             </a>
           </div>
@@ -328,9 +339,11 @@ export default function ContratarPage() {
 
       </main>
 
-      {/* Footer */}
-      <footer className="w-full px-10 py-7 flex flex-col items-center space-y-4 z-25 mt-12">
-        <div className="text-xs opacity-50 font-light tracking-wide">
+      {/* Footer Unificado en 1 sola línea */}
+      <footer className="w-full px-4 py-4 flex flex-col items-center space-y-3 z-25 mt-6">
+        <div className={`text-[9px] sm:text-[11px] md:text-xs font-light tracking-tight sm:tracking-wide text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
+          theme === 'dark' ? 'text-zinc-400 opacity-70' : 'text-zinc-700 opacity-90'
+        }`}>
           Nu-Design Derechos reservados 2026 - Design by Garic Edume
         </div>
       </footer>
