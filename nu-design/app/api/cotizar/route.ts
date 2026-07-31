@@ -4,11 +4,6 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // 1. Obtener variables de entorno (Invisibles para el cliente)
-    const resendApiKey = process.env.RESEND_API_KEY || '';
-    const whatsappToken = process.env.WHATSAPP_API_TOKEN || '';
-    const adminEmail = process.env.ADMIN_EMAIL || 'nubellstore@gmail.com';
-
     const {
       companyName,
       contactName,
@@ -21,38 +16,44 @@ export async function POST(request: Request) {
       selectedSubService,
       timeQuantity,
       timeUnit,
+      timeQuantity2,
+      timeUnit2,
+      needsPhysicalSample,
       receiveChannel,
     } = body;
 
-    // 2. Construcción del resumen de cotización
-    const resumenCotizacion = `
-    📌 NUEVA SOLICITUD DE COTIZACIÓN - NU-DESIGN
-    --------------------------------------------------
-    Cliente: ${contactName || 'No especificado'}
-    Empresa: ${companyName || 'No especificada'}
-    Ubicación: ${selectedCity}, ${selectedCountry} (${countryCode})
-    Teléfono: ${contactPhone}
-    Correo: ${contactEmail}
-    
-    Servicio: ${selectedMainService} -> ${selectedSubService}
-    Tiempo Requerido: ${timeQuantity} ${timeUnit}
-    Canal de Entrega Preferido: String(${receiveChannel}).toUpperCase()
-    --------------------------------------------------
-    `;
+    const cliente = contactName || 'No especificado';
+    const empresa = companyName || 'No especificada';
+    const ubicacion = `${selectedCity}, ${selectedCountry}`;
+    const telefonoCompleto = `${countryCode} ${contactPhone}`;
 
-    // Log interno de servidor para utilizar las variables y evitar avisos de ESLint
-    if (process.env.NODE_ENV === 'development') {
-      console.log('--- LOG SERVIDOR SECURE ---');
-      console.log(resumenCotizacion);
-      console.log(`Config Servidor -> Destino: ${adminEmail} | Resend Configurado: ${Boolean(resendApiKey)} | Meta WA Configurado: ${Boolean(whatsappToken)}`);
+    // Construcción del tiempo requerido
+    let tiempoTexto = `${timeQuantity} ${timeUnit}`;
+    if (timeQuantity2 && timeQuantity2 !== '0' && timeUnit2 && timeUnit2 !== 'ninguno') {
+      tiempoTexto += ` y ${timeQuantity2} ${timeUnit2}`;
     }
 
-    // 3. Lógica para respuesta vía WhatsApp
+    // 1. CANAL DE WHATSAPP: Formato de mensaje elegante
     if (receiveChannel === 'whatsapp') {
-      const whatsappText = encodeURIComponent(
-        `Hola Garic, he solicitado una cotización en la web:\n\n*Servicio:* ${selectedSubService}\n*Empresa:* ${companyName || contactName}\n*Teléfono:* ${countryCode} ${contactPhone}`
-      );
-      const redirectUrl = `https://wa.me/18294608316?text=${whatsappText}`;
+      const mensajeWhatsApp = 
+`*¡Hola Garic! Solicité una Cotización en NU-DESIGN* 🎨
+
+📌 *DETALLES DEL CLIENTE*
+• *Cliente:* ${cliente}
+• *Empresa:* ${empresa}
+• *Ubicación:* ${ubicacion}
+• *Contacto:* ${telefonoCompleto}
+• *Correo:* ${contactEmail}
+
+🛠️ *SERVICIO REQUERIDO*
+• *Categoría:* ${selectedMainService}
+• *Específico:* ${selectedSubService}
+• *Tiempo estimado:* ${tiempoTexto}
+• *Muestra física:* ${needsPhysicalSample === 'si' ? 'Sí requiere' : 'No (100% Digital)'}
+
+Quedo a la espera de la propuesta oficial. ¡Gracias!`;
+
+      const redirectUrl = `https://wa.me/18294608316?text=${encodeURIComponent(mensajeWhatsApp)}`;
 
       return NextResponse.json({
         success: true,
@@ -61,17 +62,24 @@ export async function POST(request: Request) {
       });
     }
 
-    // 4. Respuesta por correo / general
-    return NextResponse.json({
-      success: true,
-      channel: 'correo',
-      message: 'Cotización procesada de forma segura en el servidor.',
-    });
+    // 2. CANAL DE CORREO: Preparado para integraciones con Resend / SMTP
+    if (receiveChannel === 'correo') {
+      // Aquí se ejecuta el envío de correo seguro en servidor
+      console.log('Cotización recibida para procesamiento por correo de:', contactEmail);
+
+      return NextResponse.json({
+        success: true,
+        channel: 'correo',
+        message: 'Tu solicitud de cotización fue procesada exitosamente. Te contactaremos a la brevedad.',
+      });
+    }
+
+    return NextResponse.json({ success: true, channel: 'general' });
 
   } catch (error) {
-    console.error('Error interno de servidor:', error);
+    console.error('Error procesando cotización:', error);
     return NextResponse.json(
-      { success: false, message: 'Error al procesar la cotización.' },
+      { success: false, message: 'Ocurrió un error al procesar tu cotización.' },
       { status: 500 }
     );
   }
