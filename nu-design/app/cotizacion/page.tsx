@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 
 const translations = {
   ES: {
@@ -431,6 +432,14 @@ export default function CotizacionPage() {
 
   const isPriceFixed = currentSubServiceDetails && !currentSubServiceDetails.mode.includes('Validación');
 
+  // Convertidor para PayPal de RD$ a USD
+  const getAmountUSD = () => {
+    if (!currentSubServiceDetails) return "10.00";
+    const rawNumber = Number(currentSubServiceDetails.price.replace(/[^0-9]/g, '')) || 600;
+    const usd = (rawNumber / 60).toFixed(2);
+    return usd;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!acceptedTerms) {
@@ -446,38 +455,7 @@ export default function CotizacionPage() {
       if (companyName) localStorage.setItem(`client_${companyName.toLowerCase()}`, JSON.stringify(clientData));
     }
 
-    // FLUJO 1: PAGO EN LÍNEA DIRECTO A PASARELA STRIPE
-    if (isPriceFixed && paymentMethod === 'online' && currentSubServiceDetails) {
-      try {
-        const rawPrice = currentSubServiceDetails.price.replace(/[^0-9]/g, '');
-
-        const response = await fetch('/api/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            serviceName: currentSubServiceDetails.name,
-            priceAmount: rawPrice,
-            clientEmail: contactEmail,
-            companyName: companyName || contactName,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (data.success && data.url) {
-          window.location.assign(data.url);
-          return;
-        } else {
-          alert('No se pudo procesar la pasarela de pago. Inténtalo de nuevo.');
-        }
-      } catch (err) {
-        console.error('Error al iniciar el pago:', err);
-        alert('Ocurrió un error al conectar con la pasarela de pago.');
-      }
-      return;
-    }
-
-    // FLUJO 2: COTIZACIÓN HABITUAL (WhatsApp / Email)
+    // FLUJO COTIZACIÓN HABITUAL (WhatsApp / Email)
     try {
       const response = await fetch('/api/cotizar', {
         method: 'POST',
@@ -535,477 +513,513 @@ export default function CotizacionPage() {
   const showPhysicalSampleOption = categoriesWithPhysical.includes(selectedMainService);
 
   return (
-    <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-1000 relative overflow-x-hidden py-4 md:py-6 ${
-      theme === 'dark' ? 'bg-[#040001] text-zinc-100' : 'bg-[#e3e3e3] text-zinc-900'
-    }`}>
-      
-      {/* Fondo ambiental */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {theme === 'dark' ? (
-          <>
-            <div className="absolute top-1/4 left-1/3 -translate-x-1/2 w-225 h-225 bg-linear-to-tr from-red-700/25 via-red-950/15 to-transparent rounded-full blur-[160px]"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-transparent via-[#050000]/70 to-[#030000]"></div>
-          </>
-        ) : (
-          <div className="absolute top-1/4 right-1/4 w-175 h-175 bg-orange-200/50 rounded-full blur-[130px]"></div>
-        )}
-      </motion.div>
+    <PayPalScriptProvider options={{ clientId: "BAAMMXgMLVZhRv9LQ9cbG8OLQ_oFU2oGG2uqJLKyg0A-RQzZswqLZGPhx6iafe8N0upkynATd3Yc4zs348", currency: "USD" }}>
+      <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-1000 relative overflow-x-hidden py-4 md:py-6 ${
+        theme === 'dark' ? 'bg-[#040001] text-zinc-100' : 'bg-[#e3e3e3] text-zinc-900'
+      }`}>
+        
+        {/* Fondo ambiental */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          {theme === 'dark' ? (
+            <>
+              <div className="absolute top-1/4 left-1/3 -translate-x-1/2 w-225 h-225 bg-linear-to-tr from-red-700/25 via-red-950/15 to-transparent rounded-full blur-[160px]"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-transparent via-[#050000]/70 to-[#030000]"></div>
+            </>
+          ) : (
+            <div className="absolute top-1/4 right-1/4 w-175 h-175 bg-orange-200/50 rounded-full blur-[130px]"></div>
+          )}
+        </motion.div>
 
-      {/* Top Navigation Bar Unificada */}
-      <motion.header 
-        initial={{ y: -20, opacity: 0 }} 
-        animate={{ y: 0, opacity: 1 }} 
-        transition={{ duration: 0.8 }} 
-        className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
-      >
-        <div className="flex items-center space-x-2">
-          {/* Marca en esquina móvil cambiada a AGENCY */}
-          <Link href="/" className="md:hidden font-extrabold text-xs tracking-[0.25em] uppercase text-zinc-200">
-            AGENCY
-          </Link>
+        {/* Top Navigation Bar Unificada */}
+        <motion.header 
+          initial={{ y: -20, opacity: 0 }} 
+          animate={{ y: 0, opacity: 1 }} 
+          transition={{ duration: 0.8 }} 
+          className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
+        >
+          <div className="flex items-center space-x-2">
+            <Link href="/" className="md:hidden font-extrabold text-xs tracking-[0.25em] uppercase text-zinc-200">
+              AGENCY
+            </Link>
 
-          <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
-            <Link href="/" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.inicio}</Link>
-            <Link href="/portafolio" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.portafolio}</Link>
-            <Link href="/contratar" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.contratar}</Link>
-            <Link href="/contacto" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.contacto}</Link>
-            <Link href="/utilidades" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.utilidades}</Link>
-          </nav>
-        </div>
-
-        <div className="flex items-center space-x-3 md:space-x-4">
-          <div className="relative hidden md:block" ref={langMenuRef}>
-            <button 
-              onClick={() => setIsLangOpen(!isLangOpen)} 
-              className={`text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center space-x-1 focus:outline-none ${
-                theme === 'dark'
-                  ? 'bg-white/5 border border-white/10 text-white hover:border-red-500/40'
-                  : 'bg-black/5 border border-black/10 text-zinc-900 hover:border-red-500/40'
-              }`}
-            >
-              <span>IDIOMAS</span>
-              <span className="text-red-500 font-bold ml-1">({currentLang})</span>
-            </button>
-            <AnimatePresence>
-              {isLangOpen && (
-                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className={`absolute right-0 mt-2 w-36 backdrop-blur-2xl border rounded-xl shadow-2xl overflow-hidden z-50 py-1 ${
-                  theme === 'dark' ? 'bg-black/90 border-white/15 text-zinc-200' : 'bg-white/95 border-black/10 text-zinc-800'
-                }`}>
-                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Español</button>
-                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">English</button>
-                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Français</button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
+              <Link href="/" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.inicio}</Link>
+              <Link href="/portafolio" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.portafolio}</Link>
+              <Link href="/contratar" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.contratar}</Link>
+              <Link href="/contacto" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.contacto}</Link>
+              <Link href="/utilidades" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.utilidades}</Link>
+            </nav>
           </div>
 
-          <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className={`hidden sm:flex backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 transition-all ${
-            theme === 'dark'
-              ? 'bg-white/10 border border-white/20 text-white hover:border-emerald-500/60'
-              : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60'
-          }`}>
-            <span>{t.whatsapp}</span>
-          </a>
-
-          <Link href="/cotizacion" className={`block backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal transition-all ${
-            theme === 'dark'
-              ? 'bg-white/10 border border-red-500/40 text-red-500 font-semibold shadow-[0_0_15px_rgba(239,68,68,0.3)]'
-              : 'bg-black/10 border border-red-500/50 text-red-600 font-semibold'
-          }`}>
-            Cotización
-          </Link>
-
-          {/* Botón de menú hamburguesa calcado de Inicio */}
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50 text-white"
-            aria-label="Abrir Menú"
-          >
-            ☰
-          </button>
-        </div>
-      </motion.header>
-
-      {/* MENÚ MÓVIL DESPLEGABLE (Copia idéntica de la plantilla Inicio) */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className={`fixed inset-0 z-30 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden ${
-              theme === 'dark' ? 'bg-black/95 text-white' : 'bg-white/95 text-zinc-900'
-            }`}
-          >
-            <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
-                <span>Inicio</span>
-                <span>→</span>
-              </Link>
-              <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
-                <span>Portafolio</span>
-                <span>→</span>
-              </Link>
-              <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
-                <span>Contratar</span>
-                <span>→</span>
-              </Link>
-              <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
-                <span>Contacto</span>
-                <span>→</span>
-              </Link>
-              <Link href="/utilidades" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
-                <span>Utilidades</span>
-                <span>→</span>
-              </Link>
+          <div className="flex items-center space-x-3 md:space-x-4">
+            <div className="relative hidden md:block" ref={langMenuRef}>
+              <button 
+                onClick={() => setIsLangOpen(!isLangOpen)} 
+                className={`text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center space-x-1 focus:outline-none ${
+                  theme === 'dark'
+                    ? 'bg-white/5 border border-white/10 text-white hover:border-red-500/40'
+                    : 'bg-black/5 border border-black/10 text-zinc-900 hover:border-red-500/40'
+                }`}
+              >
+                <span>IDIOMAS</span>
+                <span className="text-red-500 font-bold ml-1">({currentLang})</span>
+              </button>
+              <AnimatePresence>
+                {isLangOpen && (
+                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className={`absolute right-0 mt-2 w-36 backdrop-blur-2xl border rounded-xl shadow-2xl overflow-hidden z-50 py-1 ${
+                    theme === 'dark' ? 'bg-black/90 border-white/15 text-zinc-200' : 'bg-white/95 border-black/10 text-zinc-800'
+                  }`}>
+                    <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Español</button>
+                    <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">English</button>
+                    <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Français</button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            <div className="flex flex-col space-y-4 pt-6 border-t border-zinc-500/20">
-              <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
-              <div className="flex items-center gap-3">
-                <button onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Español</button>
-                <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
-                <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
+            <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className={`hidden sm:flex backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 transition-all ${
+              theme === 'dark'
+                ? 'bg-white/10 border border-white/20 text-white hover:border-emerald-500/60'
+                : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60'
+            }`}>
+              <span>{t.whatsapp}</span>
+            </a>
+
+            <Link href="/cotizacion" className={`block backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal transition-all ${
+              theme === 'dark'
+                ? 'bg-white/10 border border-red-500/40 text-red-500 font-semibold shadow-[0_0_15px_rgba(239,68,68,0.3)]'
+                : 'bg-black/10 border border-red-500/50 text-red-600 font-semibold'
+            }`}>
+              Cotización
+            </Link>
+
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+              className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50 text-white"
+              aria-label="Abrir Menú"
+            >
+              ☰
+            </button>
+          </div>
+        </motion.header>
+
+        {/* MENÚ MÓVIL DESPLEGABLE */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className={`fixed inset-0 z-30 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden ${
+                theme === 'dark' ? 'bg-black/95 text-white' : 'bg-white/95 text-zinc-900'
+              }`}
+            >
+              <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                  <span>Inicio</span>
+                  <span>→</span>
+                </Link>
+                <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                  <span>Portafolio</span>
+                  <span>→</span>
+                </Link>
+                <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                  <span>Contratar</span>
+                  <span>→</span>
+                </Link>
+                <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                  <span>Contacto</span>
+                  <span>→</span>
+                </Link>
+                <Link href="/utilidades" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                  <span>Utilidades</span>
+                  <span>→</span>
+                </Link>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* Theme Switcher */}
-      <div className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-3 z-30 p-1.5 rounded-full backdrop-blur-xl border shadow-2xl ${
-        theme === 'dark' ? 'bg-white/10 border-white/20' : 'bg-black/5 border-black/10'
-      }`}>
-        <button onClick={() => setTheme('light')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
-        <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
-      </div>
-
-      {/* Main Content */}
-      <main className="w-full max-w-4xl mx-auto px-6 py-12 z-10 flex flex-col items-center">
-        
-        <div className="flex flex-col items-center text-center mb-12 space-y-3">
-          <h1 className={`text-3xl md:text-5xl font-light tracking-tight ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}`}>
-            {t.titulo} <span className={`font-semibold ${theme === 'dark' ? 'text-red-500' : 'text-red-600'}`}>Cotización</span>
-          </h1>
-          <p className={`text-xs md:text-sm font-light tracking-widest uppercase opacity-75 ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}`}>
-            {t.subtitulo}
-          </p>
-        </div>
-
-        {!isSubmitted ? (
-          <motion.form initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} onSubmit={handleSubmit} className={`w-full backdrop-blur-2xl border rounded-3xl p-8 md:p-12 shadow-2xl space-y-8 ${theme === 'dark' ? 'bg-zinc-900/50 border-white/15' : 'bg-white/70 border-zinc-300'}`}>
-            
-            {/* 1. Selector de Cliente */}
-            <div className="space-y-3 border-b pb-6 border-white/10">
-              <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">{t.tipoCliente}</label>
-              <div className="flex gap-4">
-                <button type="button" onClick={() => { setClientType('nuevo'); resetForm(); }} className={`px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all ${clientType === 'nuevo' ? 'bg-red-600 text-white shadow-lg' : 'bg-white/5 border border-white/10 opacity-70 hover:opacity-100'}`}>
-                  {t.nuevoCliente}
-                </button>
-                <button type="button" onClick={() => setClientType('existente')} className={`px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all ${clientType === 'existente' ? 'bg-red-600 text-white shadow-lg' : 'bg-white/5 border border-white/10 opacity-70 hover:opacity-100'}`}>
-                  {t.soyCliente}
-                </button>
-              </div>
-
-              {clientType === 'existente' && (
-                <div className="mt-4 pt-2">
-                  <input type="text" value={identifier} onChange={(e) => handleClientLookup(e.target.value)} placeholder={t.buscarClientePlaceholder} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
-                  <span className="text-[10px] text-red-500 mt-1 block">{t.avisoCliente}</span>
+              <div className="flex flex-col space-y-4 pt-6 border-t border-zinc-500/20">
+                <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
+                <div className="flex items-center gap-3">
+                  <button onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Español</button>
+                  <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
+                  <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
                 </div>
-              )}
-            </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-            {/* 2. Datos Generales */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider opacity-80">{t.infoContacto}</h3>
+        {/* Theme Switcher */}
+        <div className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-3 z-30 p-1.5 rounded-full backdrop-blur-xl border shadow-2xl ${
+          theme === 'dark' ? 'bg-white/10 border-white/20' : 'bg-black/5 border-black/10'
+        }`}>
+          <button onClick={() => setTheme('light')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
+          <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
+        </div>
+
+        {/* Main Content */}
+        <main className="w-full max-w-4xl mx-auto px-6 py-12 z-10 flex flex-col items-center">
+          
+          <div className="flex flex-col items-center text-center mb-12 space-y-3">
+            <h1 className={`text-3xl md:text-5xl font-light tracking-tight ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}`}>
+              {t.titulo} <span className={`font-semibold ${theme === 'dark' ? 'text-red-500' : 'text-red-600'}`}>Cotización</span>
+            </h1>
+            <p className={`text-xs md:text-sm font-light tracking-widest uppercase opacity-75 ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}`}>
+              {t.subtitulo}
+            </p>
+          </div>
+
+          {!isSubmitted ? (
+            <motion.form initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} onSubmit={handleSubmit} className={`w-full backdrop-blur-2xl border rounded-3xl p-8 md:p-12 shadow-2xl space-y-8 ${theme === 'dark' ? 'bg-zinc-900/50 border-white/15' : 'bg-white/70 border-zinc-300'}`}>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.nombreEmpresa}</label>
-                  <input type="text" disabled={isLocked} value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Ej. Nu-Design Corp" className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
-                </div>
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.nombreResponsable}</label>
-                  <input type="text" disabled={isLocked} value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="Ej. Garic Edume" className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
-                </div>
-              </div>
-
-              {/* País y Ciudad */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.seleccionarPais}</label>
-                  <select disabled={isLocked} value={selectedCountry} onChange={(e) => handleCountryChange(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white focus:border-red-500' : 'bg-white border-zinc-400 text-zinc-900 focus:border-red-600'}`}>
-                    {allowedCountries.map((c, i) => (
-                      <option key={i} value={c.name} className="bg-zinc-900 text-white">{c.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.ciudad}</label>
-                  <select disabled={isLocked} value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white focus:border-red-500' : 'bg-white border-zinc-400 text-zinc-900 focus:border-red-600'}`}>
-                    {allowedCountries.find(c => c.name === selectedCountry)?.cities.map((city, i) => (
-                      <option key={i} value={city} className="bg-zinc-900 text-white">{city}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Teléfono y Correo */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.telefono}</label>
-                  <div className="flex">
-                    <span className={`inline-flex items-center px-3 rounded-l-xl border border-r-0 text-xs font-semibold ${theme === 'dark' ? 'bg-zinc-800 border-white/20 text-red-400' : 'bg-zinc-200 border-zinc-400 text-red-600'}`}>
-                      {countryCode}
-                    </span>
-                    <input type="tel" required disabled={isLocked} value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="8294608316" className={`w-full bg-transparent border rounded-r-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.correo}</label>
-                  <input type="email" required disabled={isLocked} value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="correo@empresa.com" className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
-                </div>
-              </div>
-            </div>
-
-            {/* 3. Selector de Servicio */}
-            <div className="space-y-4 border-t pt-6 border-white/10">
-              <h3 className="text-sm font-semibold uppercase tracking-wider opacity-80">{t.seleccionServicio}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.renglonPrincipal}</label>
-                  <select required value={selectedMainService} onChange={(e) => { setSelectedMainService(e.target.value); setSelectedSubService(''); }} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white focus:border-red-500' : 'bg-white border-zinc-400 text-zinc-900 focus:border-red-600'}`}>
-                    <option value="" disabled>{t.seleccionaServicio}</option>
-                    {Object.keys(masterCatalog).map((mainCat, idx) => (
-                      <option key={idx} value={mainCat} className="bg-zinc-900 text-white">{mainCat}</option>
-                    ))}
-                  </select>
+              {/* 1. Selector de Cliente */}
+              <div className="space-y-3 border-b pb-6 border-white/10">
+                <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">{t.tipoCliente}</label>
+                <div className="flex gap-4">
+                  <button type="button" onClick={() => { setClientType('nuevo'); resetForm(); }} className={`px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all ${clientType === 'nuevo' ? 'bg-red-600 text-white shadow-lg' : 'bg-white/5 border border-white/10 opacity-70 hover:opacity-100'}`}>
+                    {t.nuevoCliente}
+                  </button>
+                  <button type="button" onClick={() => setClientType('existente')} className={`px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all ${clientType === 'existente' ? 'bg-red-600 text-white shadow-lg' : 'bg-white/5 border border-white/10 opacity-70 hover:opacity-100'}`}>
+                    {t.soyCliente}
+                  </button>
                 </div>
 
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.subservicioEspecifico}</label>
-                  <select required disabled={!selectedMainService} value={selectedSubService} onChange={(e) => setSelectedSubService(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white focus:border-red-500' : 'bg-white border-zinc-400 text-zinc-900 focus:border-red-600'}`}>
-                    <option value="" disabled>{t.seleccionaEspecificacion}</option>
-                    {selectedMainService && masterCatalog[selectedMainService].map((sub, idx) => (
-                      <option key={idx} value={sub.name} className="bg-zinc-900 text-white">{sub.name}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {currentSubServiceDetails && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`p-5 rounded-2xl border text-xs space-y-3 ${theme === 'dark' ? 'bg-black/40 border-red-500/30' : 'bg-white/50 border-red-500/20'}`}>
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold text-red-500 uppercase tracking-wider">{currentSubServiceDetails.name}</span>
-                    <span className="font-bold text-sm">
-                      {currentSubServiceDetails.mode.includes('Validación') ? 'Precio a Consultar' : `${currentSubServiceDetails.price} • ${currentSubServiceDetails.time}`}
-                    </span>
-                  </div>
-                  <p className="opacity-80 font-light leading-relaxed">{currentSubServiceDetails.description}</p>
-                </motion.div>
-              )}
-            </div>
-
-            {/* 4. Selector de Tiempo */}
-            <div className="space-y-4 border-t pt-6 border-white/10">
-              <h3 className="text-sm font-semibold uppercase tracking-wider opacity-80">{t.tiempoNecesario}</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.cantidad1}</label>
-                  <select value={timeQuantity} onChange={(e) => setTimeQuantity(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
-                    {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => <option key={n} value={n} className="bg-zinc-900 text-white">{n}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.unidad1}</label>
-                  <select value={timeUnit} onChange={(e) => setTimeUnit(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
-                    <option value="horas" className="bg-zinc-900 text-white">{t.horas}</option>
-                    <option value="días" className="bg-zinc-900 text-white">{t.dias}</option>
-                    <option value="semanas" className="bg-zinc-900 text-white">{t.semanas}</option>
-                    <option value="meses" className="bg-zinc-900 text-white">{t.meses}</option>
-                    <option value="año" className="bg-zinc-900 text-white">{t.anio}</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.adicional}</label>
-                  <select value={timeQuantity2} onChange={(e) => setTimeQuantity2(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
-                    {[0,1,2,3,4,5,6].map(n => <option key={n} value={n} className="bg-zinc-900 text-white">{n}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.unidadAdicional}</label>
-                  <select value={timeUnit2} onChange={(e) => setTimeUnit2(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
-                    <option value="ninguno" className="bg-zinc-900 text-white">{t.ninguno}</option>
-                    <option value="días" className="bg-zinc-900 text-white">{t.dias}</option>
-                    <option value="semanas" className="bg-zinc-900 text-white">{t.semanas}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* 5. Muestra Física */}
-            {showPhysicalSampleOption && (
-              <div className="space-y-4 border-t pt-6 border-white/10">
-                <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">{t.muestraFisica}</label>
-                <div className="flex gap-6">
-                  <label className="flex items-center space-x-2 text-xs cursor-pointer">
-                    <input type="radio" name="physicalSample" checked={needsPhysicalSample === 'si'} onChange={() => setNeedsPhysicalSample('si')} className="accent-red-600" />
-                    <span>{t.si}</span>
-                  </label>
-                  <label className="flex items-center space-x-2 text-xs cursor-pointer">
-                    <input type="radio" name="physicalSample" checked={needsPhysicalSample === 'no'} onChange={() => setNeedsPhysicalSample('no')} className="accent-red-600" />
-                    <span>{t.noDigital}</span>
-                  </label>
-                </div>
-              </div>
-            )}
-
-            {/* Archivo */}
-            <div className="space-y-2 border-t pt-6 border-white/10">
-              <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.adjuntarRef}</label>
-              <input type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" onChange={handleFileChange} className={`w-full text-xs file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-600 file:text-white hover:file:bg-red-700 cursor-pointer ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}`} />
-              {fileError && <p className="text-[11px] text-red-500 mt-1 font-semibold">{fileError}</p>}
-              {file && <p className="text-[11px] text-emerald-400 mt-1 font-semibold">Archivo listo: {file.name}</p>}
-            </div>
-
-            {/* 6. Canal de Entrega */}
-            <div className="space-y-3 border-t pt-6 border-white/10">
-              <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">{t.canalEntrega}</label>
-              <div className="flex gap-6 pt-1">
-                <label className="flex items-center space-x-2 text-xs cursor-pointer">
-                  <input type="radio" name="receiveChannel" checked={receiveChannel === 'whatsapp'} onChange={() => setReceiveChannel('whatsapp')} className="accent-red-600" />
-                  <span>{t.whatsappCanal} ({countryCode} {contactPhone || 'Número'})</span>
-                </label>
-                <label className="flex items-center space-x-2 text-xs cursor-pointer">
-                  <input type="radio" name="receiveChannel" checked={receiveChannel === 'correo'} onChange={() => setReceiveChannel('correo')} className="accent-red-600" />
-                  <span>{t.correoCanal} ({contactEmail || 'Correo'})</span>
-                </label>
-              </div>
-            </div>
-
-            {/* 7. MODALIDAD DE PAGO Y ACUERDO */}
-            {selectedSubService && (
-              <div className="space-y-4 border-t pt-6 border-white/10">
-                <h3 className="text-sm font-semibold uppercase tracking-wider opacity-80">Método de Procesamiento y Pago</h3>
-                
-                {isPriceFixed ? (
-                  <div className="p-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 space-y-3">
-                    <span className="text-xs font-semibold text-emerald-400 flex items-center gap-2">
-                      Precio Fijo Automatizable Disponible
-                    </span>
-                    <p className="text-[11px] opacity-80 leading-relaxed">
-                      Este servicio tiene una tarifa estandarizada. Puedes realizar tu pago en línea de forma segura con **Apple Pay, Google Pay o Tarjeta** o coordinar la orden por WhatsApp.
-                    </p>
-                    <div className="flex gap-4 pt-1">
-                      <button type="button" onClick={() => setPaymentMethod('online')} className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${paymentMethod === 'online' ? 'bg-emerald-600 border-emerald-500 text-white shadow-lg' : 'border-white/20 opacity-70'}`}>
-                        Apple / Google Pay / Tarjeta
-                      </button>
-                      <button type="button" onClick={() => setPaymentMethod('acuerdo')} className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${paymentMethod === 'acuerdo' ? 'bg-red-600 border-red-500 text-white shadow-lg' : 'border-white/20 opacity-70'}`}>
-                        Coordinar por WhatsApp
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-4 rounded-2xl border border-red-500/30 bg-red-500/10 space-y-2">
-                    <span className="text-xs font-semibold text-red-400 flex items-center gap-2">
-                      Requiere Evaluación & Acuerdo a Medida
-                    </span>
-                    <p className="text-[11px] opacity-80 leading-relaxed">
-                      Este servicio requiere análisis de alcance. Al enviar el formulario, iniciaremos una conversación directa vía WhatsApp o correo para acordar los detalles y el presupuesto exacto.
-                    </p>
+                {clientType === 'existente' && (
+                  <div className="mt-4 pt-2">
+                    <input type="text" value={identifier} onChange={(e) => handleClientLookup(e.target.value)} placeholder={t.buscarClientePlaceholder} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
+                    <span className="text-[10px] text-red-500 mt-1 block">{t.avisoCliente}</span>
                   </div>
                 )}
               </div>
-            )}
 
-            {/* 8. TÉRMINOS Y CONDICIONES OBLIGATORIOS */}
-            <div className="space-y-3 border-t pt-6 border-white/10">
-              <div className="flex items-start gap-3">
-                <input 
-                  type="checkbox" 
-                  id="terms" 
-                  required
-                  checked={acceptedTerms} 
-                  onChange={(e) => setAcceptedTerms(e.target.checked)} 
-                  className="mt-1 w-4 h-4 accent-red-600 rounded cursor-pointer" 
-                />
-                <label htmlFor="terms" className="text-xs opacity-80 leading-relaxed cursor-pointer">
-                  Acepto los{' '}
-                  <button type="button" onClick={() => setShowTermsModal(true)} className="text-red-500 font-semibold underline hover:text-red-400">
-                    Términos y Condiciones de Servicio
-                  </button>{' '}
-                  de NU-DESIGN y la política de entrega de archivos.
-                </label>
-              </div>
-            </div>
+              {/* 2. Datos Generales */}
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold uppercase tracking-wider opacity-80">{t.infoContacto}</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.nombreEmpresa}</label>
+                    <input type="text" disabled={isLocked} value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Ej. Nu-Design Corp" className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
+                  </div>
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.nombreResponsable}</label>
+                    <input type="text" disabled={isLocked} value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="Ej. Garic Edume" className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
+                  </div>
+                </div>
 
-            {/* Botón de Enviar */}
-            <div className="pt-4 flex justify-center">
-              <motion.button 
-                whileHover={{ scale: 1.05 }} 
-                whileTap={{ scale: 0.95 }} 
-                type="submit" 
-                className="w-full md:w-auto px-12 py-4 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl transition-all"
-              >
-                {isPriceFixed && paymentMethod === 'online' ? 'Proceder al Pago Seguro' : t.botonEnviar}
-              </motion.button>
-            </div>
+                {/* País y Ciudad */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.seleccionarPais}</label>
+                    <select disabled={isLocked} value={selectedCountry} onChange={(e) => handleCountryChange(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white focus:border-red-500' : 'bg-white border-zinc-400 text-zinc-900 focus:border-red-600'}`}>
+                      {allowedCountries.map((c, i) => (
+                        <option key={i} value={c.name} className="bg-zinc-900 text-white">{c.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.ciudad}</label>
+                    <select disabled={isLocked} value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white focus:border-red-500' : 'bg-white border-zinc-400 text-zinc-900 focus:border-red-600'}`}>
+                      {allowedCountries.find(c => c.name === selectedCountry)?.cities.map((city, i) => (
+                        <option key={i} value={city} className="bg-zinc-900 text-white">{city}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
 
-          </motion.form>
-        ) : (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className={`w-full backdrop-blur-2xl border rounded-3xl p-12 text-center space-y-6 ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/70 border-zinc-300'}`}>
-            <div className="w-16 h-16 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
-              ✓
-            </div>
-            <h2 className="text-2xl md:text-3xl font-light">{t.exitoTitulo}</h2>
-            <p className="text-xs md:text-sm font-light opacity-80 max-w-lg mx-auto leading-relaxed">
-              {t.exitoDesc} <strong>{receiveChannel === 'whatsapp' ? t.whatsappCanal : t.correoCanal}</strong>.
-            </p>
-            <button onClick={resetForm} className="mt-4 px-8 py-3 bg-red-600 text-white rounded-full text-xs uppercase tracking-wider font-semibold hover:bg-red-700 transition-colors">
-              {t.otraCotizacion}
-            </button>
-          </motion.div>
-        )}
-
-      </main>
-
-      {/* MODAL DE TÉRMINOS Y CONDICIONES */}
-      <AnimatePresence>
-        {showTermsModal && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }} className={`max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8 rounded-3xl border shadow-2xl space-y-6 ${theme === 'dark' ? 'bg-zinc-950 border-white/20 text-zinc-200' : 'bg-white border-zinc-300 text-zinc-800'}`}>
-              <div className="flex justify-between items-center border-b border-white/10 pb-4">
-                <h3 className="text-lg font-bold text-red-500 uppercase tracking-wide">Términos y Condiciones • NU-DESIGN</h3>
-                <button onClick={() => setShowTermsModal(false)} className="text-xl opacity-60 hover:opacity-100">&times;</button>
+                {/* Teléfono y Correo */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.telefono}</label>
+                    <div className="flex">
+                      <span className={`inline-flex items-center px-3 rounded-l-xl border border-r-0 text-xs font-semibold ${theme === 'dark' ? 'bg-zinc-800 border-white/20 text-red-400' : 'bg-zinc-200 border-zinc-400 text-red-600'}`}>
+                        {countryCode}
+                      </span>
+                      <input type="tel" required disabled={isLocked} value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="8294608316" className={`w-full bg-transparent border rounded-r-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.correo}</label>
+                    <input type="email" required disabled={isLocked} value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="correo@empresa.com" className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
+                  </div>
+                </div>
               </div>
 
-              <div className="text-xs space-y-4 font-light leading-relaxed">
-                <p><strong>1. Propiedad Intelectual:</strong> Todos los derechos de autor de las propuestas conceptuales pertenecen a NU-DESIGN hasta la liquidación total del proyecto.</p>
-                <p><strong>2. Revisiones y Tiempos:</strong> Cada servicio incluye hasta 3 rondas de ajustes dentro del tiempo estimado especificado en la cotización.</p>
-                <p><strong>3. Archivos y Formatos:</strong> Los archivos finales se entregan en formatos editables (AI, EPS, PDF) e imágenes de alta resolución (PNG, JPG, SVG) según el paquete adquirido.</p>
-                <p><strong>4. Pagos y Reembolsos:</strong> Los pagos únicos para servicios automatizables o el anticipo acordado no son reembolsables una vez iniciado el proceso de diseño activo.</p>
+              {/* 3. Selector de Servicio */}
+              <div className="space-y-4 border-t pt-6 border-white/10">
+                <h3 className="text-sm font-semibold uppercase tracking-wider opacity-80">{t.seleccionServicio}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.renglonPrincipal}</label>
+                    <select required value={selectedMainService} onChange={(e) => { setSelectedMainService(e.target.value); setSelectedSubService(''); }} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white focus:border-red-500' : 'bg-white border-zinc-400 text-zinc-900 focus:border-red-600'}`}>
+                      <option value="" disabled>{t.seleccionaServicio}</option>
+                      {Object.keys(masterCatalog).map((mainCat, idx) => (
+                        <option key={idx} value={mainCat} className="bg-zinc-900 text-white">{mainCat}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.subservicioEspecifico}</label>
+                    <select required disabled={!selectedMainService} value={selectedSubService} onChange={(e) => setSelectedSubService(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white focus:border-red-500' : 'bg-white border-zinc-400 text-zinc-900 focus:border-red-600'}`}>
+                      <option value="" disabled>{t.seleccionaEspecificacion}</option>
+                      {selectedMainService && masterCatalog[selectedMainService].map((sub, idx) => (
+                        <option key={idx} value={sub.name} className="bg-zinc-900 text-white">{sub.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {currentSubServiceDetails && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`p-5 rounded-2xl border text-xs space-y-3 ${theme === 'dark' ? 'bg-black/40 border-red-500/30' : 'bg-white/50 border-red-500/20'}`}>
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-red-500 uppercase tracking-wider">{currentSubServiceDetails.name}</span>
+                      <span className="font-bold text-sm">
+                        {currentSubServiceDetails.mode.includes('Validación') ? 'Precio a Consultar' : `${currentSubServiceDetails.price} • ${currentSubServiceDetails.time}`}
+                      </span>
+                    </div>
+                    <p className="opacity-80 font-light leading-relaxed">{currentSubServiceDetails.description}</p>
+                  </motion.div>
+                )}
               </div>
 
-              <div className="pt-4 flex justify-end">
-                <button onClick={() => { setAcceptedTerms(true); setShowTermsModal(false); }} className="px-6 py-2.5 bg-red-600 text-white rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-red-700">
-                  Entendido y Aceptar
-                </button>
+              {/* 4. Selector de Tiempo */}
+              <div className="space-y-4 border-t pt-6 border-white/10">
+                <h3 className="text-sm font-semibold uppercase tracking-wider opacity-80">{t.tiempoNecesario}</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.cantidad1}</label>
+                    <select value={timeQuantity} onChange={(e) => setTimeQuantity(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
+                      {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => <option key={n} value={n} className="bg-zinc-900 text-white">{n}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.unidad1}</label>
+                    <select value={timeUnit} onChange={(e) => setTimeUnit(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
+                      <option value="horas" className="bg-zinc-900 text-white">{t.horas}</option>
+                      <option value="días" className="bg-zinc-900 text-white">{t.dias}</option>
+                      <option value="semanas" className="bg-zinc-900 text-white">{t.semanas}</option>
+                      <option value="meses" className="bg-zinc-900 text-white">{t.meses}</option>
+                      <option value="año" className="bg-zinc-900 text-white">{t.anio}</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.adicional}</label>
+                    <select value={timeQuantity2} onChange={(e) => setTimeQuantity2(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
+                      {[0,1,2,3,4,5,6].map(n => <option key={n} value={n} className="bg-zinc-900 text-white">{n}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.unidadAdicional}</label>
+                    <select value={timeUnit2} onChange={(e) => setTimeUnit2(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
+                      <option value="ninguno" className="bg-zinc-900 text-white">{t.ninguno}</option>
+                      <option value="días" className="bg-zinc-900 text-white">{t.dias}</option>
+                      <option value="semanas" className="bg-zinc-900 text-white">{t.semanas}</option>
+                    </select>
+                  </div>
+                </div>
               </div>
+
+              {/* 5. Muestra Física */}
+              {showPhysicalSampleOption && (
+                <div className="space-y-4 border-t pt-6 border-white/10">
+                  <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">{t.muestraFisica}</label>
+                  <div className="flex gap-6">
+                    <label className="flex items-center space-x-2 text-xs cursor-pointer">
+                      <input type="radio" name="physicalSample" checked={needsPhysicalSample === 'si'} onChange={() => setNeedsPhysicalSample('si')} className="accent-red-600" />
+                      <span>{t.si}</span>
+                    </label>
+                    <label className="flex items-center space-x-2 text-xs cursor-pointer">
+                      <input type="radio" name="physicalSample" checked={needsPhysicalSample === 'no'} onChange={() => setNeedsPhysicalSample('no')} className="accent-red-600" />
+                      <span>{t.noDigital}</span>
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {/* Archivo */}
+              <div className="space-y-2 border-t pt-6 border-white/10">
+                <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.adjuntarRef}</label>
+                <input type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" onChange={handleFileChange} className={`w-full text-xs file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-600 file:text-white hover:file:bg-red-700 cursor-pointer ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}`} />
+                {fileError && <p className="text-[11px] text-red-500 mt-1 font-semibold">{fileError}</p>}
+                {file && <p className="text-[11px] text-emerald-400 mt-1 font-semibold">Archivo listo: {file.name}</p>}
+              </div>
+
+              {/* 6. Canal de Entrega */}
+              <div className="space-y-3 border-t pt-6 border-white/10">
+                <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">{t.canalEntrega}</label>
+                <div className="flex gap-6 pt-1">
+                  <label className="flex items-center space-x-2 text-xs cursor-pointer">
+                    <input type="radio" name="receiveChannel" checked={receiveChannel === 'whatsapp'} onChange={() => setReceiveChannel('whatsapp')} className="accent-red-600" />
+                    <span>{t.whatsappCanal} ({countryCode} {contactPhone || 'Número'})</span>
+                  </label>
+                  <label className="flex items-center space-x-2 text-xs cursor-pointer">
+                    <input type="radio" name="receiveChannel" checked={receiveChannel === 'correo'} onChange={() => setReceiveChannel('correo')} className="accent-red-600" />
+                    <span>{t.correoCanal} ({contactEmail || 'Correo'})</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* 7. MODALIDAD DE PAGO Y ACUERDO (CON BOTONES DE PAYPAL) */}
+              {selectedSubService && (
+                <div className="space-y-4 border-t pt-6 border-white/10">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider opacity-80">Método de Procesamiento y Pago</h3>
+                  
+                  {isPriceFixed ? (
+                    <div className="p-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 space-y-4">
+                      <span className="text-xs font-semibold text-emerald-400 flex items-center gap-2">
+                        Precio Fijo Automatizable Disponible
+                      </span>
+                      <p className="text-[11px] opacity-80 leading-relaxed">
+                        Este servicio tiene una tarifa estandarizada. Puedes realizar tu pago en línea de forma segura con **PayPal o Tarjeta** o coordinar la orden por WhatsApp.
+                      </p>
+                      <div className="flex gap-4 pt-1">
+                        <button type="button" onClick={() => setPaymentMethod('online')} className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${paymentMethod === 'online' ? 'bg-emerald-600 border-emerald-500 text-white shadow-lg' : 'border-white/20 opacity-70'}`}>
+                          PayPal / Tarjeta de Crédito
+                        </button>
+                        <button type="button" onClick={() => setPaymentMethod('acuerdo')} className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${paymentMethod === 'acuerdo' ? 'bg-red-600 border-red-500 text-white shadow-lg' : 'border-white/20 opacity-70'}`}>
+                          Coordinar por WhatsApp
+                        </button>
+                      </div>
+
+                      {/* Renderizado directo de Botones de PayPal en línea */}
+                      {paymentMethod === 'online' && (
+                        <div className="pt-3 max-w-sm mx-auto">
+                          <PayPalButtons
+                            style={{ layout: 'vertical', color: 'gold', shape: 'pill', label: 'pay' }}
+                            createOrder={(data, actions) => {
+                              return actions.order.create({
+                                intent: "CAPTURE",
+                                purchase_units: [
+                                  {
+                                    description: `Servicio NU-Design: ${currentSubServiceDetails?.name}`,
+                                    amount: {
+                                      currency_code: "USD",
+                                      value: getAmountUSD(),
+                                    },
+                                  },
+                                ],
+                              });
+                            }}
+                            onApprove={async (data, actions) => {
+                              if (actions.order) {
+                                await actions.order.capture();
+                                setIsSubmitted(true);
+                              }
+                            }}
+                            onError={(err) => {
+                              console.error("Error PayPal:", err);
+                              alert("Ocurrió un contratiempo con PayPal. Por favor reintenta.");
+                            }}
+                          />
+                        </div>
+                      )}
+
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-2xl border border-red-500/30 bg-red-500/10 space-y-2">
+                      <span className="text-xs font-semibold text-red-400 flex items-center gap-2">
+                        Requiere Evaluación & Acuerdo a Medida
+                      </span>
+                      <p className="text-[11px] opacity-80 leading-relaxed">
+                        Este servicio requiere análisis de alcance. Al enviar el formulario, iniciaremos una conversación directa vía WhatsApp o correo para acordar los detalles y el presupuesto exacto.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* 8. TÉRMINOS Y CONDICIONES OBLIGATORIOS */}
+              <div className="space-y-3 border-t pt-6 border-white/10">
+                <div className="flex items-start gap-3">
+                  <input 
+                    type="checkbox" 
+                    id="terms" 
+                    required
+                    checked={acceptedTerms} 
+                    onChange={(e) => setAcceptedTerms(e.target.checked)} 
+                    className="mt-1 w-4 h-4 accent-red-600 rounded cursor-pointer" 
+                  />
+                  <label htmlFor="terms" className="text-xs opacity-80 leading-relaxed cursor-pointer">
+                    Acepto los{' '}
+                    <button type="button" onClick={() => setShowTermsModal(true)} className="text-red-500 font-semibold underline hover:text-red-400">
+                      Términos y Condiciones de Servicio
+                    </button>{' '}
+                    de NU-DESIGN y la política de entrega de archivos.
+                  </label>
+                </div>
+              </div>
+
+              {/* Botón de Enviar (Sólo si es WhatsApp/Manual) */}
+              {(!isPriceFixed || paymentMethod === 'acuerdo') && (
+                <div className="pt-4 flex justify-center">
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }} 
+                    whileTap={{ scale: 0.95 }} 
+                    type="submit" 
+                    className="w-full md:w-auto px-12 py-4 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl transition-all"
+                  >
+                    {t.botonEnviar}
+                  </motion.button>
+                </div>
+              )}
+
+            </motion.form>
+          ) : (
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className={`w-full backdrop-blur-2xl border rounded-3xl p-12 text-center space-y-6 ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/70 border-zinc-300'}`}>
+              <div className="w-16 h-16 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
+                ✓
+              </div>
+              <h2 className="text-2xl md:text-3xl font-light">{t.exitoTitulo}</h2>
+              <p className="text-xs md:text-sm font-light opacity-80 max-w-lg mx-auto leading-relaxed">
+                {t.exitoDesc} <strong>{receiveChannel === 'whatsapp' ? t.whatsappCanal : t.correoCanal}</strong>.
+              </p>
+              <button onClick={resetForm} className="mt-4 px-8 py-3 bg-red-600 text-white rounded-full text-xs uppercase tracking-wider font-semibold hover:bg-red-700 transition-colors">
+                {t.otraCotizacion}
+              </button>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
 
-      {/* Footer Unificado en 1 sola línea */}
-      <footer className="w-full px-4 py-4 flex flex-col items-center space-y-3 z-25 mt-6">
-        <div className={`text-[9px] sm:text-[11px] md:text-xs font-light tracking-tight sm:tracking-wide text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
-          theme === 'dark' ? 'text-zinc-400 opacity-70' : 'text-zinc-700 opacity-90'
-        }`}>
-          Nu-Design Derechos reservados 2026 - Design by Garic Edume
-        </div>
-      </footer>
+        </main>
 
-    </div>
+        {/* MODAL DE TÉRMINOS Y CONDICIONES */}
+        <AnimatePresence>
+          {showTermsModal && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+              <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }} className={`max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8 rounded-3xl border shadow-2xl space-y-6 ${theme === 'dark' ? 'bg-zinc-950 border-white/20 text-zinc-200' : 'bg-white border-zinc-300 text-zinc-800'}`}>
+                <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                  <h3 className="text-lg font-bold text-red-500 uppercase tracking-wide">Términos y Condiciones • NU-DESIGN</h3>
+                  <button onClick={() => setShowTermsModal(false)} className="text-xl opacity-60 hover:opacity-100">&times;</button>
+                </div>
+
+                <div className="text-xs space-y-4 font-light leading-relaxed">
+                  <p><strong>1. Propiedad Intelectual:</strong> Todos los derechos de autor de las propuestas conceptuales pertenecen a NU-DESIGN hasta la liquidación total del proyecto.</p>
+                  <p><strong>2. Revisiones y Tiempos:</strong> Cada servicio incluye hasta 3 rondas de ajustes dentro del tiempo estimado especificado en la cotización.</p>
+                  <p><strong>3. Archivos y Formatos:</strong> Los archivos finales se entregan en formatos editables (AI, EPS, PDF) e imágenes de alta resolución (PNG, JPG, SVG) según el paquete adquirido.</p>
+                  <p><strong>4. Pagos y Reembolsos:</strong> Los pagos únicos para servicios automatizables o el anticipo acordado no son reembolsables una vez iniciado el proceso de diseño activo.</p>
+                </div>
+
+                <div className="pt-4 flex justify-end">
+                  <button onClick={() => { setAcceptedTerms(true); setShowTermsModal(false); }} className="px-6 py-2.5 bg-red-600 text-white rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-red-700">
+                    Entendido y Aceptar
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Footer Unificado en 1 sola línea */}
+        <footer className="w-full px-4 py-4 flex flex-col items-center space-y-3 z-25 mt-6">
+          <div className={`text-[9px] sm:text-[11px] md:text-xs font-light tracking-tight sm:tracking-wide text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
+            theme === 'dark' ? 'text-zinc-400 opacity-70' : 'text-zinc-700 opacity-90'
+          }`}>
+            Nu-Design Derechos reservados 2026 - Design by Garic Edume
+          </div>
+        </footer>
+
+      </div>
+    </PayPalScriptProvider>
   );
 }
