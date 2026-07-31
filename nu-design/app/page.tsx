@@ -48,7 +48,7 @@ const serviceIcons = [
     name: "Idea y Concepto", 
     label: "Idea & Concept",
     svg: (
-      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
         <path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7zM9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1z"/>
       </svg>
     )
@@ -57,7 +57,7 @@ const serviceIcons = [
     name: "Branding", 
     label: "Branding",
     svg: (
-      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
         <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
       </svg>
     )
@@ -66,7 +66,7 @@ const serviceIcons = [
     name: "Diseño Gráfico", 
     label: "Graphic Design",
     svg: (
-      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
         <path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10c1.38 0 2.5-1.12 2.5-2.5 0-.61-.23-1.21-.64-1.67-.38-.45-.6-.1-.6-.78 0-.55.45-1 1-1h1.74c3.31 0 6-2.69 6-6 0-4.96-4.49-9.05-10-9.05zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 8 6.5 8s1.5.67 1.5 1.5S7.33 11 6.5 11zm3-4C8.67 7 8 6.33 8 5.5S8.67 4 9.5 4s1.5.67 1.5 1.5S10.33 7 9.5 7zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 4 14.5 4s1.5.67 1.5 1.5S15.33 7 14.5 7zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 8 17.5 8s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
       </svg>
     )
@@ -75,7 +75,7 @@ const serviceIcons = [
     name: "Diseño UI/UX", 
     label: "UI/UX Design",
     svg: (
-      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
         <path d="M20 3H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v2h8v-2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H4V5h16v12z"/>
       </svg>
     )
@@ -84,7 +84,7 @@ const serviceIcons = [
     name: "Layout y Diagramación", 
     label: "Layout",
     svg: (
-      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
         <path d="M4 11h5V5H4v6zm0 7h5v-5H4v6zm6 0h10v-5H10v6zm6-13v6h4V5h-4zm-6 6h4V5h-4v6z"/>
       </svg>
     )
@@ -93,7 +93,7 @@ const serviceIcons = [
     name: "Desarrollo Web", 
     label: "Web Dev",
     svg: (
-      <svg className="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
         <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
       </svg>
     )
@@ -437,61 +437,61 @@ export default function Home() {
         <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
       </motion.div>
 
-      {/* Main Hero Section */}
-      <main className="w-full max-w-5xl mx-auto px-4 flex flex-col items-center text-center my-auto z-10 space-y-6 md:space-y-8 py-6">
+      {/* Main Hero Section - JERARQUÍA REFINADA */}
+      <main className="w-full max-w-5xl mx-auto px-4 flex flex-col items-center text-center my-auto z-10 space-y-5 md:space-y-7 py-4">
         
-        {/* Icono superior */}
+        {/* Icono superior PROTAGÓNICO Y GRANDE */}
         <motion.div 
           initial={{ scale: 0.8, opacity: 0, y: 15 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative group cursor-pointer w-20 h-20 md:w-28 md:h-28 flex items-center justify-center"
+          className="relative group cursor-pointer w-28 h-28 md:w-36 md:h-36 flex items-center justify-center"
         >
           <Image 
             src={theme === 'dark' ? '/icon-dark.svg' : '/icon-light.svg'} 
             alt="NU-Design Icon" 
-            width={112} 
-            height={112} 
-            className="w-full h-full object-contain drop-shadow-[0_10px_25px_rgba(255,0,0,0.25)] transition-transform duration-500 group-hover:scale-105" 
+            width={144} 
+            height={144} 
+            className="w-full h-full object-contain drop-shadow-[0_12px_30px_rgba(255,0,0,0.3)] transition-transform duration-500 group-hover:scale-105" 
             priority
           />
         </motion.div>
 
-        {/* Wordmark */}
+        {/* Wordmark ELEGANTE Y AMPLIO */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="w-56 sm:w-64 md:w-88 flex items-center justify-center"
+          className="w-72 sm:w-88 md:w-md flex items-center justify-center"
         >
           <Image 
             src={theme === 'dark' ? '/wordmark-dark.svg' : '/wordmark-light.svg'} 
             alt="NU-Design Wordmark" 
-            width={320} 
-            height={80} 
-            className="w-full h-auto object-contain drop-shadow-md" 
+            width={440} 
+            height={110} 
+            className="w-full h-auto object-contain drop-shadow-lg" 
             priority
           />
         </motion.div>
 
-        {/* ICONOS INTERACTIVOS VISIBLES CON SVG NATIVO */}
+        {/* ICONOS INTERACTIVOS COMPACTOS (MÁS PEQUEÑOS QUE EL WORDMARK) */}
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.35 }}
-          className="flex items-center flex-wrap justify-center gap-3 sm:gap-5 md:gap-8 pt-2"
+          className="flex items-center flex-wrap justify-center gap-2.5 sm:gap-4 md:gap-5 pt-1"
         >
           {serviceIcons.map((service, index) => (
             <motion.button
               key={index}
-              whileHover={{ scale: 1.15, y: -4 }}
+              whileHover={{ scale: 1.12, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handleServiceClick(service.name)}
               title={service.name}
-              className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl backdrop-blur-2xl border flex items-center justify-center transition-all group relative cursor-pointer ${
+              className={`w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-xl backdrop-blur-2xl border flex items-center justify-center transition-all group relative cursor-pointer ${
                 theme === 'dark'
-                  ? 'bg-white/10 border-white/20 text-white hover:text-red-500 hover:border-red-500/60 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)]'
-                  : 'bg-black/5 border-black/15 text-zinc-900 hover:text-red-600 hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]'
+                  ? 'bg-white/10 border-white/15 text-white/90 hover:text-red-500 hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.35)]'
+                  : 'bg-black/5 border-black/10 text-zinc-800 hover:text-red-600 hover:border-red-500/60 hover:shadow-[0_0_15px_rgba(239,68,68,0.25)]'
               }`}
             >
               {service.svg}
@@ -499,13 +499,13 @@ export default function Home() {
           ))}
         </motion.div>
 
-        {/* Buscador Interactivo */}
+        {/* Buscador Interactivo con Lupa SVG Minimalista */}
         <motion.form 
           onSubmit={handleSearchSubmit}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className={`w-full max-w-3xl backdrop-blur-3xl border rounded-full px-4 sm:px-6 md:px-10 py-3 md:py-5 flex items-center justify-between shadow-2xl focus-within:border-red-500/60 focus-within:shadow-[0_0_30px_rgba(239,68,68,0.25)] transition-all duration-500 relative overflow-hidden ${
+          className={`w-full max-w-2xl backdrop-blur-3xl border rounded-full px-5 md:px-8 py-3 md:py-4 flex items-center justify-between shadow-2xl focus-within:border-red-500/60 focus-within:shadow-[0_0_30px_rgba(239,68,68,0.25)] transition-all duration-500 relative overflow-hidden ${
             theme === 'dark'
               ? 'bg-black/40 border-white/20 text-white'
               : 'bg-white/60 border-black/15 text-zinc-900'
@@ -516,17 +516,21 @@ export default function Home() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t.searchPlaceholder} 
-            className={`w-full bg-transparent border-none outline-none text-xs sm:text-sm md:text-lg font-normal tracking-wide z-10 ${
+            className={`w-full bg-transparent border-none outline-none text-xs sm:text-sm md:text-base font-normal tracking-wide z-10 ${
               theme === 'dark' 
                 ? 'placeholder-zinc-400 text-white' 
                 : 'placeholder-zinc-600 text-zinc-900'
             }`} 
           />
-          <button type="submit" className="text-red-500 font-bold text-lg md:text-2xl ml-2">🔍</button>
+          <button type="submit" className="text-zinc-300 hover:text-red-500 transition-colors ml-3 cursor-pointer z-10" title="Buscar servicio">
+            <svg className="w-5 h-5 md:w-6 md:h-6 stroke-current fill-none" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+          </button>
         </motion.form>
 
         {/* Bloque de Texto de Servicios */}
-        <div className={`w-full max-w-3xl text-[10px] sm:text-xs md:text-sm font-light leading-relaxed px-2 text-center pt-1 ${
+        <div className={`w-full max-w-2xl text-[10px] sm:text-xs font-light leading-relaxed px-2 text-center pt-1 ${
           theme === 'dark' ? 'text-zinc-300 opacity-80' : 'text-zinc-800 opacity-90'
         }`}>
           <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Branding")}>Branding</span> • <span>PNG</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Logotipos")}>Logotipos</span> • <span>Creatividad</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("UX/UI")}>UX/UI</span> • <span>PDF</span> • <span>Diseño Editorial</span> • <span>RGB</span> • 
@@ -536,7 +540,7 @@ export default function Home() {
       </main>
 
       {/* Footer Section */}
-      <footer className="w-full px-4 md:px-10 py-4 flex flex-col items-center space-y-3 z-25 mt-4 md:mt-8">
+      <footer className="w-full px-4 md:px-10 py-4 flex flex-col items-center space-y-3 z-25 mt-2">
         <div className={`text-[10px] md:text-xs font-light tracking-wide text-center ${
           theme === 'dark' ? 'text-zinc-400 opacity-60' : 'text-zinc-700 opacity-80'
         }`}>
