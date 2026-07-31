@@ -12,7 +12,7 @@ const translations = {
     utilidades: 'utilidades',
     whatsapp: 'Whatsapp',
     titulo: 'Solicita tu',
-    subtitulo: 'Diseño estratégico y producción a medida • Tu propuesta al instante',
+    subtitulo: 'Diseño strategic y producción a medida • Tu propuesta al instante',
     tipoCliente: 'Tipo de Cliente',
     nuevoCliente: 'Nuevo Cliente',
     soyCliente: 'Ya soy cliente',
@@ -415,6 +415,12 @@ export default function CotizacionPage() {
     }
   };
 
+  const currentSubServiceDetails = selectedMainService && selectedSubService
+    ? masterCatalog[selectedMainService]?.find(item => item.name === selectedSubService)
+    : null;
+
+  const isPriceFixed = currentSubServiceDetails && !currentSubServiceDetails.mode.includes('Validación');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!acceptedTerms) {
@@ -422,6 +428,7 @@ export default function CotizacionPage() {
       return;
     }
     
+    // Guardar cliente en almacenamiento local
     if (clientType === 'nuevo' && (contactPhone || companyName)) {
       const clientData = { companyName, contactName, country: selectedCountry, city: selectedCity, code: countryCode, phone: contactPhone, email: contactEmail };
       if (contactPhone) localStorage.setItem(`client_${contactPhone}`, JSON.stringify(clientData));
@@ -429,6 +436,41 @@ export default function CotizacionPage() {
       if (companyName) localStorage.setItem(`client_${companyName.toLowerCase()}`, JSON.stringify(clientData));
     }
 
+    // FLUJO 1: PAGO EN LÍNEA DIRECTO A PASARELA STRIPE (Apple/Google Pay/Tarjeta)
+    if (isPriceFixed && paymentMethod === 'online' && currentSubServiceDetails) {
+      try {
+        const rawPrice = currentSubServiceDetails.price.replace(/[^0-9]/g, '');
+
+        const response = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            serviceName: currentSubServiceDetails.name,
+            priceAmount: rawPrice,
+            clientEmail: contactEmail,
+            companyName: companyName || contactName,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.url) {
+          if (data.success && data.url) {
+  window.location.assign(data.url);
+  return;
+}
+          return;
+        } else {
+          alert('No se pudo procesar la pasarela de pago. Inténtalo de nuevo.');
+        }
+      } catch (err) {
+        console.error('Error al iniciar el pago:', err);
+        alert('Ocurrió un error al conectar con la pasarela de pago.');
+      }
+      return;
+    }
+
+    // FLUJO 2: COTIZACIÓN HABITUAL (WhatsApp / Email)
     try {
       const response = await fetch('/api/cotizar', {
         method: 'POST',
@@ -482,13 +524,8 @@ export default function CotizacionPage() {
     setIsSubmitted(false);
   };
 
-  const currentSubServiceDetails = selectedMainService && selectedSubService
-    ? masterCatalog[selectedMainService]?.find(item => item.name === selectedSubService)
-    : null;
-
   const categoriesWithPhysical = ["Papelería Corporativa", "Gran Formato", "Packaging y Etiquetas", "Merchandising y Eventos"];
   const showPhysicalSampleOption = categoriesWithPhysical.includes(selectedMainService);
-  const isPriceFixed = currentSubServiceDetails && !currentSubServiceDetails.mode.includes('Validación');
 
   return (
     <div className={`min-h-screen flex flex-col justify-between transition-colors duration-700 relative overflow-hidden py-6 ${theme === 'dark' ? 'bg-[#050000] text-zinc-100' : 'bg-[#e8e2dc] text-zinc-800'}`}>
