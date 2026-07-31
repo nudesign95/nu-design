@@ -131,12 +131,12 @@ export default function PortfolioPage() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [currentLang, setCurrentLang] = useState<'ES' | 'EN' | 'FR'>('ES');
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Ver todas las categorías');
   
   const [activeProject, setActiveProject] = useState<typeof sampleProjects[0] | null>(null);
 
-  
   const langMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -190,27 +190,46 @@ export default function PortfolioPage() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-20"
+        className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
       >
-        <nav className="flex items-center space-x-6 md:space-x-10 text-base font-medium">
-          <Link href="/" className="opacity-70 hover:opacity-100 transition-opacity tracking-wide">inicio</Link>
-          <div className="relative flex flex-col items-start cursor-pointer group py-1">
-            <span className="opacity-100 tracking-wide font-semibold text-red-500">portafolio</span>
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-red-500 rounded-full"></div>
-          </div>
-          <Link href="/contratar" className="opacity-70 hover:opacity-100 transition-opacity tracking-wide">contratar</Link>
-          <Link href="/contacto" className="opacity-70 hover:opacity-100 transition-opacity tracking-wide">contacto</Link>
-        </nav>
+        <div className="flex items-center space-x-2">
+          <Link href="/" className="md:hidden font-bold text-sm tracking-widest uppercase">
+            NU-DESIGN
+          </Link>
+          
+          <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
+            <Link href="/" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">
+              inicio
+            </Link>
+            <Link href="/portafolio" className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
+              theme === 'dark' 
+                ? 'bg-white/10 border border-red-500/40 text-red-500 font-semibold shadow-[0_0_15px_rgba(239,68,68,0.3)]' 
+                : 'bg-black/10 border border-red-500/50 text-red-600 font-semibold'
+            }`}>
+              portafolio
+            </Link>
+            <Link href="/contratar" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">
+              contratar
+            </Link>
+            <Link href="/contacto" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">
+              contacto
+            </Link>
+          </nav>
+        </div>
 
-        <div className="flex items-center space-x-3 md:space-x-5">
-          <div className="relative hidden sm:block" ref={langMenuRef}>
+        <div className="flex items-center space-x-3 md:space-x-4">
+          <div className="relative hidden md:block" ref={langMenuRef}>
             <button 
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="text-xs uppercase tracking-widest opacity-80 hover:opacity-100 font-semibold px-3 py-1.5 transition-opacity flex items-center space-x-1 focus:outline-none"
+              className={`text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center space-x-1 focus:outline-none ${
+                theme === 'dark'
+                  ? 'bg-white/5 border border-white/10 text-white hover:border-red-500/40'
+                  : 'bg-black/5 border border-black/10 text-zinc-900 hover:border-red-500/40'
+              }`}
             >
               <span>IDIOMAS</span>
-              <span className="text-red-500 font-bold">({currentLang})</span>
-              <i className={`fa-solid fa-chevron-down text-[10px] ml-1 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`}></i>
+              <span className="text-red-500 font-bold ml-1">({currentLang})</span>
+              <i className={`fa-solid fa-chevron-down text-[10px] ml-1 transition-transform ${isLangOpen ? 'rotate-180' : ''}`}></i>
             </button>
 
             <AnimatePresence>
@@ -232,16 +251,80 @@ export default function PortfolioPage() {
             </AnimatePresence>
           </div>
 
-          <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="hidden sm:flex backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-6 py-2 rounded-full text-sm font-normal items-center space-x-2.5 shadow-lg hover:bg-white/20 transition-all">
+          <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className={`hidden sm:flex backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 transition-all ${
+            theme === 'dark'
+              ? 'bg-white/10 border border-white/20 text-white hover:border-emerald-500/60'
+              : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60'
+          }`}>
             <i className="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
             <span>Whatsapp</span>
           </a>
           
-          <Link href="/cotizacion" className="backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-6 py-2 rounded-full text-sm font-normal shadow-lg hover:bg-white/20 transition-all">
+          <Link href="/cotizacion" className={`block backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal transition-all ${
+            theme === 'dark'
+              ? 'bg-white/10 border border-white/20 text-white hover:border-red-500/60'
+              : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-red-500/60'
+          }`}>
             Cotización
           </Link>
+
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50"
+            aria-label="Abrir Menú"
+          >
+            <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+          </button>
         </div>
       </motion.header>
+
+      {/* MENÚ MÓVIL DESPLEGABLE */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className={`fixed inset-0 z-30 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden ${
+              theme === 'dark' ? 'bg-black/95 text-white' : 'bg-white/95 text-zinc-900'
+            }`}
+          >
+            <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Inicio</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+              <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Portafolio</span>
+                <i className="fa-solid fa-arrow-right text-sm"></i>
+              </Link>
+              <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Contratar</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+              <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Contacto</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+            </div>
+
+            <div className="flex flex-col space-y-4 pt-6 border-t border-zinc-500/20">
+              <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
+              <div className="flex items-center gap-3">
+                <button onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Español</button>
+                <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
+                <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
+              </div>
+
+              <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="mt-4 w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 py-3 rounded-full flex items-center justify-center space-x-2 text-sm font-medium">
+                <i className="fa-brands fa-whatsapp text-lg"></i>
+                <span>Whatsapp</span>
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Theme Switcher */}
       <div className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-3 z-30 p-1.5 rounded-full backdrop-blur-xl border shadow-2xl ${

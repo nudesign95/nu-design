@@ -8,6 +8,8 @@ export default function ContratarPage() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [currentLang, setCurrentLang] = useState<'ES' | 'EN' | 'FR'>('ES');
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
   const langMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function ContratarPage() {
   return (
     <div className={`min-h-screen flex flex-col justify-between transition-colors duration-700 relative overflow-hidden py-6 ${theme === 'dark' ? 'bg-[#050000] text-zinc-100' : 'bg-[#e8e2dc] text-zinc-800'}`}>
       
-      {/* Fondo con brillo ambiental animado */}
+      {/* Fondo ambiental */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -53,27 +55,37 @@ export default function ContratarPage() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full px-10 py-4 flex items-center justify-between z-20"
+        className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
       >
-        <nav className="flex items-center space-x-10 text-base font-medium">
-          <Link href="/" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">inicio</Link>
-          <Link href="/portafolio" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">portafolio</Link>
-          <div className="relative flex flex-col items-start cursor-pointer group py-1">
-            <span className="opacity-100 tracking-wide font-semibold">contratar</span>
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-current rounded-full"></div>
-          </div>
-          <Link href="/#contacto" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">contacto</Link>
-        </nav>
+        <div className="flex items-center space-x-2">
+          <Link href="/" className="md:hidden font-bold text-sm tracking-widest uppercase">
+            NU-DESIGN
+          </Link>
 
-        <div className="flex items-center space-x-5">
-          {/* Selector de Idiomas */}
-          <div className="relative" ref={langMenuRef}>
+          <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
+            <Link href="/" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">inicio</Link>
+            <Link href="/portafolio" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">portafolio</Link>
+            <Link href="/contratar" className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
+              theme === 'dark' 
+                ? 'bg-white/10 border border-red-500/40 text-red-500 font-semibold shadow-[0_0_15px_rgba(239,68,68,0.3)]' 
+                : 'bg-black/10 border border-red-500/50 text-red-600 font-semibold'
+            }`}>contratar</Link>
+            <Link href="/contacto" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">contacto</Link>
+          </nav>
+        </div>
+
+        <div className="flex items-center space-x-3 md:space-x-4">
+          <div className="relative hidden md:block" ref={langMenuRef}>
             <button 
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="text-xs uppercase tracking-widest opacity-70 hover:opacity-100 font-semibold px-3 py-1.5 transition-opacity flex items-center space-x-1 focus:outline-none"
+              className={`text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center space-x-1 focus:outline-none ${
+                theme === 'dark'
+                  ? 'bg-white/5 border border-white/10 text-white hover:border-red-500/40'
+                  : 'bg-black/5 border border-black/10 text-zinc-900 hover:border-red-500/40'
+              }`}
             >
               <span>IDIOMAS</span>
-              <span className="text-red-500 font-bold">({currentLang})</span>
+              <span className="text-red-500 font-bold ml-1">({currentLang})</span>
               <i className={`fa-solid fa-chevron-down text-[10px] ml-1 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`}></i>
             </button>
 
@@ -84,37 +96,104 @@ export default function ContratarPage() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute right-0 mt-2 w-36 backdrop-blur-2xl bg-black/80 dark:bg-zinc-900/90 border border-white/15 rounded-xl shadow-2xl overflow-hidden z-50 py-1"
+                  className={`absolute right-0 mt-2 w-36 backdrop-blur-2xl border rounded-xl shadow-2xl overflow-hidden z-50 py-1 ${
+                    theme === 'dark' ? 'bg-black/90 border-white/15 text-zinc-200' : 'bg-white/95 border-black/10 text-zinc-800'
+                  }`}
                 >
-                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-white/10 text-zinc-300">Español</button>
-                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-white/10 text-zinc-300">English</button>
-                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-white/10 text-zinc-300">Français</button>
+                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Español</button>
+                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">English</button>
+                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Français</button>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-6 py-2 rounded-full text-sm font-normal flex items-center space-x-2.5 shadow-lg hover:bg-white/20 transition-colors">
+          <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className={`hidden sm:flex backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 transition-all ${
+            theme === 'dark'
+              ? 'bg-white/10 border border-white/20 text-white hover:border-emerald-500/60'
+              : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60'
+          }`}>
             <i className="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
             <span>Whatsapp</span>
           </a>
           
-          <a href="https://wa.me/18294608316?text=Hola,%20deseo%20una%20cotizaci%C3%B3n" target="_blank" rel="noopener noreferrer" className="backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-7 py-2 rounded-full text-sm font-normal shadow-lg hover:bg-white/20 transition-colors">
+          <Link href="/cotizacion" className={`block backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal transition-all ${
+            theme === 'dark'
+              ? 'bg-white/10 border border-white/20 text-white hover:border-red-500/60'
+              : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-red-500/60'
+          }`}>
             Cotización
-          </a>
+          </Link>
+
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50"
+            aria-label="Abrir Menú"
+          >
+            <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+          </button>
         </div>
       </motion.header>
 
-      {/* Theme Switcher (Fixed Right Side) */}
-      <div className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-3 z-30">
-        <button onClick={() => setTheme('light')} className="w-8 h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
-        <button onClick={() => setTheme('dark')} className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
+      {/* MENÚ MÓVIL DESPLEGABLE */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className={`fixed inset-0 z-30 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden ${
+              theme === 'dark' ? 'bg-black/95 text-white' : 'bg-white/95 text-zinc-900'
+            }`}
+          >
+            <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Inicio</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+              <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Portafolio</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+              <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Contratar</span>
+                <i className="fa-solid fa-arrow-right text-sm"></i>
+              </Link>
+              <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Contacto</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+            </div>
+
+            <div className="flex flex-col space-y-4 pt-6 border-t border-zinc-500/20">
+              <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
+              <div className="flex items-center gap-3">
+                <button onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Español</button>
+                <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
+                <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
+              </div>
+
+              <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="mt-4 w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 py-3 rounded-full flex items-center justify-center space-x-2 text-sm font-medium">
+                <i className="fa-brands fa-whatsapp text-lg"></i>
+                <span>Whatsapp</span>
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Theme Switcher */}
+      <div className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-3 z-30 p-1.5 rounded-full backdrop-blur-xl border shadow-2xl ${
+        theme === 'dark' ? 'bg-white/10 border-white/20' : 'bg-black/5 border-black/10'
+      }`}>
+        <button onClick={() => setTheme('light')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
+        <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
       </div>
 
-      {/* Contenido Principal de Contratar */}
+      {/* Contenido Principal */}
       <main className="w-full max-w-5xl mx-auto px-6 py-12 z-10 flex flex-col items-center">
         
-        {/* Cabecera de Autoridad */}
         <div className="flex flex-col items-center text-center mb-16 space-y-4">
           <motion.div 
             initial={{ scale: 0.8, opacity: 0, y: -10 }}
@@ -147,10 +226,8 @@ export default function ContratarPage() {
           </motion.div>
         </div>
 
-        {/* Tarjetas de Modelos de Contratación (3 Opciones de Alta Gama) */}
+        {/* Tarjetas */}
         <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-16">
-          
-          {/* Opción 1: Proyecto Único / Rebranding */}
           <motion.div 
             whileHover={{ y: -8, scale: 1.02 }}
             transition={{ duration: 0.3 }}
@@ -177,7 +254,6 @@ export default function ContratarPage() {
             </div>
           </motion.div>
 
-          {/* Opción 2: Producción Gráfica / Corporativa (Destacada) */}
           <motion.div 
             whileHover={{ y: -8, scale: 1.02 }}
             transition={{ duration: 0.3 }}
@@ -204,7 +280,6 @@ export default function ContratarPage() {
             </div>
           </motion.div>
 
-          {/* Opción 3: Dirección de Arte Mensual / Partner */}
           <motion.div 
             whileHover={{ y: -8, scale: 1.02 }}
             transition={{ duration: 0.3 }}
@@ -230,10 +305,9 @@ export default function ContratarPage() {
               </a>
             </div>
           </motion.div>
-
         </div>
 
-        {/* Bloque de Cierre / Autoridad */}
+        {/* Cierre */}
         <div className={`w-full backdrop-blur-2xl border rounded-3xl p-8 md:p-12 text-center space-y-6 ${theme === 'dark' ? 'bg-black/30 border-white/10' : 'bg-white/60 border-zinc-300'}`}>
           <h2 className="text-2xl md:text-3xl font-light">¿Tienes un requerimiento especial o urgente?</h2>
           <p className="text-xs md:text-sm font-light opacity-75 max-w-xl mx-auto">
@@ -254,18 +328,8 @@ export default function ContratarPage() {
 
       </main>
 
-      {/* Footer Section */}
+      {/* Footer */}
       <footer className="w-full px-10 py-7 flex flex-col items-center space-y-4 z-25 mt-12">
-        <div className="flex items-center justify-center gap-8 text-lg opacity-85">
-          <a href="https://www.facebook.com/share/18szd7DaVA/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors"><i className="fa-brands fa-facebook-f"></i></a>
-          <a href="https://x.com/nudesign_02?s=11" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors flex items-center justify-center">
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
-          <a href="https://www.instagram.com/nudesign_02/" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors"><i className="fa-brands fa-instagram"></i></a>
-          <a href="https://youtube.com/@anousleshow1680?si=BqJxqzF7533u7sx2" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors"><i className="fa-brands fa-youtube"></i></a>
-          <a href="https://www.tiktok.com/@garicedume?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors"><i className="fa-brands fa-tiktok"></i></a>
-          <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors"><i className="fa-brands fa-whatsapp"></i></a>
-        </div>
         <div className="text-xs opacity-50 font-light tracking-wide">
           Nu-Design Derechos reservados 2026 - Design by Garic Edume
         </div>
