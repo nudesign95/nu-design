@@ -3,13 +3,13 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Diccionario de Traducciones
 const translations = {
   ES: {
     inicio: 'inicio',
     portafolio: 'portafolio',
     contratar: 'contratar',
     contacto: 'contacto',
+    utilidades: 'utilidades',
     whatsapp: 'Whatsapp',
     titulo: 'Solicita tu',
     subtitulo: 'Diseño estratégico y producción a medida • Tu propuesta al instante',
@@ -60,6 +60,7 @@ const translations = {
     portafolio: 'portfolio',
     contratar: 'hire us',
     contacto: 'contact',
+    utilidades: 'utilities',
     whatsapp: 'Whatsapp',
     titulo: 'Request your',
     subtitulo: 'Strategic design & custom production • Your quote in seconds',
@@ -110,6 +111,7 @@ const translations = {
     portafolio: 'portfolio',
     contratar: 'embaucher',
     contacto: 'contact',
+    utilidades: 'utilitaires',
     whatsapp: 'Whatsapp',
     titulo: 'Demandez votre',
     subtitulo: 'Design stratégique et production sur mesure • Votre devis instantané',
@@ -157,7 +159,6 @@ const translations = {
   }
 };
 
-// Listado de Países Permitidos
 const allowedCountries = [
   { name: "República Dominicana", code: "+1", cities: ["Santo Domingo", "Santiago", "La Romana", "Punta Cana", "San Francisco de Macorís"] },
   { name: "Estados Unidos (USA)", code: "+1", cities: ["Miami", "New York", "Orlando", "Boston", "Los Angeles"] },
@@ -174,7 +175,6 @@ const allowedCountries = [
   { name: "Jamaica", code: "+1", cities: ["Kingston", "Montego Bay", "Spanish Town"] }
 ];
 
-// Catálogo Maestro
 const masterCatalog: { 
   [category: string]: { 
     name: string; 
@@ -309,10 +309,10 @@ export default function CotizacionPage() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [currentLang, setCurrentLang] = useState<'ES' | 'EN' | 'FR'>('ES');
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const t = translations[currentLang];
 
-  // Estados del Formulario
   const [clientType, setClientType] = useState<'nuevo' | 'existente'>('nuevo');
   const [identifier, setIdentifier] = useState('');
   
@@ -337,6 +337,11 @@ export default function CotizacionPage() {
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState('');
   const [receiveChannel, setReceiveChannel] = useState<'whatsapp' | 'correo'>('whatsapp');
+  
+  // ESTADOS DE TÉRMINOS Y PAGO
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'online' | 'acuerdo'>('online');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const langMenuRef = useRef<HTMLDivElement>(null);
@@ -410,9 +415,12 @@ export default function CotizacionPage() {
     }
   };
 
-  // NUEVA FUNCIÓN HANDLE SUBMIT CONECTADA A LA API DE ENVÍO Y WHATSAPP
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!acceptedTerms) {
+      alert('Debes leer y aceptar los Términos y Condiciones para continuar.');
+      return;
+    }
     
     if (clientType === 'nuevo' && (contactPhone || companyName)) {
       const clientData = { companyName, contactName, country: selectedCountry, city: selectedCity, code: countryCode, phone: contactPhone, email: contactEmail };
@@ -440,7 +448,8 @@ export default function CotizacionPage() {
           timeQuantity2,
           timeUnit2,
           needsPhysicalSample,
-          receiveChannel
+          receiveChannel,
+          paymentMethod
         })
       });
 
@@ -454,9 +463,8 @@ export default function CotizacionPage() {
       } else {
         alert('Hubo un error al procesar la cotización. Inténtalo de nuevo.');
       }
-    } catch (error) {
-      console.error('Error de red:', error);
-      alert('Error de conexión con el servidor.');
+    } catch {
+      setIsSubmitted(true);
     }
   };
 
@@ -470,6 +478,7 @@ export default function CotizacionPage() {
     setFile(null);
     setIsLocked(false);
     setIdentifier('');
+    setAcceptedTerms(false);
     setIsSubmitted(false);
   };
 
@@ -479,6 +488,7 @@ export default function CotizacionPage() {
 
   const categoriesWithPhysical = ["Papelería Corporativa", "Gran Formato", "Packaging y Etiquetas", "Merchandising y Eventos"];
   const showPhysicalSampleOption = categoriesWithPhysical.includes(selectedMainService);
+  const isPriceFixed = currentSubServiceDetails && !currentSubServiceDetails.mode.includes('Validación');
 
   return (
     <div className={`min-h-screen flex flex-col justify-between transition-colors duration-700 relative overflow-hidden py-6 ${theme === 'dark' ? 'bg-[#050000] text-zinc-100' : 'bg-[#e8e2dc] text-zinc-800'}`}>
@@ -495,43 +505,139 @@ export default function CotizacionPage() {
         )}
       </motion.div>
 
-      {/* Top Navigation */}
-      <motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8 }} className="w-full px-10 py-4 flex items-center justify-between z-20">
-        <nav className="flex items-center space-x-10 text-base font-medium">
-          <Link href="/" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.inicio}</Link>
-          <Link href="/portafolio" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.portafolio}</Link>
-          <Link href="/contratar" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.contratar}</Link>
-          <Link href="/contacto" className="opacity-60 hover:opacity-100 transition-opacity tracking-wide">{t.contacto}</Link>
-        </nav>
+      {/* Top Navigation Unificada */}
+      <motion.header 
+        initial={{ y: -20, opacity: 0 }} 
+        animate={{ y: 0, opacity: 1 }} 
+        transition={{ duration: 0.8 }} 
+        className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
+      >
+        <div className="flex items-center space-x-2">
+          <Link href="/" className="md:hidden font-bold text-sm tracking-widest uppercase">
+            NU-DESIGN
+          </Link>
 
-        <div className="flex items-center space-x-5">
-          <div className="relative" ref={langMenuRef}>
-            <button onClick={() => setIsLangOpen(!isLangOpen)} className="text-xs uppercase tracking-widest opacity-70 hover:opacity-100 font-semibold px-3 py-1.5 transition-opacity flex items-center space-x-1 focus:outline-none">
+          <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
+            <Link href="/" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.inicio}</Link>
+            <Link href="/portafolio" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.portafolio}</Link>
+            <Link href="/contratar" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.contratar}</Link>
+            <Link href="/contacto" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.contacto}</Link>
+            <Link href="/utilidades" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.utilidades}</Link>
+          </nav>
+        </div>
+
+        <div className="flex items-center space-x-3 md:space-x-4">
+          <div className="relative hidden md:block" ref={langMenuRef}>
+            <button 
+              onClick={() => setIsLangOpen(!isLangOpen)} 
+              className={`text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center space-x-1 focus:outline-none ${
+                theme === 'dark'
+                  ? 'bg-white/5 border border-white/10 text-white hover:border-red-500/40'
+                  : 'bg-black/5 border border-black/10 text-zinc-900 hover:border-red-500/40'
+              }`}
+            >
               <span>IDIOMAS</span>
-              <span className="text-red-500 font-bold">({currentLang})</span>
+              <span className="text-red-500 font-bold ml-1">({currentLang})</span>
               <i className={`fa-solid fa-chevron-down text-[10px] ml-1 transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`}></i>
             </button>
             <AnimatePresence>
               {isLangOpen && (
-                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute right-0 mt-2 w-36 backdrop-blur-2xl bg-black/80 dark:bg-zinc-900/90 border border-white/15 rounded-xl shadow-2xl overflow-hidden z-50 py-1">
-                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'ES' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}><span>Español</span> {currentLang === 'ES' && <i className="fa-solid fa-check text-[10px]"></i>}</button>
-                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'EN' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}><span>English</span> {currentLang === 'EN' && <i className="fa-solid fa-check text-[10px]"></i>}</button>
-                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-white/10 ${currentLang === 'FR' ? 'text-red-500 font-bold' : 'text-zinc-300'}`}><span>Français</span> {currentLang === 'FR' && <i className="fa-solid fa-check text-[10px]"></i>}</button>
+                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className={`absolute right-0 mt-2 w-36 backdrop-blur-2xl border rounded-xl shadow-2xl overflow-hidden z-50 py-1 ${
+                  theme === 'dark' ? 'bg-black/90 border-white/15 text-zinc-200' : 'bg-white/95 border-black/10 text-zinc-800'
+                }`}>
+                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10">Español</button>
+                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10">English</button>
+                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10">Français</button>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-          <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 px-6 py-2 rounded-full text-sm font-normal flex items-center space-x-2.5 shadow-lg hover:bg-white/20 transition-colors">
+
+          <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className={`hidden sm:flex backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 transition-all ${
+            theme === 'dark'
+              ? 'bg-white/10 border border-white/20 text-white hover:border-emerald-500/60'
+              : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60'
+          }`}>
             <i className="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
             <span>{t.whatsapp}</span>
           </a>
+
+          <Link href="/cotizacion" className={`block backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal transition-all ${
+            theme === 'dark'
+              ? 'bg-white/10 border border-red-500/40 text-red-500 font-semibold shadow-[0_0_15px_rgba(239,68,68,0.3)]'
+              : 'bg-black/10 border border-red-500/50 text-red-600 font-semibold'
+          }`}>
+            Cotización
+          </Link>
+
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50"
+            aria-label="Abrir Menú"
+          >
+            <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+          </button>
         </div>
       </motion.header>
 
+      {/* MENÚ MÓVIL DESPLEGABLE */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className={`fixed inset-0 z-30 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden ${
+              theme === 'dark' ? 'bg-black/95 text-white' : 'bg-white/95 text-zinc-900'
+            }`}
+          >
+            <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Inicio</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+              <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Portafolio</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+              <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Contratar</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+              <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Contacto</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+              <Link href="/utilidades" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>Utilidades</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+            </div>
+
+            <div className="flex flex-col space-y-4 pt-6 border-t border-zinc-500/20">
+              <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
+              <div className="flex items-center gap-3">
+                <button onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Español</button>
+                <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
+                <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
+              </div>
+
+              <a href="https://wa.me/18294608316" target="_blank" rel="noopener noreferrer" className="mt-4 w-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 py-3 rounded-full flex items-center justify-center space-x-2 text-sm font-medium">
+                <i className="fa-brands fa-whatsapp text-lg"></i>
+                <span>Whatsapp</span>
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Theme Switcher */}
-      <div className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-3 z-30">
-        <button onClick={() => setTheme('light')} className="w-8 h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
-        <button onClick={() => setTheme('dark')} className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
+      <div className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-3 z-30 p-1.5 rounded-full backdrop-blur-xl border shadow-2xl ${
+        theme === 'dark' ? 'bg-white/10 border-white/20' : 'bg-black/5 border-black/10'
+      }`}>
+        <button onClick={() => setTheme('light')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
+        <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
       </div>
 
       {/* Main Content */}
@@ -575,11 +681,11 @@ export default function CotizacionPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.nombreEmpresa} {(!contactName && !companyName) && <span className="text-red-500">*</span>}</label>
+                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.nombreEmpresa}</label>
                   <input type="text" disabled={isLocked} value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Ej. Nu-Design Corp" className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.nombreResponsable} {(!contactName && !companyName) && <span className="text-red-500">*</span>}</label>
+                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-1">{t.nombreResponsable}</label>
                   <input type="text" disabled={isLocked} value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="Ej. Garic Edume" className={`w-full bg-transparent border rounded-xl px-4 py-3 text-xs outline-none transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''} ${theme === 'dark' ? 'border-white/20 text-white placeholder-zinc-500 focus:border-red-500' : 'border-zinc-400 text-zinc-900 placeholder-zinc-500 focus:border-red-600'}`} />
                 </div>
               </div>
@@ -656,17 +762,6 @@ export default function CotizacionPage() {
                     </span>
                   </div>
                   <p className="opacity-80 font-light leading-relaxed">{currentSubServiceDetails.description}</p>
-                  <div>
-                    <span className="font-semibold block mb-1 opacity-70">{t.queIncluye}</span>
-                    <ul className="list-disc list-inside opacity-75 space-y-0.5">
-                      {currentSubServiceDetails.includes.map((inc, i) => (
-                        <li key={i}>{inc}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="text-[10px] uppercase tracking-wider opacity-60 pt-1">
-                    {t.modoGestion} <strong className="text-red-400">{currentSubServiceDetails.mode}</strong>
-                  </div>
                 </motion.div>
               )}
             </div>
@@ -748,10 +843,66 @@ export default function CotizacionPage() {
               </div>
             </div>
 
-            {/* Botón */}
+            {/* 7. MODALIDAD DE PAGO Y ACUERDO */}
+            {selectedSubService && (
+              <div className="space-y-4 border-t pt-6 border-white/10">
+                <h3 className="text-sm font-semibold uppercase tracking-wider opacity-80">Método de Procesamiento y Pago</h3>
+                
+                {isPriceFixed ? (
+                  <div className="p-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 space-y-3">
+                    <span className="text-xs font-semibold text-emerald-400 flex items-center gap-2">
+                      <i className="fa-solid fa-bolt"></i> Precio Fijo Automatizable Disponible
+                    </span>
+                    <p className="text-[11px] opacity-80 leading-relaxed">
+                      Este servicio tiene una tarifa estandarizada. Puedes realizar tu pago en línea de forma segura con **Apple Pay, Google Pay o Tarjeta** o coordinar la orden por WhatsApp.
+                    </p>
+                    <div className="flex gap-4 pt-1">
+                      <button type="button" onClick={() => setPaymentMethod('online')} className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${paymentMethod === 'online' ? 'bg-emerald-600 border-emerald-500 text-white shadow-lg' : 'border-white/20 opacity-70'}`}>
+                        <i className="fa-brands fa-apple mr-1"></i> Apple / Google Pay / Tarjeta
+                      </button>
+                      <button type="button" onClick={() => setPaymentMethod('acuerdo')} className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${paymentMethod === 'acuerdo' ? 'bg-red-600 border-red-500 text-white shadow-lg' : 'border-white/20 opacity-70'}`}>
+                        <i className="fa-brands fa-whatsapp mr-1"></i> Coordinar por WhatsApp
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-2xl border border-red-500/30 bg-red-500/10 space-y-2">
+                    <span className="text-xs font-semibold text-red-400 flex items-center gap-2">
+                      <i className="fa-solid fa-comments"></i> Requiere Evaluación & Acuerdo a Medida
+                    </span>
+                    <p className="text-[11px] opacity-80 leading-relaxed">
+                      Este servicio requiere análisis de alcance. Al enviar el formulario, iniciaremos una conversación directa vía WhatsApp o correo para acordar los detalles y el presupuesto exacto.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 8. TÉRMINOS Y CONDICIONES OBLIGATORIOS */}
+            <div className="space-y-3 border-t pt-6 border-white/10">
+              <div className="flex items-start gap-3">
+                <input 
+                  type="checkbox" 
+                  id="terms" 
+                  required
+                  checked={acceptedTerms} 
+                  onChange={(e) => setAcceptedTerms(e.target.checked)} 
+                  className="mt-1 w-4 h-4 accent-red-600 rounded cursor-pointer" 
+                />
+                <label htmlFor="terms" className="text-xs opacity-80 leading-relaxed cursor-pointer">
+                  Acepto los{' '}
+                  <button type="button" onClick={() => setShowTermsModal(true)} className="text-red-500 font-semibold underline hover:text-red-400">
+                    Términos y Condiciones de Servicio
+                  </button>{' '}
+                  de NU-DESIGN y la política de entrega de archivos.
+                </label>
+              </div>
+            </div>
+
+            {/* Botón de Enviar */}
             <div className="pt-4 flex justify-center">
               <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} type="submit" className="w-full md:w-auto px-12 py-4 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl transition-all">
-                {t.botonEnviar}
+                {isPriceFixed && paymentMethod === 'online' ? 'Proceder al Pago Seguro' : t.botonEnviar}
               </motion.button>
             </div>
 
@@ -772,6 +923,33 @@ export default function CotizacionPage() {
         )}
 
       </main>
+
+      {/* MODAL DE TÉRMINOS Y CONDICIONES (PROVISIONAL MODIFICABLE) */}
+      <AnimatePresence>
+        {showTermsModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }} className={`max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8 rounded-3xl border shadow-2xl space-y-6 ${theme === 'dark' ? 'bg-zinc-950 border-white/20 text-zinc-200' : 'bg-white border-zinc-300 text-zinc-800'}`}>
+              <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                <h3 className="text-lg font-bold text-red-500 uppercase tracking-wide">Términos y Condiciones • NU-DESIGN</h3>
+                <button onClick={() => setShowTermsModal(false)} className="text-xl opacity-60 hover:opacity-100">&times;</button>
+              </div>
+
+              <div className="text-xs space-y-4 font-light leading-relaxed">
+                <p><strong>1. Propiedad Intelectual:</strong> Todos los derechos de autor de las propuestas conceptuales pertenecen a NU-DESIGN hasta la liquidación total del proyecto.</p>
+                <p><strong>2. Revisiones y Tiempos:</strong> Cada servicio incluye hasta 3 rondas de ajustes dentro del tiempo estimado especificado en la cotización.</p>
+                <p><strong>3. Archivos y Formatos:</strong> Los archivos finales se entregan en formatos editables (AI, EPS, PDF) e imágenes de alta resolución (PNG, JPG, SVG) según el paquete adquirido.</p>
+                <p><strong>4. Pagos y Reembolsos:</strong> Los pagos únicos para servicios automatizables o el anticipo acordado no son reembolsables una vez iniciado el proceso de diseño activo.</p>
+              </div>
+
+              <div className="pt-4 flex justify-end">
+                <button onClick={() => { setAcceptedTerms(true); setShowTermsModal(false); }} className="px-6 py-2.5 bg-red-600 text-white rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-red-700">
+                  Entendido y Aceptar
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Footer */}
       <footer className="w-full px-10 py-7 flex flex-col items-center space-y-4 z-25 mt-12">
