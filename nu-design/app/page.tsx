@@ -10,6 +10,7 @@ const translations = {
     portafolio: 'portafolio',
     contratar: 'contratar',
     contacto: 'contacto',
+    utilidades: 'utilidades',
     whatsapp: 'Whatsapp',
     cotizacion: 'Cotización',
     searchPlaceholder: 'Hola, necesito...',
@@ -21,6 +22,7 @@ const translations = {
     portafolio: 'portfolio',
     contratar: 'hire us',
     contacto: 'contact',
+    utilidades: 'utilities',
     whatsapp: 'Whatsapp',
     cotizacion: 'Quote',
     searchPlaceholder: 'Hello, I need...',
@@ -32,6 +34,7 @@ const translations = {
     portafolio: 'portfolio',
     contratar: 'embaucher',
     contacto: 'contact',
+    utilidades: 'utilitaires',
     whatsapp: 'Whatsapp',
     cotizacion: 'Devis',
     searchPlaceholder: 'Bonjour, j\'ai besoin...',
@@ -221,12 +224,26 @@ export default function Home() {
                 {t.contacto}
               </Link>
             </motion.div>
+
+            {/* 5. Botón UTILIDADES */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link 
+                href="/utilidades" 
+                className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
+                  theme === 'dark' 
+                    ? 'bg-white/0 text-white/80 hover:text-white hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]' 
+                    : 'bg-black/0 text-zinc-800 hover:text-black hover:border-black/20 hover:bg-black/5 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)]'
+                }`}
+              >
+                {t.utilidades}
+              </Link>
+            </motion.div>
           </nav>
         </div>
 
         <div className="flex items-center space-x-3 md:space-x-4">
           
-          {/* 5. Selector de IDIOMAS con Adaptación a Light Mode */}
+          {/* Selector de IDIOMAS con Adaptación a Light Mode */}
           <div className="relative hidden md:block" ref={langMenuRef}>
             <motion.button 
               whileHover={{ scale: 1.05 }}
@@ -270,7 +287,7 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          {/* 6. Botón WHATSAPP */}
+          {/* Botón WHATSAPP */}
           <motion.a 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -287,7 +304,7 @@ export default function Home() {
             <span>{t.whatsapp}</span>
           </motion.a>
           
-          {/* 7. Botón COTIZACIÓN */}
+          {/* Botón COTIZACIÓN */}
           <motion.div 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -341,6 +358,10 @@ export default function Home() {
               </Link>
               <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
                 <span>{t.contacto}</span>
+                <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
+              </Link>
+              <Link href="/utilidades" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
+                <span>{t.utilidades}</span>
                 <i className="fa-solid fa-arrow-right text-sm opacity-40"></i>
               </Link>
             </div>

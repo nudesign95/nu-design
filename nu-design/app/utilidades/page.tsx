@@ -92,15 +92,17 @@ export default function UtilidadesPage() {
     }
   };
 
-  // Cálculo proporcional para visualizar el canvas en pantalla
-  const maxDisplaySize = 320;
+  // Cálculo de escala máxima para abarcar la pantalla
+  const maxDisplayWidth = 520;
+  const maxDisplayHeight = 420;
   const aspectRatio = canvasWidth / (canvasHeight || 1);
-  let displayWidth = maxDisplaySize;
-  let displayHeight = maxDisplaySize / aspectRatio;
+  
+  let displayWidth = maxDisplayWidth;
+  let displayHeight = maxDisplayWidth / aspectRatio;
 
-  if (displayHeight > maxDisplaySize) {
-    displayHeight = maxDisplaySize;
-    displayWidth = maxDisplaySize * aspectRatio;
+  if (displayHeight > maxDisplayHeight) {
+    displayHeight = maxDisplayHeight;
+    displayWidth = maxDisplayHeight * aspectRatio;
   }
 
   return (
@@ -218,7 +220,7 @@ export default function UtilidadesPage() {
       </div>
 
       {/* Main Content */}
-      <main className="w-full max-w-6xl mx-auto px-4 md:px-6 py-10 z-10 flex flex-col items-center">
+      <main className="w-full max-w-7xl mx-auto px-4 md:px-6 py-10 z-10 flex flex-col items-center">
         
         <div className="text-center mb-10 space-y-2">
           <h1 className={`text-3xl md:text-5xl font-light tracking-tight ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}`}>
@@ -232,7 +234,7 @@ export default function UtilidadesPage() {
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Panel de Controles */}
-          <div className={`lg:col-span-5 p-6 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/80 border-zinc-300'}`}>
+          <div className={`lg:col-span-4 p-6 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/80 border-zinc-300'}`}>
             
             {/* Preajustes */}
             <div className="space-y-2">
@@ -290,23 +292,23 @@ export default function UtilidadesPage() {
 
           </div>
 
-          {/* VISUALIZADOR DE CANVA CON REGLAS TIPO PHOTOSHOP */}
-          <div className={`lg:col-span-7 p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl flex flex-col items-center justify-center relative min-h-112 overflow-hidden ${theme === 'dark' ? 'bg-black/50 border-white/15' : 'bg-white/60 border-zinc-300'}`}>
+          {/* VISUALIZADOR DE CANVA CON REGLAS TIPO PHOTOSHOP GIGANTE */}
+          <div className={`lg:col-span-8 p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl flex flex-col items-center justify-center relative min-h-125 overflow-hidden ${theme === 'dark' ? 'bg-black/50 border-white/15' : 'bg-white/60 border-zinc-300'}`}>
             
             {/* Regla Horizontal Superior */}
-            <div className="w-full max-w-xs flex justify-between items-end border-b border-red-500/50 pb-1 mb-4 text-[9px] font-mono opacity-80 text-red-500">
+            <div className="w-full max-w-lg flex justify-between items-end border-b border-red-500/50 pb-1 mb-6 text-[10px] font-mono opacity-80 text-red-500">
               <span>0 {unit}</span>
               <span className="font-bold">{canvasWidth} {unit}</span>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               {/* Regla Vertical Izquierda */}
-              <div className="h-xs flex flex-col justify-between items-end border-r border-red-500/50 pr-1 text-[9px] font-mono opacity-80 text-red-500">
+              <div className="h-80 flex flex-col justify-between items-end border-r border-red-500/50 pr-2 text-[10px] font-mono opacity-80 text-red-500">
                 <span>0</span>
                 <span className="font-bold">{canvasHeight}</span>
               </div>
 
-              {/* El Canvas Dinámico */}
+              {/* El Canvas Dinámico Ampltud Máxima */}
               <motion.div 
                 animate={{ width: displayWidth, height: displayHeight }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
@@ -318,9 +320,9 @@ export default function UtilidadesPage() {
                   </div>
                 ) : (
                   <div className="text-center space-y-1">
-                    <i className="fa-solid fa-expand text-2xl text-red-500/80 mb-1 block"></i>
-                    <span className="text-xs font-bold block">{canvasWidth} x {canvasHeight} {unit}</span>
-                    <span className="text-[9px] opacity-60 block">Escala Visual Proporcional</span>
+                    <i className="fa-solid fa-expand text-3xl text-red-500/80 mb-2 block"></i>
+                    <span className="text-sm font-bold block">{canvasWidth} x {canvasHeight} {unit}</span>
+                    <span className="text-[10px] opacity-60 block">Escala Visual Proporcional</span>
                   </div>
                 )}
               </motion.div>
