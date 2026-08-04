@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { LanguageProvider } from './context/LanguageContext';
+import GoogleAnalytics from '@/app/components/analytics/GoogleAnalytics';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nudesign.agency'),
@@ -58,73 +59,72 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Datos Estructurados Schema.org para Google (Sitelinks & SiteNavigationElement)
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'Organization',
         '@id': 'https://nudesign.agency/#organization',
-        'name': 'NU-DESIGN Agency',
-        'url': 'https://nudesign.agency',
-        'logo': 'https://nudesign.agency/icon-dark.svg',
-        'sameAs': [
+        name: 'NU-DESIGN Agency',
+        url: 'https://nudesign.agency',
+        logo: 'https://nudesign.agency/icon-dark.svg',
+        sameAs: [
           'https://www.instagram.com/nudesign_02/',
           'https://www.facebook.com/share/18szd7DaVA/',
           'https://x.com/nudesign_02',
           'https://youtube.com/@anousleshow1680'
         ],
-        'founder': {
+        founder: {
           '@type': 'Person',
-          'name': 'Garic Edume'
+          name: 'Garic Edume'
         }
       },
       {
         '@type': 'WebSite',
         '@id': 'https://nudesign.agency/#website',
-        'url': 'https://nudesign.agency',
-        'name': 'NU-DESIGN',
-        'publisher': {
+        url: 'https://nudesign.agency',
+        name: 'NU-DESIGN',
+        publisher: {
           '@id': 'https://nudesign.agency/#organization'
         },
-        'potentialAction': {
+        potentialAction: {
           '@type': 'SearchAction',
-          'target': 'https://nudesign.agency/portafolio?q={search_term_string}',
+          target: 'https://nudesign.agency/portafolio?q={search_term_string}',
           'query-input': 'required name=search_term_string'
         }
       },
       {
         '@type': 'ItemList',
         '@id': 'https://nudesign.agency/#sitelinks',
-        'name': 'Navegación Principal NU-DESIGN',
-        'itemListElement': [
+        name: 'Navegación Principal NU-DESIGN',
+        itemListElement: [
           {
             '@type': 'SiteNavigationElement',
-            'position': 1,
-            'name': 'Portafolio & Casos de Estudio',
-            'description': 'Explora proyectos visuales, branding y empaques de alta gama.',
-            'url': 'https://nudesign.agency/portafolio'
+            position: 1,
+            name: 'Portafolio & Casos de Estudio',
+            description: 'Explora proyectos visuales, branding y empaques de alta gama.',
+            url: 'https://nudesign.agency/portafolio'
           },
           {
             '@type': 'SiteNavigationElement',
-            'position': 2,
-            'name': 'Solicitar Cotización',
-            'description': 'Calcula y solicita la propuesta automatizada para tu proyecto.',
-            'url': 'https://nudesign.agency/cotizacion'
+            position: 2,
+            name: 'Solicitar Cotización',
+            description: 'Calcula y solicita la propuesta automatizada para tu proyecto.',
+            url: 'https://nudesign.agency/cotizacion'
           },
           {
             '@type': 'SiteNavigationElement',
-            'position': 3,
-            'name': 'Servicios & Contratación',
-            'description': 'Modelos de colaboración, branding y dirección de arte exclusiva.',
-            'url': 'https://nudesign.agency/contratar'
+            position: 3,
+            name: 'Servicios & Contratación',
+            description: 'Modelos de colaboración, branding y dirección de arte exclusiva.',
+            url: 'https://nudesign.agency/contratar'
           },
           {
             '@type': 'SiteNavigationElement',
-            'position': 4,
-            'name': 'Contacto Directo',
-            'description': 'Escríbenos directamente o conecta con Garic Edume.',
-            'url': 'https://nudesign.agency/contacto'
+            position: 4,
+            name: 'Contacto Directo',
+            description: 'Escríbenos directamente o conecta con Garic Edume.',
+            url: 'https://nudesign.agency/contacto'
           }
         ]
       }
@@ -136,13 +136,18 @@ export default function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd),
+          }}
         />
       </head>
+
       <body>
         <LanguageProvider>
           {children}
         </LanguageProvider>
+
+        <GoogleAnalytics />
       </body>
     </html>
   );
