@@ -294,10 +294,10 @@ export default function ContactoPage() {
             </div>
           </motion.a>
 
-          {/* Instagram */}
+          {/* Instagram - ACTUALIZADO CON EL NUEVO USUARIO */}
           <motion.a 
             whileHover={{ y: -5, scale: 1.02 }}
-            href="https://www.instagram.com/nudesign_02/" 
+            href="https://www.instagram.com/nudesign.agency02" 
             target="_blank" 
             rel="noopener noreferrer"
             className={`backdrop-blur-xl border rounded-2xl p-6 flex items-center space-x-4 shadow-xl transition-all ${theme === 'dark' ? 'bg-zinc-900/40 border-white/10 hover:border-pink-500/50' : 'bg-white/50 border-zinc-300 hover:border-pink-600/50'}`}
