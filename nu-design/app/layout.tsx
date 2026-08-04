@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { LanguageProvider } from './context/LanguageContext';
-import GoogleAnalytics from '@/app/components/analytics/GoogleAnalytics';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nudesign.agency'),
@@ -69,7 +69,7 @@ export default function RootLayout({
         url: 'https://nudesign.agency',
         logo: 'https://nudesign.agency/icon-dark.svg',
         sameAs: [
-          'https://www.instagram.com/nudesign_02/',
+          'https://www.instagram.com/nudesign.agency02',
           'https://www.facebook.com/share/18szd7DaVA/',
           'https://x.com/nudesign_02',
           'https://youtube.com/@anousleshow1680'
@@ -147,7 +147,8 @@ export default function RootLayout({
           {children}
         </LanguageProvider>
 
-        <GoogleAnalytics />
+        {/* Google Analytics con tu ID real */}
+        <GoogleAnalytics gaId="G-29J66PT6PQ" />
       </body>
     </html>
   );
