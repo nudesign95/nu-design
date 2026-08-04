@@ -161,7 +161,7 @@ export default function Home() {
       longitude: '-69.9722',
     },
     sameAs: [
-      'https://www.instagram.com/nudesign_02/',
+      'https://www.instagram.com/nudesign.agency02/',
       'https://www.facebook.com/share/18szd7DaVA/?mibextid=wwXIfr',
       'https://x.com/nudesign_02?s=11',
       'https://youtube.com/@anousleshow1680?si=BqJxqzF7533u7sx2',
