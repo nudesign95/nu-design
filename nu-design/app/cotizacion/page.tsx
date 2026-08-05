@@ -1,12 +1,17 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { createClient } from '@supabase/supabase-js';
 import { Turnstile } from '@marsidev/react-turnstile';
 import { useLanguage } from '../context/LanguageContext';
 import Footer from '../components/Footer';
+
+// Carga dinámica de SignatureCanvas sin SSR para prevenir fallos en Next.js
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const SignatureCanvas = dynamic(() => import('react-signature-canvas'), { ssr: false }) as React.ComponentType<any>;
 
 // Inicialización limpia de Supabase
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://m3c3m0sc0kic0.supabase.co';
@@ -359,12 +364,17 @@ export default function CotizacionPage() {
   const [fileError, setFileError] = useState('');
   const [receiveChannel, setReceiveChannel] = useState<'whatsapp' | 'correo'>('whatsapp');
   
-  // ESTADOS DE TÉRMINOS, PAGO Y CAPTCHA
+  // ESTADOS DE TÉRMINOS, PAGO, CAPTCHA Y CONTRATO
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'online' | 'acuerdo'>('online');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  // ESTADOS Y CANVAS PARA LA FIRMA DIGITAL
+  const [signatureData, setSignatureData] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sigPadRef = useRef<any>(null);
 
   const langMenuRef = useRef<HTMLDivElement>(null);
 
@@ -468,6 +478,22 @@ export default function CotizacionPage() {
     }
   };
 
+  const clearSignature = () => {
+    sigPadRef.current?.clear();
+    setSignatureData(null);
+  };
+
+  const saveSignatureAndAccept = () => {
+    if (sigPadRef.current?.isEmpty()) {
+      alert('Por favor dibuja tu firma en el recuadro antes de aceptar.');
+      return;
+    }
+    const dataUrl = sigPadRef.current?.getTrimmedCanvas().toDataURL('image/png');
+    setSignatureData(dataUrl || null);
+    setShowTermsModal(false);
+    setAcceptedTerms(true);
+  };
+
   const currentSubServiceDetails = selectedMainService && selectedSubService
     ? masterCatalog[selectedMainService]?.find(item => item.name === selectedSubService)
     : null;
@@ -488,7 +514,7 @@ export default function CotizacionPage() {
       return;
     }
     if (!acceptedTerms) {
-      alert('Debes leer y aceptar los Términos y Condiciones para continuar.');
+      alert('Debes leer, aceptar y firmar los Términos y Condiciones para continuar.');
       return;
     }
     
@@ -536,7 +562,8 @@ export default function CotizacionPage() {
           needsPhysicalSample,
           receiveChannel,
           paymentMethod,
-          turnstileToken
+          turnstileToken,
+          signatureData
         })
       });
 
@@ -568,6 +595,7 @@ export default function CotizacionPage() {
     setAcceptedTerms(false);
     setIsSubmitted(false);
     setTurnstileToken(null);
+    setSignatureData(null);
   };
 
   const categoriesWithPhysical = ["Papelería Corporativa", "Gran Formato", "Packaging y Etiquetas", "Merchandising y Eventos"];
@@ -1016,7 +1044,7 @@ export default function CotizacionPage() {
                 </div>
               )}
 
-              {/* 8. VERIFICACIÓN ANTI-BOTS Y TÉRMINOS */}
+              {/* 8. VERIFICACIÓN ANTI-BOTS Y TÉRMINOS CON FIRMA */}
               <div className="space-y-4 border-t pt-6 border-white/10 flex flex-col items-center">
                 
                 {/* WIDGET CLOUDFLARE TURNSTILE */}
@@ -1041,11 +1069,17 @@ export default function CotizacionPage() {
                   <label htmlFor="terms" className="text-xs opacity-80 leading-relaxed cursor-pointer">
                     Acepto los{' '}
                     <button type="button" onClick={() => setShowTermsModal(true)} className="text-red-500 font-semibold underline hover:text-red-400 cursor-pointer">
-                      Términos y Condiciones de Servicio
+                      Términos, Condiciones y Contrato con Firma Digital
                     </button>{' '}
                     de NU-DESIGN y la política de entrega de archivos.
                   </label>
                 </div>
+
+                {signatureData && (
+                  <p className="text-xs text-emerald-400 font-semibold self-start">
+                    ✓ Firma digital registrada correctamente.
+                  </p>
+                )}
               </div>
 
               {/* Botón de Enviar (Sólo si es WhatsApp/Manual) */}
@@ -1080,26 +1114,59 @@ export default function CotizacionPage() {
 
         </main>
 
-        {/* MODAL DE TÉRMINOS Y CONDICIONES COMPLETO */}
+        {/* MODAL DE TÉRMINOS Y CONTRATO CON FIRMA DIGITAL */}
         <AnimatePresence>
           {showTermsModal && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-              <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }} className={`max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8 rounded-3xl border shadow-2xl space-y-6 ${theme === 'dark' ? 'bg-zinc-950 border-white/20 text-zinc-200' : 'bg-white border-zinc-300 text-zinc-800'}`}>
-                <div className="flex justify-between items-center border-b border-white/10 pb-4">
-                  <h3 className="text-lg font-bold text-red-500 uppercase tracking-wide">Términos y Condiciones • NU-DESIGN</h3>
-                  <button type="button" onClick={() => setShowTermsModal(false)} className="text-xl opacity-60 hover:opacity-100 cursor-pointer">&times;</button>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+              <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }} className={`max-w-3xl w-full max-h-[85vh] overflow-y-auto p-8 rounded-3xl border shadow-2xl space-y-6 ${theme === 'dark' ? 'bg-zinc-950 border-white/20 text-zinc-200' : 'bg-white border-zinc-300 text-zinc-800'}`}>
+                <div className="flex justify-between items-center border-b border-white/10 pb-4 sticky top-0 bg-zinc-950/90 backdrop-blur-md z-10 pt-2">
+                  <div>
+                    <h3 className="text-lg font-bold text-red-500 uppercase tracking-wide">TÉRMINOS, CONDICIONES Y CONTRATO • NU-DESIGN</h3>
+                    <span className="text-[10px] text-zinc-500 uppercase tracking-widest block">Última actualización: Agosto de 2026</span>
+                  </div>
+                  <button type="button" onClick={() => setShowTermsModal(false)} className="text-2xl opacity-60 hover:opacity-100 cursor-pointer">&times;</button>
                 </div>
 
-                <div className="text-xs space-y-4 font-light leading-relaxed">
-                  <p><strong>1. Propiedad Intelectual:</strong> Todos los derechos de autor de las propuestas conceptuales pertenecen a NU-DESIGN hasta la liquidación total del proyecto.</p>
-                  <p><strong>2. Revisiones y Tiempos:</strong> Cada servicio incluye hasta 3 rondas de ajustes dentro del tiempo estimado especificado en la cotización.</p>
-                  <p><strong>3. Archivos y Formatos:</strong> Los archivos finales se entregan en formatos editables (AI, EPS, PDF) e imágenes de alta resolución (PNG, JPG, SVG) según el paquete adquirido.</p>
-                  <p><strong>4. Pagos y Reembolsos:</strong> Los pagos únicos para servicios automatizables o el anticipo acordado no son reembolsables una vez iniciado el proceso de diseño activo.</p>
+                <div className="text-xs space-y-5 font-light leading-relaxed opacity-90 pr-2">
+                  <section>
+                    <h4 className="font-semibold text-red-400 uppercase tracking-wider mb-1">1. Introducción</h4>
+                    <p>Bienvenido a NU-DESIGN. El presente documento establece los Términos y Condiciones que regulan la contratación de los servicios ofrecidos por Garic Edume, diseñador gráfico profesional, diseñador web y desarrollador junior, quien presta sus servicios como freelancer independiente bajo la marca comercial NU-DESIGN.</p>
+                  </section>
+
+                  <section>
+                    <h4 className="font-semibold text-red-400 uppercase tracking-wider mb-1">2. Objeto del Servicio</h4>
+                    <p>NU-DESIGN ofrece servicios profesionales relacionados con el diseño gráfico, diseño web, branding y desarrollo digital.</p>
+                  </section>
+
+                  <section>
+                    <h4 className="font-semibold text-red-400 uppercase tracking-wider mb-1">3. Propiedad Intelectual y Pagos</h4>
+                    <p>Los archivos finales se entregarán una vez liquidado el pago total del proyecto. Los pagos o anticipos no son reembolsables una vez iniciado el proceso de diseño activo.</p>
+                  </section>
+
+                  {/* LIENZO DE FIRMA DIGITAL INTEGRADOR */}
+                  <div className="space-y-2 pt-4 border-t border-white/10">
+                    <div className="flex justify-between items-center">
+                      <label className="text-xs uppercase font-semibold text-red-400 tracking-wider">
+                        Plasma tu Firma Digital (Dedo en Pantalla o Mouse):
+                      </label>
+                      <button type="button" onClick={clearSignature} className="text-[10px] text-zinc-400 underline hover:text-red-400 cursor-pointer">
+                        Limpiar Firma
+                      </button>
+                    </div>
+
+                    <div className="border border-red-500/40 rounded-xl bg-zinc-900 overflow-hidden">
+                      <SignatureCanvas
+                        ref={sigPadRef}
+                        penColor="#ef4444"
+                        canvasProps={{ className: 'w-full h-32 cursor-crosshair' }}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="pt-4 flex justify-end">
-                  <button type="button" onClick={() => { setAcceptedTerms(true); setShowTermsModal(false); }} className="px-6 py-2.5 bg-red-600 text-white rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-red-700 cursor-pointer">
-                    Entendido y Aceptar
+                <div className="pt-4 flex justify-end sticky bottom-0 bg-zinc-950/90 backdrop-blur-md pb-2">
+                  <button type="button" onClick={saveSignatureAndAccept} className="px-8 py-3 bg-red-600 text-white rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-red-700 cursor-pointer shadow-xl">
+                    Guardar Firma y Aceptar Todo
                   </button>
                 </div>
               </motion.div>

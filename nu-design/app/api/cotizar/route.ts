@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
-// Configuración del limitador a máximo 5 solicitudes por IP cada 15 minutos
+// Limitador de tasa: máximo 5 solicitudes por IP cada 15 minutos
 const ratelimit = (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)
   ? new Ratelimit({
       redis: Redis.fromEnv(),
@@ -14,7 +14,6 @@ const ratelimit = (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_RED
 export async function POST(request: Request) {
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
 
-  // Control de 5 intentos por IP
   if (ratelimit) {
     const { success } = await ratelimit.limit(ip);
     if (!success) {
@@ -44,6 +43,7 @@ export async function POST(request: Request) {
       timeUnit2,
       needsPhysicalSample,
       receiveChannel,
+      signatureData
     } = body;
 
     const cliente = contactName || 'No especificado';
@@ -51,13 +51,11 @@ export async function POST(request: Request) {
     const ubicacion = `${selectedCity}, ${selectedCountry}`;
     const telefonoCompleto = `${countryCode} ${contactPhone}`;
 
-    // Construcción del tiempo requerido
     let tiempoTexto = `${timeQuantity} ${timeUnit}`;
     if (timeQuantity2 && timeQuantity2 !== '0' && timeUnit2 && timeUnit2 !== 'ninguno') {
       tiempoTexto += ` y ${timeQuantity2} ${timeUnit2}`;
     }
 
-    // 1. CANAL DE WHATSAPP: Formato de mensaje elegante
     if (receiveChannel === 'whatsapp') {
       const mensajeWhatsApp = 
 `*¡Hola Garic! Solicité una Cotización en NU-DESIGN* 🎨
@@ -74,8 +72,7 @@ export async function POST(request: Request) {
 • *Específico:* ${selectedSubService}
 • *Tiempo estimado:* ${tiempoTexto}
 • *Muestra física:* ${needsPhysicalSample === 'si' ? 'Sí requiere' : 'No (100% Digital)'}
-
-Quedo a la espera de la propuesta oficial. ¡Gracias!`;
+• *Contrato Firmado:* ${signatureData ? '✅ Sí (Firma Digital Registrada)' : '❌ Pendiente'}`;
 
       const redirectUrl = `https://wa.me/18294608316?text=${encodeURIComponent(mensajeWhatsApp)}`;
 
@@ -86,21 +83,14 @@ Quedo a la espera de la propuesta oficial. ¡Gracias!`;
       });
     }
 
-    // 2. CANAL DE CORREO: Preparado para integraciones con Resend / SMTP
-    if (receiveChannel === 'correo') {
-      console.log('Cotización recibida para procesamiento por correo de:', contactEmail);
-
-      return NextResponse.json({
-        success: true,
-        channel: 'correo',
-        message: 'Tu solicitud de cotización fue procesada exitosamente. Te contactaremos a la brevedad.',
-      });
-    }
-
-    return NextResponse.json({ success: true, channel: 'general' });
+    return NextResponse.json({
+      success: true,
+      channel: receiveChannel || 'general',
+      message: 'Cotización procesada correctamente.'
+    });
 
   } catch (error) {
-    console.error('Error procesando cotización:', error);
+    console.error('Error en API cotizar:', error);
     return NextResponse.json(
       { success: false, message: 'Ocurrió un error al procesar tu cotización.' },
       { status: 500 }
