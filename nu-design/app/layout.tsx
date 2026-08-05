@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { LanguageProvider } from './context/LanguageContext';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import SecurityProvider from './components/SecurityProvider';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nudesign.agency'),
@@ -142,10 +143,12 @@ export default function RootLayout({
         />
       </head>
 
-      <body>
-        <LanguageProvider>
-          {children}
-        </LanguageProvider>
+      <body className="select-none">
+        <SecurityProvider>
+          <LanguageProvider>
+            {children}
+          </LanguageProvider>
+        </SecurityProvider>
 
         {/* Google Analytics con tu ID real */}
         <GoogleAnalytics gaId="G-29J66PT6PQ" />
