@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { createClient } from '@supabase/supabase-js';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { useLanguage } from '../context/LanguageContext';
 
 // Inicialización limpia de Supabase
@@ -316,7 +317,6 @@ const masterCatalog: {
 };
 
 export default function CotizacionPage() {
-  // Inicialización limpia desde localStorage sin activar setters síncronos en efectos
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('nu_theme');
@@ -358,15 +358,15 @@ export default function CotizacionPage() {
   const [fileError, setFileError] = useState('');
   const [receiveChannel, setReceiveChannel] = useState<'whatsapp' | 'correo'>('whatsapp');
   
-  // ESTADOS DE TÉRMINOS Y PAGO
+  // ESTADOS DE TÉRMINOS, PAGO Y CAPTCHA
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'online' | 'acuerdo'>('online');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const langMenuRef = useRef<HTMLDivElement>(null);
 
-  // Sincronizar el DOM y localStorage únicamente cuando el tema cambie
   useEffect(() => {
     localStorage.setItem('nu_theme', theme);
     if (theme === 'dark') {
@@ -376,7 +376,6 @@ export default function CotizacionPage() {
     }
   }, [theme]);
 
-  // Guardar cambio de tema explícito desde los botones
   const handleThemeChange = (newTheme: 'dark' | 'light') => {
     setTheme(newTheme);
   };
@@ -400,7 +399,6 @@ export default function CotizacionPage() {
     }
   };
 
-  // 🔍 BÚSQUEDA HÍBRIDA DE CLIENTES (Paso 1: Supabase / Paso 2: LocalStorage respaldo)
   const handleClientLookup = async (val: string) => {
     setIdentifier(val);
     if (val.length > 2) {
@@ -475,7 +473,6 @@ export default function CotizacionPage() {
 
   const isPriceFixed = currentSubServiceDetails && currentSubServiceDetails.mode.includes('Pago Automatizado');
 
-  // Convertidor para PayPal de RD$ a USD
   const getAmountUSD = () => {
     if (!currentSubServiceDetails) return "10.00";
     const rawNumber = Number(currentSubServiceDetails.price.replace(/[^0-9]/g, '')) || 600;
@@ -485,12 +482,15 @@ export default function CotizacionPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!turnstileToken) {
+      alert('Por favor, completa la verificación de seguridad anti-bots.');
+      return;
+    }
     if (!acceptedTerms) {
       alert('Debes leer y aceptar los Términos y Condiciones para continuar.');
       return;
     }
     
-    // 💾 Guardar cliente en LocalStorage y Supabase
     if (clientType === 'nuevo' && (contactPhone || companyName)) {
       const clientData = { companyName, contactName, country: selectedCountry, city: selectedCity, code: countryCode, phone: contactPhone, email: contactEmail };
       if (contactPhone) localStorage.setItem(`client_${contactPhone}`, JSON.stringify(clientData));
@@ -534,7 +534,8 @@ export default function CotizacionPage() {
           timeUnit2,
           needsPhysicalSample,
           receiveChannel,
-          paymentMethod
+          paymentMethod,
+          turnstileToken
         })
       });
 
@@ -546,7 +547,7 @@ export default function CotizacionPage() {
         }
         setIsSubmitted(true);
       } else {
-        alert('Hubo un error al procesar la cotización. Inténtalo de nuevo.');
+        alert(result.message || 'Hubo un error al procesar la cotización. Inténtalo de nuevo.');
       }
     } catch {
       setIsSubmitted(true);
@@ -565,6 +566,7 @@ export default function CotizacionPage() {
     setIdentifier('');
     setAcceptedTerms(false);
     setIsSubmitted(false);
+    setTurnstileToken(null);
   };
 
   const categoriesWithPhysical = ["Papelería Corporativa", "Gran Formato", "Packaging y Etiquetas", "Merchandising y Eventos"];
@@ -610,7 +612,6 @@ export default function CotizacionPage() {
           </div>
 
           <div className="flex items-center space-x-3 md:space-x-4">
-            {/* IDIOMA GLOBAL REPARADO */}
             <div className="relative hidden md:block" ref={langMenuRef}>
               <button 
                 type="button"
@@ -1014,9 +1015,20 @@ export default function CotizacionPage() {
                 </div>
               )}
 
-              {/* 8. TÉRMINOS Y CONDICIONES OBLIGATORIOS */}
-              <div className="space-y-3 border-t pt-6 border-white/10">
-                <div className="flex items-start gap-3">
+              {/* 8. VERIFICACIÓN ANTI-BOTS Y TÉRMINOS */}
+              <div className="space-y-4 border-t pt-6 border-white/10 flex flex-col items-center">
+                
+                {/* WIDGET CLOUDFLARE TURNSTILE */}
+                <div className="my-2">
+                  <Turnstile
+                    siteKey="1x00000000000000000000AA" // Clave pública universal de prueba de Cloudflare Turnstile
+                    onSuccess={(token) => setTurnstileToken(token)}
+                    onError={() => setTurnstileToken(null)}
+                    onExpire={() => setTurnstileToken(null)}
+                  />
+                </div>
+
+                <div className="flex items-start gap-3 w-full">
                   <input 
                     type="checkbox" 
                     id="terms" 
@@ -1042,7 +1054,7 @@ export default function CotizacionPage() {
                     whileHover={{ scale: 1.05 }} 
                     whileTap={{ scale: 0.95 }} 
                     type="submit" 
-                    className="w-full md:w-auto px-12 py-4 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl transition-all cursor-pointer"
+                    className="w-full md:w-auto px-12 py-4 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {t.botonEnviar}
                   </motion.button>
