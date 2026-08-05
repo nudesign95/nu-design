@@ -3,6 +3,7 @@ import './globals.css';
 import { LanguageProvider } from './context/LanguageContext';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import SecurityProvider from './components/SecurityProvider';
+import CookieBanner from './components/CookieBanner';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nudesign.agency'),
@@ -147,6 +148,8 @@ export default function RootLayout({
         <SecurityProvider>
           <LanguageProvider>
             {children}
+            {/* Banner flotante de consentimiento de Cookies */}
+            <CookieBanner />
           </LanguageProvider>
         </SecurityProvider>
 
