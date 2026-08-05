@@ -6,6 +6,7 @@ import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { createClient } from '@supabase/supabase-js';
 import { Turnstile } from '@marsidev/react-turnstile';
 import { useLanguage } from '../context/LanguageContext';
+import Footer from '../components/Footer';
 
 // Inicialización limpia de Supabase
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://m3c3m0sc0kic0.supabase.co';
@@ -1079,7 +1080,7 @@ export default function CotizacionPage() {
 
         </main>
 
-        {/* MODAL DE TÉRMINOS Y CONDICIONES */}
+        {/* MODAL DE TÉRMINOS Y CONDICIONES COMPLETO */}
         <AnimatePresence>
           {showTermsModal && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
@@ -1106,14 +1107,8 @@ export default function CotizacionPage() {
           )}
         </AnimatePresence>
 
-        {/* Footer Unificado en 1 sola línea */}
-        <footer className="w-full px-4 py-4 flex flex-col items-center space-y-3 z-25 mt-6">
-          <div className={`text-[9px] sm:text-[11px] md:text-xs font-light tracking-tight sm:tracking-wide text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
-            theme === 'dark' ? 'text-zinc-400 opacity-70' : 'text-zinc-700 opacity-90'
-          }`}>
-            Nu-Design Derechos reservados 2026 - Design by Garic Edume
-          </div>
-        </footer>
+        {/* Footer Unificado Completo */}
+        <Footer />
 
       </div>
     </PayPalScriptProvider>

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import Footer from '../components/Footer';
 
 type UnitType = 'pulg' | 'cm' | 'mm' | 'pies' | 'yardas';
 
@@ -445,14 +446,8 @@ export default function UtilidadesPage() {
 
       </main>
 
-      {/* Footer Unificado en 1 sola línea */}
-      <footer className="w-full px-4 py-4 flex flex-col items-center space-y-3 z-25 mt-6">
-        <div className={`text-[9px] sm:text-[11px] md:text-xs font-light tracking-tight sm:tracking-wide text-center whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
-          theme === 'dark' ? 'text-zinc-400 opacity-70' : 'text-zinc-700 opacity-90'
-        }`}>
-          Nu-Design Derechos reservados 2026 - Design by Garic Edume
-        </div>
-      </footer>
+      {/* Footer Global Unificado */}
+      <Footer />
 
     </div>
   );

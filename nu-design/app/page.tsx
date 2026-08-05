@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import Footer from './components/Footer';
 
 const translations = {
   ES: {
@@ -539,14 +540,8 @@ export default function Home() {
 
       </main>
 
-      {/* Footer Section */}
-      <footer className="w-full px-4 md:px-10 py-4 flex flex-col items-center space-y-3 z-25 mt-2">
-        <div className={`text-[10px] md:text-xs font-light tracking-wide text-center ${
-          theme === 'dark' ? 'text-zinc-400 opacity-60' : 'text-zinc-700 opacity-80'
-        }`}>
-          {t.rights}
-        </div>
-      </footer>
+      {/* Footer Unificado Completo */}
+      <Footer />
 
       {/* Floating Chat Now Button */}
       <motion.div 
