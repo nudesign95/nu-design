@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
+import { Resend } from 'resend';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
+
+const resend = new Resend('re_GUPMwW6J_CaYiZeShr21f1AwUA9TY3v2n');
 
 const ratelimit = (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)
   ? new Ratelimit({
@@ -56,7 +59,7 @@ export async function POST(request: Request) {
 
     const muestraTexto = needsPhysicalSample === 'si' ? 'Con muestra física impresa' : '100% Digital (sin muestra física)';
 
-    // NUEVO FORMATO ELEGANTE DE MENSAJE DE WHATSAPP
+    // OPCIÓN 1: WHATSAPP
     if (receiveChannel === 'whatsapp') {
       const mensajeWhatsApp = 
 `📩 *NUEVA SOLICITUD DE COTIZACIÓN*
@@ -84,12 +87,10 @@ Se ha recibido una nueva solicitud de cotización con la siguiente información:
 ━━━━━━━━━━━━━━━━━━
 **ESTADO DE LA SOLICITUD**
 
-📄 **Contrato de Prestación de Servicios:** Pendiente de revisión y firma
+📄 **Contrato de Prestación de Servicios:** Pendiente de revisión
 
 ━━━━━━━━━━━━━━━━━━
-Gracias por elegir *NU-DESIGN*.
-
-En breve revisaremos tu solicitud y nos pondremos en contacto contigo para confirmar los detalles, enviar la cotización correspondiente y dar inicio al proceso.`;
+Gracias por elegir *NU-DESIGN*.`;
 
       const redirectUrl = `https://wa.me/18294608316?text=${encodeURIComponent(mensajeWhatsApp)}`;
 
@@ -100,7 +101,44 @@ En breve revisaremos tu solicitud y nos pondremos en contacto contigo para confi
       });
     }
 
-    return NextResponse.json({ success: true, channel: receiveChannel || 'general' });
+    // OPCIÓN 2: CORREO ELECTRÓNICO AUTOMÁTICO (RESEND)
+    if (receiveChannel === 'correo') {
+      await resend.emails.send({
+        from: 'NU-DESIGN <onboarding@resend.dev>',
+        to: [contactEmail],
+        subject: `Confirmación de Cotización • NU-DESIGN (${selectedSubService})`,
+        html: `
+          <div style="font-family: Arial, sans-serif; background-color: #040001; color: #ffffff; padding: 30px; border-radius: 16px;">
+            <h2 style="color: #ef4444; margin-bottom: 5px;">📩 SOLICITUD RECIBIDA</h2>
+            <p style="color: #a1a1aa; font-size: 14px;">NU-DESIGN • Agencia Creativa</p>
+            <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;" />
+            
+            <p>Hola <strong>${cliente}</strong>,</p>
+            <p>Hemos recibido tu solicitud de cotización para el servicio <strong>${selectedSubService}</strong> (${selectedMainService}).</p>
+            
+            <div style="background-color: #111; padding: 15px; border-radius: 12px; margin: 20px 0; font-size: 13px; border-left: 4px solid #ef4444;">
+              <p style="margin: 5px 0;"><strong>Empresa:</strong> ${empresa}</p>
+              <p style="margin: 5px 0;"><strong>Ubicación:</strong> ${ubicacion}</p>
+              <p style="margin: 5px 0;"><strong>Tiempo Solicitado:</strong> ${tiempoTexto}</p>
+              <p style="margin: 5px 0;"><strong>Modalidad:</strong> ${muestraTexto}</p>
+            </div>
+
+            <p style="font-size: 13px; color: #ccc;">En breve nuestro equipo revisará tu solicitud y nos pondremos en contacto contigo.</p>
+            
+            <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;" />
+            <p style="font-size: 11px; color: #777;">NU-DESIGN • Todos los derechos reservados.</p>
+          </div>
+        `
+      });
+
+      return NextResponse.json({
+        success: true,
+        channel: 'correo',
+        message: 'Correo de confirmación enviado exitosamente.'
+      });
+    }
+
+    return NextResponse.json({ success: true, channel: 'general' });
 
   } catch (error) {
     console.error('Error en API cotizar:', error);
