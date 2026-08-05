@@ -4,11 +4,16 @@ import type { NextRequest } from 'next/server';
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Ignorar rutas estáticas, imágenes y la propia página de bloqueo
+  // Ignorar rutas estáticas, imágenes, página de bloqueo y páginas legales
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/blocked') ||
+    pathname.startsWith('/aviso-legal') ||
+    pathname.startsWith('/terminos') ||
+    pathname.startsWith('/privacidad') ||
+    pathname.startsWith('/cookies') ||
+    pathname.startsWith('/reembolsos') ||
     pathname.includes('.')
   ) {
     return NextResponse.next();
@@ -23,16 +28,13 @@ export async function middleware(req: NextRequest) {
   }
 
   try {
-    // Verificación de IP mediante ipapi.co (detecta vpn / proxy / datacenter)
     const res = await fetch(`https://ipapi.co/${ip}/json/`, { next: { revalidate: 3600 } });
     const data = await res.json();
 
-    // Si ipapi detecta que es un proxy/hosting/vpn de datacenter
     if (data.security?.is_vpn || data.security?.is_proxy || data.in_hosting) {
       return NextResponse.redirect(new URL('/blocked', req.url));
     }
   } catch (error) {
-    // Si falla la API externa, permite el paso sin interrumpir al usuario legítimo
     console.error('Error al verificar IP:', error);
   }
 
@@ -40,5 +42,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|aviso-legal|terminos|privacidad|cookies|reembolsos).*)'
+  ],
 };
