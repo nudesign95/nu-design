@@ -1058,22 +1058,22 @@ export default function CotizacionPage() {
                 </div>
 
                 <div className="flex items-start gap-3 w-full">
-                  <input 
-                    type="checkbox" 
-                    id="terms" 
-                    required
-                    checked={acceptedTerms} 
-                    onChange={(e) => setAcceptedTerms(e.target.checked)} 
-                    className="mt-1 w-4 h-4 accent-red-600 rounded cursor-pointer" 
-                  />
-                  <label htmlFor="terms" className="text-xs opacity-80 leading-relaxed cursor-pointer">
-                    Acepto los{' '}
-                    <button type="button" onClick={() => setShowTermsModal(true)} className="text-red-500 font-semibold underline hover:text-red-400 cursor-pointer">
-                      Términos, Condiciones y Contrato con Firma Digital
-                    </button>{' '}
-                    de NU-DESIGN y la política de entrega de archivos.
-                  </label>
-                </div>
+  <input 
+    type="checkbox" 
+    id="terms" 
+    required
+    checked={acceptedTerms} 
+    onChange={(e) => setAcceptedTerms(e.target.checked)} 
+    className="mt-1 w-4 h-4 accent-red-600 rounded cursor-pointer" 
+  />
+  <label htmlFor="terms" className="text-xs opacity-80 leading-relaxed cursor-pointer">
+    Acepto los{' '}
+    <button type="button" onClick={() => setShowTermsModal(true)} className="text-red-500 font-semibold underline hover:text-red-400 cursor-pointer">
+      Términos y Condiciones de Servicio
+    </button>{' '}
+    de NU-DESIGN y la política de entrega de archivos.
+  </label>
+</div>
 
                 {signatureData && (
                   <p className="text-xs text-emerald-400 font-semibold self-start">

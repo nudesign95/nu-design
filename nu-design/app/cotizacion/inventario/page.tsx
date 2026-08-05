@@ -59,15 +59,30 @@ export default function InventarioPage() {
     setCotizaciones(updated);
 
     const mensajeAprobado = 
-`✅ *¡SOLICITUD APROBADA! - NU-DESIGN*
+`🎉 *SOLICITUD APROBADA*
+*NU-DESIGN*
 
-Hola *${cot.cliente}*, hemos revisado tu solicitud para *${cot.servicio}* y confirmamos que disponemos del tiempo y recursos para tu proyecto.
+Hola, *${cot.cliente}*.
 
-📌 *PASO SIGUIENTE:*
-Para formalizar la orden y comenzar el trabajo, por favor completa y firma tu Contrato de Servicios en el siguiente enlace:
-👉 https://nudesign.agency/contrato/firmar?id=${cot.id}
+Nos complace informarte que hemos revisado tu solicitud de *${cot.servicio}* y confirmamos que podemos asumir tu proyecto dentro del tiempo estimado.
 
-¡Estamos listos para crear un diseño excepcional para ti!`;
+━━━━━━━━━━━━━━━━━━
+**PRÓXIMO PASO**
+
+Para formalizar el inicio del proyecto, es necesario completar y firmar digitalmente el *Contrato de Prestación de Servicios*.
+
+📄 Firma tu contrato aquí:
+https://nudesign.agency/contrato/firmar?id=${cot.id}
+
+━━━━━━━━━━━━━━━━━━
+**¿Qué sucede después?**
+
+• Recibiremos automáticamente tu contrato firmado.
+• Confirmaremos el inicio del proyecto.
+• Te enviaremos la cotización final y las instrucciones para el pago inicial (si aplica).
+• Una vez confirmado el pago, comenzaremos el desarrollo de tu diseño.
+
+Gracias por confiar en *NU-DESIGN*. Será un placer trabajar contigo.`;
 
     window.open(`https://wa.me/${cot.contacto.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(mensajeAprobado)}`, '_blank');
   };
@@ -175,6 +190,9 @@ Quedamos a tu disposición para futuras consultas o para ajustar los tiempos de 
                     {cot.estado === 'Aprobada' && (
                       <span className="text-[10px] text-emerald-400 font-semibold">Enlace Enviado</span>
                     )}
+                    {cot.estado === 'Rechazada' && (
+                      <span className="text-[10px] text-red-400 font-semibold">Notificado</span>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -203,7 +221,7 @@ Quedamos a tu disposición para futuras consultas o para ajustar los tiempos de 
             <div className="flex justify-end space-x-3 pt-2">
               <button 
                 onClick={() => setShowRejectModal(false)} 
-                className="px-4 py-2 border border-white/20 rounded-full text-xs"
+                className="px-4 py-2 border border-white/20 rounded-full text-xs hover:bg-white/10"
               >
                 Cancelar
               </button>
