@@ -1,6 +1,30 @@
 import { NextResponse } from 'next/server';
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
+
+// Configuración del limitador a máximo 5 solicitudes por IP cada 15 minutos
+const ratelimit = (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)
+  ? new Ratelimit({
+      redis: Redis.fromEnv(),
+      limiter: Ratelimit.slidingWindow(5, '15 m'),
+      analytics: true,
+    })
+  : null;
 
 export async function POST(request: Request) {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
+
+  // Control de 5 intentos por IP
+  if (ratelimit) {
+    const { success } = await ratelimit.limit(ip);
+    if (!success) {
+      return NextResponse.json(
+        { success: false, message: 'Has superado el límite de 5 solicitudes. Por favor, espera 15 minutos para volver a intentarlo.' },
+        { status: 429 }
+      );
+    }
+  }
+
   try {
     const body = await request.json();
 
@@ -64,7 +88,6 @@ Quedo a la espera de la propuesta oficial. ¡Gracias!`;
 
     // 2. CANAL DE CORREO: Preparado para integraciones con Resend / SMTP
     if (receiveChannel === 'correo') {
-      // Aquí se ejecuta el envío de correo seguro en servidor
       console.log('Cotización recibida para procesamiento por correo de:', contactEmail);
 
       return NextResponse.json({
