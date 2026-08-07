@@ -2,57 +2,53 @@
 import { useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useTexture, Center } from '@react-three/drei';
+import { OrbitControls, useGLTF, useTexture, Decal, Center } from '@react-three/drei';
 
+// Modelo de Taza usando mug.glb
 function MugModel({ color, logoUrl, logoScale }: { color: string; logoUrl: string | null; logoScale: number }) {
-  // Carga el archivo local placeholder-logo.png o la imagen que suba el usuario
+  const { nodes } = useGLTF('/models/mug.glb') as any;
   const texture = useTexture(logoUrl || '/placeholder-logo.png');
 
-  return (
-    <group dispose={null}>
-      {/* Cuerpo de la Taza */}
-      <mesh castShadow receiveShadow position={[0, 0, 0]}>
-        <cylinderGeometry args={[1.2, 1.2, 2.4, 64]} />
-        <meshStandardMaterial color={color} roughness={0.2} metalness={0.1} />
-      </mesh>
-      
-      {/* Asa de la Taza */}
-      <mesh position={[-1.3, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[0.7, 0.2, 16, 32, Math.PI]} />
-        <meshStandardMaterial color={color} roughness={0.2} metalness={0.1} />
-      </mesh>
+  // Selecciona la malla principal del archivo GLB
+  const meshGeometry = nodes.Mug?.geometry || nodes.mesh_0?.geometry || (Object.values(nodes) as any[]).find((n) => n.isMesh)?.geometry;
 
-      {/* Arte / Logo sobre la Taza */}
-      <mesh position={[0, 0, 1.21]}>
-        <planeGeometry args={[1.5 * logoScale, 1.5 * logoScale]} />
-        <meshBasicMaterial map={texture} transparent depthTest={true} />
-      </mesh>
-    </group>
+  return (
+    <mesh geometry={meshGeometry} castShadow receiveShadow dispose={null}>
+      <meshStandardMaterial color={color} roughness={0.2} metalness={0.05} />
+      <Decal
+        position={[0, 0, 0.9]}
+        rotation={[0, 0, 0]}
+        scale={[0.8 * logoScale, 0.8 * logoScale, 0.8 * logoScale]}
+      >
+        <meshBasicMaterial map={texture} transparent depthTest={true} polygonOffset polygonOffsetFactor={-1} />
+      </Decal>
+    </mesh>
   );
 }
 
+// Modelo de Camiseta usando tshirt.glb
 function ShirtModel({ color, logoUrl, logoScale }: { color: string; logoUrl: string | null; logoScale: number }) {
+  const { nodes } = useGLTF('/models/tshirt.glb') as any;
   const texture = useTexture(logoUrl || '/placeholder-logo.png');
 
-  return (
-    <group dispose={null}>
-      {/* Torso Representativo */}
-      <mesh castShadow receiveShadow position={[0, 0, 0]}>
-        <boxGeometry args={[2.2, 2.8, 0.8]} />
-        <meshStandardMaterial color={color} roughness={0.7} />
-      </mesh>
+  const meshGeometry = nodes.Shirt?.geometry || nodes.mesh_0?.geometry || (Object.values(nodes) as any[]).find((n) => n.isMesh)?.geometry;
 
-      {/* Arte / Logo en el Pecho */}
-      <mesh position={[0, 0.3, 0.41]}>
-        <planeGeometry args={[1.2 * logoScale, 1.2 * logoScale]} />
-        <meshBasicMaterial map={texture} transparent depthTest={true} />
-      </mesh>
-    </group>
+  return (
+    <mesh geometry={meshGeometry} castShadow receiveShadow dispose={null}>
+      <meshStandardMaterial color={color} roughness={0.6} metalness={0.05} />
+      <Decal
+        position={[0, 0.2, 0.15]}
+        rotation={[0, 0, 0]}
+        scale={[0.5 * logoScale, 0.5 * logoScale, 0.5 * logoScale]}
+      >
+        <meshBasicMaterial map={texture} transparent depthTest={true} polygonOffset polygonOffsetFactor={-1} />
+      </Decal>
+    </mesh>
   );
 }
 
 export default function Mockup3DViewer() {
-  const [productType, setProductType] = useState<'tshirt' | 'taza'>('tshirt');
+  const [productType, setProductType] = useState<'tshirt' | 'taza'>('taza');
   const [itemColor, setItemColor] = useState('#ffffff');
   const [tshirtSize, setTshirtSize] = useState('M');
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
@@ -94,29 +90,29 @@ export default function Mockup3DViewer() {
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
       
-      {/* VISUALIZADOR 3D (360°) */}
+      {/* Visualizador 3D */}
       <div className="lg:col-span-8 h-125 md:h-150 w-full rounded-3xl border border-white/10 bg-zinc-950/80 relative overflow-hidden flex items-center justify-center">
         
         <div className="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] tracking-wider uppercase text-zinc-400">
           💡 Haz clic y arrastra para rotar 360°
         </div>
 
-        <Canvas ref={canvasRef} camera={{ position: [0, 0, 5], fov: 45 }} gl={{ preserveDrawingBuffer: true }}>
-          <ambientLight intensity={0.7} />
+        <Canvas ref={canvasRef} camera={{ position: [0, 0, 3], fov: 45 }} gl={{ preserveDrawingBuffer: true }}>
+          <ambientLight intensity={0.8} />
           <directionalLight position={[5, 5, 5]} intensity={1.2} />
           <directionalLight position={[-5, -5, -5]} intensity={0.4} />
 
           <Suspense fallback={null}>
             <Center>
-              {productType === 'tshirt' ? (
-                <ShirtModel color={itemColor} logoUrl={logoUrl} logoScale={logoScale} />
-              ) : (
+              {productType === 'taza' ? (
                 <MugModel color={itemColor} logoUrl={logoUrl} logoScale={logoScale} />
+              ) : (
+                <ShirtModel color={itemColor} logoUrl={logoUrl} logoScale={logoScale} />
               )}
             </Center>
           </Suspense>
 
-          <OrbitControls enableZoom={true} minDistance={3} maxDistance={8} />
+          <OrbitControls enableZoom={true} minDistance={1.5} maxDistance={6} />
         </Canvas>
 
         <div className="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-md p-3 rounded-2xl border border-white/10 flex justify-between items-center text-[11px] text-zinc-300">
@@ -129,7 +125,7 @@ export default function Mockup3DViewer() {
         </div>
       </div>
 
-      {/* PANEL DE CONFIGURACIÓN */}
+      {/* Controles de Configuración */}
       <div className="lg:col-span-4 bg-zinc-900/60 border border-white/10 rounded-3xl p-6 space-y-6 backdrop-blur-xl">
         
         <div>
@@ -137,17 +133,17 @@ export default function Mockup3DViewer() {
           <div className="grid grid-cols-2 gap-3">
             <button 
               type="button" 
-              onClick={() => setProductType('tshirt')} 
-              className={`py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider border cursor-pointer ${productType === 'tshirt' ? 'bg-red-600 border-red-500 text-white' : 'border-white/10 opacity-70'}`}
-            >
-              Camiseta
-            </button>
-            <button 
-              type="button" 
               onClick={() => setProductType('taza')} 
               className={`py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider border cursor-pointer ${productType === 'taza' ? 'bg-red-600 border-red-500 text-white' : 'border-white/10 opacity-70'}`}
             >
               Taza Cerámica
+            </button>
+            <button 
+              type="button" 
+              onClick={() => setProductType('tshirt')} 
+              className={`py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider border cursor-pointer ${productType === 'tshirt' ? 'bg-red-600 border-red-500 text-white' : 'border-white/10 opacity-70'}`}
+            >
+              Camiseta
             </button>
           </div>
         </div>
@@ -168,7 +164,6 @@ export default function Mockup3DViewer() {
               value={itemColor} 
               onChange={(e) => setItemColor(e.target.value)} 
               className="w-8 h-8 rounded-xl bg-transparent border-0 cursor-pointer"
-              title="Color personalizado"
             />
           </div>
         </div>
@@ -201,20 +196,18 @@ export default function Mockup3DViewer() {
           {fileError && <p className="text-[11px] text-red-500 font-semibold mt-1">{fileError}</p>}
         </div>
 
-        {logoUrl && (
-          <div>
-            <label className="text-xs uppercase font-semibold text-zinc-400 block mb-1">Escala del Arte</label>
-            <input 
-              type="range" 
-              min="0.5" 
-              max="1.8" 
-              step="0.1" 
-              value={logoScale} 
-              onChange={(e) => setLogoScale(parseFloat(e.target.value))} 
-              className="w-full accent-red-600 cursor-pointer"
-            />
-          </div>
-        )}
+        <div>
+          <label className="text-xs uppercase font-semibold text-zinc-400 block mb-1">Escala del Arte</label>
+          <input 
+            type="range" 
+            min="0.5" 
+            max="1.8" 
+            step="0.1" 
+            value={logoScale} 
+            onChange={(e) => setLogoScale(parseFloat(e.target.value))} 
+            className="w-full accent-red-600 cursor-pointer"
+          />
+        </div>
 
         <div className="pt-4 border-t border-white/10 space-y-3">
           <button 
@@ -229,7 +222,7 @@ export default function Mockup3DViewer() {
             href="/cotizacion" 
             className="w-full block text-center py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs font-bold uppercase tracking-wider shadow-xl transition-all cursor-pointer"
           >
-            ✨ ¿Quieres mejorar tu arte o producirlo físicamente? Cotiza Aquí
+            ✨ Cotizar este Diseño
           </Link>
         </div>
 
