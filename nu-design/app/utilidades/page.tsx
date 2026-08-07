@@ -289,11 +289,22 @@ export default function UtilidadesPage() {
     <p className="text-sm font-light text-zinc-200">Prueba tus logos en Camisetas y Tazas en tiempo real 360°</p>
   </div>
   <Link 
-    href="/utilidades/mockup-3d" 
-    className="px-6 py-2.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider shadow-lg transition-all whitespace-nowrap"
-  >
-    Ir a Mockup 3D →
-  </Link>
+  href="/utilidades/mockup-3d" 
+  className="bg-zinc-900 border border-white/10 p-6 rounded-3xl hover:border-red-500 transition-all group block"
+>
+  <div className="flex justify-between items-start mb-4">
+    <span className="text-3xl">📐</span>
+    <span className="text-[10px] font-bold uppercase tracking-wider text-red-500 bg-red-500/10 px-2.5 py-1 rounded-full border border-red-500/20">
+      Interactivo
+    </span>
+  </div>
+  <h3 className="text-sm font-extrabold uppercase text-white group-hover:text-red-500 transition-colors">
+    Asesor de Tamaños & Sangrado
+  </h3>
+  <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
+    Consulta medidas recomendadas por la IA, prueba la escala real sobre objetos cotidianos y verifica márgenes de seguridad.
+  </p>
+</Link>
 </div>
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
