@@ -3,34 +3,29 @@ import { useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture, Center } from '@react-three/drei';
-import Footer from './Footer';
 
-// SVG incrustado para evitar consultas 404 a archivos inexistentes
+// SVG incrustado para evitar cualquier error 404
 const DEFAULT_PLACEHOLDER = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`
   <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
     <rect width="200" height="200" fill="transparent"/>
   </svg>
 `);
 
-// Componente 3D para la Taza
 function MugModel({ color, logoUrl, logoScale }: { color: string; logoUrl: string | null; logoScale: number }) {
   const texture = useTexture(logoUrl || DEFAULT_PLACEHOLDER);
 
   return (
     <group dispose={null}>
-      {/* Cuerpo de la Taza */}
       <mesh castShadow receiveShadow position={[0, 0, 0]}>
         <cylinderGeometry args={[1.2, 1.2, 2.4, 64]} />
         <meshStandardMaterial color={color} roughness={0.2} metalness={0.1} />
       </mesh>
       
-      {/* Asa de la Taza */}
       <mesh position={[-1.3, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
         <torusGeometry args={[0.7, 0.2, 16, 32, Math.PI]} />
         <meshStandardMaterial color={color} roughness={0.2} metalness={0.1} />
       </mesh>
 
-      {/* Arte / Logo sobre la Taza */}
       {logoUrl && (
         <mesh position={[0, 0, 1.21]}>
           <planeGeometry args={[1.5 * logoScale, 1.5 * logoScale]} />
@@ -41,7 +36,6 @@ function MugModel({ color, logoUrl, logoScale }: { color: string; logoUrl: strin
   );
 }
 
-// Componente 3D para la Camiseta
 function ShirtModel({ color, logoUrl, logoScale }: { color: string; logoUrl: string | null; logoScale: number }) {
   const texture = useTexture(logoUrl || DEFAULT_PLACEHOLDER);
 
@@ -88,8 +82,7 @@ export default function Mockup3DViewer() {
     }
 
     setFileError('');
-    const objectUrl = URL.createObjectURL(file);
-    setLogoUrl(objectUrl);
+    setLogoUrl(URL.createObjectURL(file));
   };
 
   const handleDownloadSnapshot = () => {
@@ -106,9 +99,7 @@ export default function Mockup3DViewer() {
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
       
-      {/* Visualizador 3D */}
       <div className="lg:col-span-8 h-125 md:h-150 w-full rounded-3xl border border-white/10 bg-zinc-950/80 relative overflow-hidden flex items-center justify-center">
-        
         <div className="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] tracking-wider uppercase text-zinc-400">
           💡 Haz clic y arrastra para rotar 360°
         </div>
@@ -141,9 +132,7 @@ export default function Mockup3DViewer() {
         </div>
       </div>
 
-      {/* Panel de Control */}
       <div className="lg:col-span-4 bg-zinc-900/60 border border-white/10 rounded-3xl p-6 space-y-6 backdrop-blur-xl">
-        
         <div>
           <label className="text-xs uppercase font-semibold text-zinc-400 block mb-2">Producto</label>
           <div className="grid grid-cols-2 gap-3">
