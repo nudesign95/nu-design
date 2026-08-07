@@ -1,7 +1,16 @@
 'use client';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import Mockup3DViewer from '../../components/Mockup3DViewer';
 import Footer from '../../components/Footer';
+
+const Mockup3DViewer = dynamic(() => import('../../components/Mockup3DViewer'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-125 md:h-150 flex items-center justify-center bg-zinc-950/80 rounded-3xl border border-white/10 text-xs text-zinc-400">
+      Cargando Motor 3D...
+    </div>
+  )
+});
 
 export default function Mockup3DPage() {
   return (
