@@ -1,20 +1,9 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Footer from '../components/Footer';
-
-// Carga dinámica del componente 3D deshabilitando SSR
-const Mockup3DViewer = dynamic(() => import('../components/Mockup3DViewer'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-125 flex items-center justify-center bg-zinc-950/80 rounded-3xl border border-white/10 text-xs text-zinc-400">
-      Cargando Motor 3D...
-    </div>
-  )
-});
 
 type UnitType = 'pulg' | 'cm' | 'mm' | 'pies' | 'yardas';
 
@@ -36,20 +25,23 @@ const PRESETS: Preset[] = [
 ];
 
 export default function UtilidadesPage() {
-  const [activeTab, setActiveTab] = useState<'3d' | 'pliegos'>('3d');
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [currentLang, setCurrentLang] = useState<'ES' | 'EN' | 'FR'>('ES');
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // --- ESTADOS SIMULADOR DE PLIEGOS ---
+  // 1. Hoja Principal (Pliego)
   const [sheetWidth, setSheetWidth] = useState<number>(8.5);
   const [sheetHeight, setSheetHeight] = useState<number>(11);
   const [unit, setUnit] = useState<UnitType>('pulg');
   const [selectedPreset, setSelectedPreset] = useState<string>("Carta (Letter)");
+
+  // 2. Pieza / Elemento a imprimir (Ej. Tarjeta 3.5x2)
   const [pieceWidth, setPieceWidth] = useState<number>(3.5);
   const [pieceHeight, setPieceHeight] = useState<number>(2);
   const [rotatePiece, setRotatePiece] = useState<boolean>(false);
+
+  // Archivo
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string>('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -58,7 +50,9 @@ export default function UtilidadesPage() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('nu_theme') as 'dark' | 'light' | null;
-    if (savedTheme) setTheme(savedTheme);
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
   }, []);
 
   useEffect(() => {
@@ -107,6 +101,7 @@ export default function UtilidadesPage() {
     }
   };
 
+  // CÁLCULO DE MULTIPLICACIÓN AUTOMÁTICA
   const actualPW = rotatePiece ? pieceHeight : pieceWidth;
   const actualPH = rotatePiece ? pieceWidth : pieceHeight;
 
@@ -135,7 +130,7 @@ export default function UtilidadesPage() {
       theme === 'dark' ? 'bg-[#040001] text-zinc-100' : 'bg-[#e3e3e3] text-zinc-900'
     }`}>
       
-      {/* Fondo Ambiental */}
+      {/* Fondo ambiental */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {theme === 'dark' ? (
           <>
@@ -147,7 +142,7 @@ export default function UtilidadesPage() {
         )}
       </motion.div>
 
-      {/* Header */}
+      {/* Top Navigation Bar Unificada */}
       <motion.header 
         initial={{ y: -20, opacity: 0 }} 
         animate={{ y: 0, opacity: 1 }} 
@@ -224,7 +219,7 @@ export default function UtilidadesPage() {
         </div>
       </motion.header>
 
-      {/* Menú Móvil */}
+      {/* MENÚ MÓVIL DESPLEGABLE */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div 
@@ -258,6 +253,14 @@ export default function UtilidadesPage() {
                 <span>→</span>
               </Link>
             </div>
+            <div className="flex flex-col space-y-4 pt-6 border-t border-zinc-500/20">
+              <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
+              <div className="flex items-center gap-3">
+                <button onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Español</button>
+                <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
+                <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -271,186 +274,181 @@ export default function UtilidadesPage() {
       {/* Main Content */}
       <main className="w-full max-w-7xl mx-auto px-4 md:px-6 py-10 z-10 flex flex-col items-center">
         
-        <div className="text-center mb-8 space-y-4">
+        <div className="text-center mb-8 space-y-2">
           <h1 className={`text-3xl md:text-5xl font-light tracking-tight ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}`}>
-            Herramientas & <span className="font-semibold text-red-500">Utilidades</span>
+            Simulador de <span className="font-semibold text-red-500">Pliegos & Multi-Impresión</span>
           </h1>
-          
-          <div className="flex justify-center gap-3 pt-2">
-            <button 
-              onClick={() => setActiveTab('3d')}
-              className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all border cursor-pointer ${
-                activeTab === '3d'
-                  ? 'bg-red-600 border-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]'
-                  : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
-              }`}
-            >
-              ✨ Visualizador Mockup 3D
-            </button>
-            <button 
-              onClick={() => setActiveTab('pliegos')}
-              className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all border cursor-pointer ${
-                activeTab === 'pliegos'
-                  ? 'bg-red-600 border-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]'
-                  : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
-              }`}
-            >
-              📐 Simulador de Pliegos
-            </button>
-          </div>
+          <p className="text-xs md:text-sm font-light tracking-widest uppercase opacity-75">
+            Calcula y visualiza la cantidad exacta de piezas que rinde tu pliego de papel
+          </p>
         </div>
 
-        {/* SECCIÓN 1: VISUALIZADOR MOCKUP 3D */}
-        {activeTab === '3d' && <Mockup3DViewer />}
-
-        {/* SECCIÓN 2: SIMULADOR DE PLIEGOS */}
-        {activeTab === 'pliegos' && (
-          <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Panel de Controles */}
+          <div className={`lg:col-span-4 p-6 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-5 ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/80 border-zinc-300'}`}>
             
-            <div className={`lg:col-span-4 p-6 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-5 ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/80 border-zinc-300'}`}>
-              <div className="space-y-3">
-                <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">1. Tamaño del Pliego / Hoja</label>
-                <select value={selectedPreset} onChange={(e) => handlePresetChange(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-2.5 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
-                  <option value="Personalizado">Personalizado</option>
-                  {PRESETS.map((p, idx) => (
-                    <option key={idx} value={p.name} className="bg-zinc-900 text-white">{p.name} ({p.width} x {p.height} {p.unit})</option>
-                  ))}
-                </select>
+            {/* 1. Medida del Pliego */}
+            <div className="space-y-3">
+              <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">1. Tamaño del Pliego / Hoja</label>
+              <select value={selectedPreset} onChange={(e) => handlePresetChange(e.target.value)} className={`w-full bg-transparent border rounded-xl px-4 py-2.5 text-xs outline-none ${theme === 'dark' ? 'bg-zinc-900 border-white/20 text-white' : 'bg-white border-zinc-400 text-zinc-900'}`}>
+                <option value="Personalizado">Personalizado</option>
+                {PRESETS.map((p, idx) => (
+                  <option key={idx} value={p.name} className="bg-zinc-900 text-white">{p.name} ({p.width} x {p.height} {p.unit})</option>
+                ))}
+              </select>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <span className="text-[10px] uppercase opacity-60 block mb-1">Ancho Hoja</span>
-                    <input type="number" step="0.1" value={sheetWidth} onChange={(e) => { setSheetWidth(Number(e.target.value)); setSelectedPreset("Personalizado"); }} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase opacity-60 block mb-1">Alto Hoja</span>
-                    <input type="number" step="0.1" value={sheetHeight} onChange={(e) => { setSheetHeight(Number(e.target.value)); setSelectedPreset("Personalizado"); }} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-3 border-t pt-4 border-white/10">
-                <div className="flex justify-between items-center">
-                  <label className="text-xs uppercase tracking-widest font-semibold opacity-70">2. Tamaño de la Pieza</label>
-                  <button type="button" onClick={() => setRotatePiece(!rotatePiece)} className="text-[10px] font-semibold text-red-500 hover:underline cursor-pointer">
-                    🔄 Rotar Pieza ({rotatePiece ? 'Vertical' : 'Horizontal'})
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <span className="text-[10px] uppercase opacity-60 block mb-1">Ancho Pieza</span>
-                    <input type="number" step="0.1" value={pieceWidth} onChange={(e) => setPieceWidth(Number(e.target.value))} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase opacity-60 block mb-1">Alto Pieza</span>
-                    <input type="number" step="0.1" value={pieceHeight} onChange={(e) => setPieceHeight(Number(e.target.value))} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2 border-t pt-4 border-white/10">
-                <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">Unidad de Medida</label>
-                <div className="grid grid-cols-5 gap-1.5">
-                  {(['pulg', 'cm', 'mm', 'pies', 'yardas'] as const).map((u) => (
-                    <button key={u} onClick={() => setUnit(u)} className={`py-2 rounded-xl text-xs font-semibold uppercase border transition-all cursor-pointer ${unit === u ? 'bg-red-600 border-red-500 text-white shadow-lg' : 'border-white/10 opacity-70 hover:opacity-100'}`}>
-                      {u}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="space-y-2 border-t pt-4 border-white/10">
-                <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">Subir Arte para Multiplicar (Máx 5 MB)</label>
-                <input type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" onChange={handleFileChange} className="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-600 file:text-white cursor-pointer" />
-                {fileError && <p className="text-[11px] text-red-500 font-semibold mt-1">{fileError}</p>}
-                {file && <p className="text-[11px] text-emerald-400 font-semibold mt-1">✓ Arte cargado ({file.name})</p>}
-              </div>
-
-              <div className="pt-2">
-                <Link href={`/cotizacion?sheetW=${sheetWidth}&sheetH=${sheetHeight}&pieceW=${actualPW}&pieceH=${actualPH}&count=${totalItems}`} className="w-full py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl flex items-center justify-center space-x-2 transition-all cursor-pointer">
-                  <span>Cotizar esta tirada</span>
-                  <span>→</span>
-                </Link>
-              </div>
-            </div>
-
-            <div className="lg:col-span-8 space-y-6">
-              <div className={`p-6 rounded-3xl border shadow-xl grid grid-cols-2 md:grid-cols-4 gap-4 text-center ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/80 border-zinc-300'}`}>
-                <div className="border-r border-white/10 pr-2">
-                  <span className="text-[10px] uppercase opacity-60 block">Rendimiento Total</span>
-                  <span className="text-2xl font-bold text-red-500">{totalItems} Piezas</span>
-                  <span className="text-[9px] opacity-50 block">por hoja/pliego</span>
-                </div>
-                <div className="border-r border-white/10 pr-2">
-                  <span className="text-[10px] uppercase opacity-60 block">Distribución Grid</span>
-                  <span className="text-xl font-bold">{cols} × {rows}</span>
-                  <span className="text-[9px] opacity-50 block">columnas × filas</span>
-                </div>
-                <div className="border-r border-white/10 pr-2">
-                  <span className="text-[10px] uppercase opacity-60 block">Uso del Papel</span>
-                  <span className="text-xl font-bold text-emerald-400">{efficiencyPercentage}%</span>
-                  <span className="text-[9px] opacity-50 block">aprovechamiento</span>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <span className="text-[10px] uppercase opacity-60 block mb-1">Ancho Hoja</span>
+                  <input type="number" step="0.1" value={sheetWidth} onChange={(e) => { setSheetWidth(Number(e.target.value)); setSelectedPreset("Personalizado"); }} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase opacity-60 block">Tamaño Pieza</span>
-                  <span className="text-sm font-bold">{actualPW} × {actualPH} {unit}</span>
-                  <span className="text-[9px] opacity-50 block">medida individual</span>
-                </div>
-              </div>
-
-              <div className={`p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl flex flex-col items-center justify-center relative min-h-125 overflow-hidden ${theme === 'dark' ? 'bg-black/50 border-white/15' : 'bg-white/60 border-zinc-300'}`}>
-                <div className="w-full max-w-lg flex justify-between items-end border-b border-red-500/50 pb-1 mb-6 text-[10px] font-mono opacity-80 text-red-500">
-                  <span>0 {unit}</span>
-                  <span className="font-bold">HOJA: {sheetWidth} {unit}</span>
-                </div>
-
-                <div className="flex items-center space-x-6">
-                  <div className="h-80 flex flex-col justify-between items-end border-r border-red-500/50 pr-2 text-[10px] font-mono opacity-80 text-red-500">
-                    <span>0</span>
-                    <span className="font-bold">{sheetHeight}</span>
-                  </div>
-
-                  <motion.div 
-                    animate={{ width: displayWidth, height: displayHeight }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                    className="relative rounded-2xl border-2 border-dashed border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.25)] p-2 bg-red-500/5 overflow-hidden grid gap-1.5"
-                    style={{
-                      gridTemplateColumns: `repeat(${cols || 1}, minmax(0, 1fr))`,
-                      gridTemplateRows: `repeat(${rows || 1}, minmax(0, 1fr))`
-                    }}
-                  >
-                    {totalItems > 0 ? (
-                      Array.from({ length: totalItems }).map((_, idx) => (
-                        <div key={idx} className="relative border border-red-500/50 bg-red-500/20 rounded-md flex items-center justify-center overflow-hidden p-1 shadow-xs group">
-                          {previewUrl ? (
-                            <Image src={previewUrl} alt="Tarjeta Multiplicada" fill className="object-cover rounded-sm" unoptimized />
-                          ) : (
-                            <div className="text-center">
-                              <span className="text-[9px] font-mono font-bold text-red-400 block leading-none">
-                                #{idx + 1}
-                              </span>
-                              <span className="text-[8px] opacity-60 block mt-0.5">
-                                {actualPW}&quot;×{actualPH}&quot;
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      ))
-                    ) : (
-                      <div className="col-span-full flex items-center justify-center text-xs text-red-500 font-bold">
-                        La pieza supera las dimensiones del pliego.
-                      </div>
-                    )}
-                  </motion.div>
+                  <span className="text-[10px] uppercase opacity-60 block mb-1">Alto Hoja</span>
+                  <input type="number" step="0.1" value={sheetHeight} onChange={(e) => { setSheetHeight(Number(e.target.value)); setSelectedPreset("Personalizado"); }} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
                 </div>
               </div>
             </div>
+
+            {/* 2. Medida de la Pieza */}
+            <div className="space-y-3 border-t pt-4 border-white/10">
+              <div className="flex justify-between items-center">
+                <label className="text-xs uppercase tracking-widest font-semibold opacity-70">2. Tamaño de la Pieza</label>
+                <button type="button" onClick={() => setRotatePiece(!rotatePiece)} className="text-[10px] font-semibold text-red-500 hover:underline">
+                  🔄 Rotar Pieza ({rotatePiece ? 'Vertical' : 'Horizontal'})
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <span className="text-[10px] uppercase opacity-60 block mb-1">Ancho Pieza</span>
+                  <input type="number" step="0.1" value={pieceWidth} onChange={(e) => setPieceWidth(Number(e.target.value))} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase opacity-60 block mb-1">Alto Pieza</span>
+                  <input type="number" step="0.1" value={pieceHeight} onChange={(e) => setPieceHeight(Number(e.target.value))} className={`w-full bg-transparent border rounded-xl px-3 py-2 text-xs ${theme === 'dark' ? 'border-white/20 text-white' : 'border-zinc-400 text-zinc-900'}`} />
+                </div>
+              </div>
+            </div>
+
+            {/* Unidades */}
+            <div className="space-y-2 border-t pt-4 border-white/10">
+              <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">Unidad de Medida</label>
+              <div className="grid grid-cols-5 gap-1.5">
+                {(['pulg', 'cm', 'mm', 'pies', 'yardas'] as const).map((u) => (
+                  <button key={u} onClick={() => setUnit(u)} className={`py-2 rounded-xl text-xs font-semibold uppercase border transition-all ${unit === u ? 'bg-red-600 border-red-500 text-white shadow-lg' : 'border-white/10 opacity-70 hover:opacity-100'}`}>
+                    {u}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Cargar Archivo de Referencia */}
+            <div className="space-y-2 border-t pt-4 border-white/10">
+              <label className="text-xs uppercase tracking-widest font-semibold opacity-70 block">Subir Arte para Multiplicar (Máx 5 MB)</label>
+              <input type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" onChange={handleFileChange} className="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-600 file:text-white cursor-pointer" />
+              {fileError && <p className="text-[11px] text-red-500 font-semibold mt-1">{fileError}</p>}
+              {file && <p className="text-[11px] text-emerald-400 font-semibold mt-1">✓ Arte cargado ({file.name})</p>}
+            </div>
+
+            {/* Botón Ir a Cotizar */}
+            <div className="pt-2">
+              <Link href={`/cotizacion?sheetW=${sheetWidth}&sheetH=${sheetHeight}&pieceW=${actualPW}&pieceH=${actualPH}&count=${totalItems}`} className="w-full py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold bg-red-600 hover:bg-red-700 text-white shadow-xl flex items-center justify-center space-x-2 transition-all">
+                <span>Cotizar esta tirada</span>
+                <span>→</span>
+              </Link>
+            </div>
+
           </div>
-        )}
+
+          {/* ÁREA DE VISUALIZACIÓN CON TABLA Y MULTIPLICACIÓN */}
+          <div className="lg:col-span-8 space-y-6">
+            
+            {/* TABLA RESUMEN DE RENDIMIENTO DE IMPRENTA */}
+            <div className={`p-6 rounded-3xl border shadow-xl grid grid-cols-2 md:grid-cols-4 gap-4 text-center ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/80 border-zinc-300'}`}>
+              <div className="border-r border-white/10 pr-2">
+                <span className="text-[10px] uppercase opacity-60 block">Rendimiento Total</span>
+                <span className="text-2xl font-bold text-red-500">{totalItems} Piezas</span>
+                <span className="text-[9px] opacity-50 block">por hoja/pliego</span>
+              </div>
+              <div className="border-r border-white/10 pr-2">
+                <span className="text-[10px] uppercase opacity-60 block">Distribución Grid</span>
+                <span className="text-xl font-bold">{cols} × {rows}</span>
+                <span className="text-[9px] opacity-50 block">columnas × filas</span>
+              </div>
+              <div className="border-r border-white/10 pr-2">
+                <span className="text-[10px] uppercase opacity-60 block">Uso del Papel</span>
+                <span className="text-xl font-bold text-emerald-400">{efficiencyPercentage}%</span>
+                <span className="text-[9px] opacity-50 block">aprovechamiento</span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase opacity-60 block">Tamaño Pieza</span>
+                <span className="text-sm font-bold">{actualPW} × {actualPH} {unit}</span>
+                <span className="text-[9px] opacity-50 block">medida individual</span>
+              </div>
+            </div>
+
+            {/* CANVAS INTERACTIVO QUE DUPLICA LA IMAGEN EN TODA LA HOJA */}
+            <div className={`p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl flex flex-col items-center justify-center relative min-h-125 overflow-hidden ${theme === 'dark' ? 'bg-black/50 border-white/15' : 'bg-white/60 border-zinc-300'}`}>
+              
+              {/* Regla Superior */}
+              <div className="w-full max-w-lg flex justify-between items-end border-b border-red-500/50 pb-1 mb-6 text-[10px] font-mono opacity-80 text-red-500">
+                <span>0 {unit}</span>
+                <span className="font-bold">HOJA: {sheetWidth} {unit}</span>
+              </div>
+
+              <div className="flex items-center space-x-6">
+                {/* Regla Lateral */}
+                <div className="h-80 flex flex-col justify-between items-end border-r border-red-500/50 pr-2 text-[10px] font-mono opacity-80 text-red-500">
+                  <span>0</span>
+                  <span className="font-bold">{sheetHeight}</span>
+                </div>
+
+                {/* DIBUJO DE LA HOJA MULTIPLICANDO LA IMAGEN N VECES */}
+                <motion.div 
+                  animate={{ width: displayWidth, height: displayHeight }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  className="relative rounded-2xl border-2 border-dashed border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.25)] p-2 bg-red-500/5 overflow-hidden grid gap-1.5"
+                  style={{
+                    gridTemplateColumns: `repeat(${cols || 1}, minmax(0, 1fr))`,
+                    gridTemplateRows: `repeat(${rows || 1}, minmax(0, 1fr))`
+                  }}
+                >
+                  {totalItems > 0 ? (
+                    Array.from({ length: totalItems }).map((_, idx) => (
+                      <div key={idx} className="relative border border-red-500/50 bg-red-500/20 rounded-md flex items-center justify-center overflow-hidden p-1 shadow-xs group">
+                        {previewUrl ? (
+                          <Image src={previewUrl} alt="Tarjeta Multiplicada" fill className="object-cover rounded-sm" unoptimized />
+                        ) : (
+                          <div className="text-center">
+                            <span className="text-[9px] font-mono font-bold text-red-400 block leading-none">
+                              #{idx + 1}
+                            </span>
+                            <span className="text-[8px] opacity-60 block mt-0.5">
+                              {actualPW}&quot;×{actualPH}&quot;
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="col-span-full flex items-center justify-center text-xs text-red-500 font-bold">
+                      La pieza supera las dimensiones del pliego.
+                    </div>
+                  )}
+                </motion.div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
 
       </main>
 
+      {/* Footer Global Unificado */}
       <Footer />
+
     </div>
   );
 }

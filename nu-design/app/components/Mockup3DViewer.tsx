@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture, Center } from '@react-three/drei';
