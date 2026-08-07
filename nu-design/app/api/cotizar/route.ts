@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
-const resend = new Resend('re_GUPMwW6J_CaYiZeShr21f1AwUA9TY3v2n');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const ratelimit = (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)
   ? new Ratelimit({
