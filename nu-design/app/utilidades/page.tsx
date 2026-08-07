@@ -282,7 +282,19 @@ export default function UtilidadesPage() {
             Calcula y visualiza la cantidad exacta de piezas que rinde tu pliego de papel
           </p>
         </div>
-
+{/* BANNER / BOTÓN DESTACADO A MOCKUP 3D */}
+<div className="w-full max-w-2xl mx-auto mb-8 p-4 rounded-2xl bg-linear-to-r from-red-950/40 via-zinc-900 to-red-950/40 border border-red-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+  <div>
+    <span className="text-xs font-bold uppercase tracking-wider text-red-400 block">NUEVA HERRAMIENTA 3D</span>
+    <p className="text-sm font-light text-zinc-200">Prueba tus logos en Camisetas y Tazas en tiempo real 360°</p>
+  </div>
+  <Link 
+    href="/utilidades/mockup-3d" 
+    className="px-6 py-2.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider shadow-lg transition-all whitespace-nowrap"
+  >
+    Ir a Mockup 3D →
+  </Link>
+</div>
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Panel de Controles */}

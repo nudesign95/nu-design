@@ -1,12 +1,10 @@
 'use client';
-import { useState, Suspense } from 'react';
+import { useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture, Center } from '@react-three/drei';
 
 function MugModel({ color, logoUrl, logoScale }: { color: string; logoUrl: string | null; logoScale: number }) {
-  const texture = useTexture(logoUrl || '/placeholder-logo.png');
-
   return (
     <group dispose={null}>
       <mesh castShadow receiveShadow position={[0, 0, 0]}>
@@ -17,32 +15,30 @@ function MugModel({ color, logoUrl, logoScale }: { color: string; logoUrl: strin
         <torusGeometry args={[0.7, 0.2, 16, 32, Math.PI]} />
         <meshStandardMaterial color={color} roughness={0.2} metalness={0.1} />
       </mesh>
-      {logoUrl && (
-        <mesh position={[0, 0, 1.21]}>
-          <planeGeometry args={[1.5 * logoScale, 1.5 * logoScale]} />
-          <meshBasicMaterial map={texture} transparent depthTest={true} />
-        </mesh>
-      )}
+      {logoUrl && <DecalPlane logoUrl={logoUrl} logoScale={logoScale} position={[0, 0, 1.21]} scaleMultiplier={1.5} />}
     </group>
   );
 }
 
 function ShirtModel({ color, logoUrl, logoScale }: { color: string; logoUrl: string | null; logoScale: number }) {
-  const texture = useTexture(logoUrl || '/placeholder-logo.png');
-
   return (
     <group dispose={null}>
       <mesh castShadow receiveShadow position={[0, 0, 0]}>
         <boxGeometry args={[2.2, 2.8, 0.8]} />
         <meshStandardMaterial color={color} roughness={0.7} />
       </mesh>
-      {logoUrl && (
-        <mesh position={[0, 0.3, 0.41]}>
-          <planeGeometry args={[1.2 * logoScale, 1.2 * logoScale]} />
-          <meshBasicMaterial map={texture} transparent depthTest={true} />
-        </mesh>
-      )}
+      {logoUrl && <DecalPlane logoUrl={logoUrl} logoScale={logoScale} position={[0, 0.3, 0.41]} scaleMultiplier={1.2} />}
     </group>
+  );
+}
+
+function DecalPlane({ logoUrl, logoScale, position, scaleMultiplier }: { logoUrl: string; logoScale: number; position: [number, number, number]; scaleMultiplier: number }) {
+  const texture = useTexture(logoUrl);
+  return (
+    <mesh position={position}>
+      <planeGeometry args={[scaleMultiplier * logoScale, scaleMultiplier * logoScale]} />
+      <meshBasicMaterial map={texture} transparent depthTest={true} />
+    </mesh>
   );
 }
 
