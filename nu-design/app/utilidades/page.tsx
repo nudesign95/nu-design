@@ -283,8 +283,9 @@ export default function UtilidadesPage() {
           </p>
         </div>
 
-        {/* BOTÓN SUTIL / COMPACTO ESTILO PÍLDORA APPLE */}
-        <div className="mb-8">
+        {/* ACCESOS RÁPIDOS ESTILO PÍLDORA APPLE */}
+        <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
+          {/* Botón Verificador DPI */}
           <Link 
             href="/utilidades/mockup-3d" 
             className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/10 bg-zinc-900/80 hover:border-red-500/60 hover:bg-zinc-900 backdrop-blur-xl shadow-lg transition-all text-xs font-medium text-zinc-300 hover:text-white group"
@@ -292,6 +293,18 @@ export default function UtilidadesPage() {
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             <span className="text-[11px] font-bold uppercase tracking-wider text-red-400 group-hover:text-red-300">
               Verificador de Resolución / DPI
+            </span>
+            <span className="text-zinc-500 group-hover:text-zinc-300 transition-colors">→</span>
+          </Link>
+
+          {/* Botón Simulador RGB -> CMYK */}
+          <Link 
+            href="/utilidades/simulador-color" 
+            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/10 bg-zinc-900/80 hover:border-emerald-500/60 hover:bg-zinc-900 backdrop-blur-xl shadow-lg transition-all text-xs font-medium text-zinc-300 hover:text-white group"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 group-hover:text-emerald-300">
+              Simulador RGB → CMYK (Gama de Color)
             </span>
             <span className="text-zinc-500 group-hover:text-zinc-300 transition-colors">→</span>
           </Link>
