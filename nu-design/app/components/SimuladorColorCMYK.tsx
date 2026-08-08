@@ -4,7 +4,34 @@ import Link from 'next/link';
 
 export default function SimuladorColorCMYK() {
   const [rgbColor, setRgbColor] = useState({ r: 239, g: 35, b: 60 });
+  const [hexInput, setHexInput] = useState('EF233C');
   const [paperType, setPaperType] = useState<'glossy' | 'bond' | 'kraft'>('glossy');
+
+  // Actualización desde Hexadecimal
+  const handleHexChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value.replace('#', '').trim();
+    setHexInput(val);
+
+    if (val.length === 6) {
+      const rVal = parseInt(val.substring(0, 2), 16);
+      const gVal = parseInt(val.substring(2, 4), 16);
+      const bVal = parseInt(val.substring(4, 6), 16);
+
+      if (!isNaN(rVal) && !isNaN(gVal) && !isNaN(bVal)) {
+        setRgbColor({ r: rVal, g: gVal, b: bVal });
+      }
+    }
+  };
+
+  // Actualización desde los Inputs Numéricos RGB
+  const handleRgbInput = (channel: 'r' | 'g' | 'b', value: number) => {
+    const clampedVal = Math.max(0, Math.min(255, value || 0));
+    const newColor = { ...rgbColor, [channel]: clampedVal };
+    setRgbColor(newColor);
+
+    const newHex = `${newColor.r.toString(16).padStart(2, '0')}${newColor.g.toString(16).padStart(2, '0')}${newColor.b.toString(16).padStart(2, '0')}`.toUpperCase();
+    setHexInput(newHex);
+  };
 
   // Conversión matemática RGB -> CMYK
   const r = rgbColor.r / 255;
@@ -17,12 +44,11 @@ export default function SimuladorColorCMYK() {
   const y = k === 1 ? 0 : Math.round(((1 - b - k) / (1 - k)) * 100);
   const kPercent = Math.round(k * 100);
 
-  // Simulación del color simulado en papel
+  // Simulación del color en papel
   let cmykR = rgbColor.r;
   let cmykG = rgbColor.g;
   let cmykB = rgbColor.b;
 
-  // Ajuste por absorsión de papel
   if (paperType === 'glossy') {
     cmykR = Math.round(rgbColor.r * 0.92);
     cmykG = Math.round(rgbColor.g * 0.88);
@@ -37,10 +63,9 @@ export default function SimuladorColorCMYK() {
     cmykB = Math.round(rgbColor.b * 0.40 + 10);
   }
 
-  const hexRGB = `#${rgbColor.r.toString(16).padStart(2, '0')}${rgbColor.g.toString(16).padStart(2, '0')}${rgbColor.b.toString(16).padStart(2, '0')}`;
-  const hexCMYK = `#${cmykR.toString(16).padStart(2, '0')}${cmykG.toString(16).padStart(2, '0')}${cmykB.toString(16).padStart(2, '0')}`;
+  const hexRGB = `#${rgbColor.r.toString(16).padStart(2, '0')}${rgbColor.g.toString(16).padStart(2, '0')}${rgbColor.b.toString(16).padStart(2, '0')}`.toUpperCase();
+  const hexCMYK = `#${cmykR.toString(16).padStart(2, '0')}${cmykG.toString(16).padStart(2, '0')}${cmykB.toString(16).padStart(2, '0')}`.toUpperCase();
 
-  // Estimación de desaturación
   const gamutLoss = Math.min(100, Math.round(((rgbColor.r + rgbColor.g + rgbColor.b - (cmykR + cmykG + cmykB)) / (rgbColor.r + rgbColor.g + rgbColor.b || 1)) * 100));
 
   const PRESET_COLORS = [
@@ -54,12 +79,12 @@ export default function SimuladorColorCMYK() {
   return (
     <div className="w-full space-y-8">
       
-      {/* SECTOR DE PRUEBAS DE PANTALLA COMPLETA */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full min-h-[380px]">
+      {/* SECTOR DE PRUEBAS FULL SCREEN */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full min-h-95">
         
         {/* PANEL 1: PANTALLA (RGB) */}
         <div 
-          className="rounded-3xl p-8 border border-white/10 flex flex-col justify-between shadow-2xl relative overflow-hidden transition-colors duration-300 min-h-[350px]"
+          className="rounded-3xl p-8 border border-white/10 flex flex-col justify-between shadow-2xl relative overflow-hidden transition-colors duration-300 min-h-87.5"
           style={{ backgroundColor: hexRGB }}
         >
           <div className="bg-black/60 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10 w-fit">
@@ -71,18 +96,18 @@ export default function SimuladorColorCMYK() {
 
           <div className="bg-black/80 backdrop-blur-xl p-5 rounded-2xl border border-white/10 space-y-2 text-white">
             <div className="flex justify-between items-center text-xs font-mono font-bold">
-              <span>HEX: {hexRGB.toUpperCase()}</span>
+              <span>HEX: {hexRGB}</span>
               <span>RGB: ({rgbColor.r}, {rgbColor.g}, {rgbColor.b})</span>
             </div>
             <p className="text-[10px] text-zinc-400">
-              Usa los canales R, G y B. Los colores neón se ven extremadamente vivos porque emiten luz propia.
+              Usa los canales R, G y B. Los colores neón se ven vivos porque emiten luz directa de la pantalla.
             </p>
           </div>
         </div>
 
         {/* PANEL 2: IMPRESIÓN (CMYK) */}
         <div 
-          className="rounded-3xl p-8 border border-white/10 flex flex-col justify-between shadow-2xl relative overflow-hidden transition-colors duration-300 min-h-[350px]"
+          className="rounded-3xl p-8 border border-white/10 flex flex-col justify-between shadow-2xl relative overflow-hidden transition-colors duration-300 min-h-87.5"
           style={{ backgroundColor: hexCMYK }}
         >
           <div className="bg-black/60 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10 w-fit">
@@ -94,11 +119,10 @@ export default function SimuladorColorCMYK() {
 
           <div className="bg-black/80 backdrop-blur-xl p-5 rounded-2xl border border-white/10 space-y-3 text-white">
             <div className="flex justify-between items-center text-xs font-mono font-bold">
-              <span>SIMULADO: {hexCMYK.toUpperCase()}</span>
+              <span>SIMULADO: {hexCMYK}</span>
               <span className="text-yellow-400">Pérdida de Brillo: ~{gamutLoss}%</span>
             </div>
 
-            {/* BARRA DE CANALES CMYK */}
             <div className="grid grid-cols-4 gap-2 text-center text-[10px] font-mono font-bold">
               <div className="bg-cyan-950/80 border border-cyan-500/40 p-2 rounded-xl text-cyan-300">C: {c}%</div>
               <div className="bg-pink-950/80 border border-pink-500/40 p-2 rounded-xl text-pink-300">M: {m}%</div>
@@ -110,64 +134,123 @@ export default function SimuladorColorCMYK() {
 
       </div>
 
-      {/* PANEL DE CONTROLES Y SELECCIÓN DE COLORES Y PAPELES */}
+      {/* PANEL DE CONTROLES E INPUTS EDITABLES */}
       <div className="bg-zinc-900/80 border border-white/10 rounded-3xl p-6 backdrop-blur-2xl space-y-6 shadow-2xl">
         
-        {/* Presets Rápidos */}
-        <div className="space-y-2">
-          <span className="text-[10px] uppercase font-bold text-zinc-400 block tracking-wider">
-            Colores Críticos con Mayor Variación en Imprenta
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {PRESET_COLORS.map((preset, idx) => (
-              <button
-                key={idx}
-                onClick={() => setRgbColor({ r: preset.r, g: preset.g, b: preset.b })}
-                className="px-4 py-2 bg-zinc-950 border border-white/10 hover:border-red-500/50 rounded-xl text-xs font-bold text-zinc-200 transition-all cursor-pointer"
-              >
-                {preset.label}
-              </button>
-            ))}
+        {/* Presets + Entrada Directa HEX */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+          
+          <div className="md:col-span-8 space-y-2">
+            <span className="text-[10px] uppercase font-bold text-zinc-400 block tracking-wider">
+              Colores Críticos con Mayor Variación
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {PRESET_COLORS.map((preset, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setRgbColor({ r: preset.r, g: preset.g, b: preset.b });
+                    const newHex = `${preset.r.toString(16).padStart(2, '0')}${preset.g.toString(16).padStart(2, '0')}${preset.b.toString(16).padStart(2, '0')}`.toUpperCase();
+                    setHexInput(newHex);
+                  }}
+                  className="px-3.5 py-1.5 bg-zinc-950 border border-white/10 hover:border-red-500/50 rounded-xl text-xs font-bold text-zinc-200 transition-all cursor-pointer"
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
           </div>
+
+          {/* Campo de Texto HEX Editable */}
+          <div className="md:col-span-4 bg-zinc-950 p-3 rounded-2xl border border-white/15 focus-within:border-red-500 transition-all">
+            <label className="text-[10px] uppercase font-extrabold text-zinc-400 block">Escribir o Pegar Código HEX</label>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-sm font-black text-red-500">#</span>
+              <input
+                type="text"
+                maxLength={6}
+                value={hexInput}
+                onChange={handleHexChange}
+                placeholder="FF0032"
+                className="w-full bg-transparent text-sm font-mono font-bold text-white uppercase focus:outline-none"
+              />
+            </div>
+          </div>
+
         </div>
 
-        {/* Sliders RGB */}
+        {/* Sliders RGB con Inputs Numéricos Editables con Teclado */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-zinc-950 p-4 rounded-2xl border border-white/10 space-y-1">
-            <div className="flex justify-between text-xs font-bold text-red-400">
-              <span>Red (Rojo)</span>
-              <span>{rgbColor.r}</span>
+          
+          {/* Canal RED */}
+          <div className="bg-zinc-950 p-4 rounded-2xl border border-white/10 space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-extrabold text-red-400">Red (Rojo)</span>
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-zinc-500">R:</span>
+                <input
+                  type="number"
+                  min="0"
+                  max="255"
+                  value={rgbColor.r}
+                  onChange={(e) => handleRgbInput('r', parseInt(e.target.value))}
+                  className="w-14 bg-zinc-900 border border-white/10 rounded-lg px-2 py-1 text-xs font-mono font-bold text-white text-right focus:outline-none focus:border-red-500"
+                />
+              </div>
             </div>
             <input 
               type="range" min="0" max="255" value={rgbColor.r} 
-              onChange={(e) => setRgbColor({ ...rgbColor, r: parseInt(e.target.value) })}
+              onChange={(e) => handleRgbInput('r', parseInt(e.target.value))}
               className="w-full accent-red-500 cursor-pointer"
             />
           </div>
 
-          <div className="bg-zinc-950 p-4 rounded-2xl border border-white/10 space-y-1">
-            <div className="flex justify-between text-xs font-bold text-green-400">
-              <span>Green (Verde)</span>
-              <span>{rgbColor.g}</span>
+          {/* Canal GREEN */}
+          <div className="bg-zinc-950 p-4 rounded-2xl border border-white/10 space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-extrabold text-green-400">Green (Verde)</span>
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-zinc-500">G:</span>
+                <input
+                  type="number"
+                  min="0"
+                  max="255"
+                  value={rgbColor.g}
+                  onChange={(e) => handleRgbInput('g', parseInt(e.target.value))}
+                  className="w-14 bg-zinc-900 border border-white/10 rounded-lg px-2 py-1 text-xs font-mono font-bold text-white text-right focus:outline-none focus:border-green-500"
+                />
+              </div>
             </div>
             <input 
               type="range" min="0" max="255" value={rgbColor.g} 
-              onChange={(e) => setRgbColor({ ...rgbColor, g: parseInt(e.target.value) })}
+              onChange={(e) => handleRgbInput('g', parseInt(e.target.value))}
               className="w-full accent-green-500 cursor-pointer"
             />
           </div>
 
-          <div className="bg-zinc-950 p-4 rounded-2xl border border-white/10 space-y-1">
-            <div className="flex justify-between text-xs font-bold text-blue-400">
-              <span>Blue (Azul)</span>
-              <span>{rgbColor.b}</span>
+          {/* Canal BLUE */}
+          <div className="bg-zinc-950 p-4 rounded-2xl border border-white/10 space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-extrabold text-blue-400">Blue (Azul)</span>
+              <div className="flex items-center gap-1">
+                <span className="text-[10px] text-zinc-500">B:</span>
+                <input
+                  type="number"
+                  min="0"
+                  max="255"
+                  value={rgbColor.b}
+                  onChange={(e) => handleRgbInput('b', parseInt(e.target.value))}
+                  className="w-14 bg-zinc-900 border border-white/10 rounded-lg px-2 py-1 text-xs font-mono font-bold text-white text-right focus:outline-none focus:border-blue-500"
+                />
+              </div>
             </div>
             <input 
               type="range" min="0" max="255" value={rgbColor.b} 
-              onChange={(e) => setRgbColor({ ...rgbColor, b: parseInt(e.target.value) })}
+              onChange={(e) => handleRgbInput('b', parseInt(e.target.value))}
               className="w-full accent-blue-500 cursor-pointer"
             />
           </div>
+
         </div>
 
         {/* Tipo de Papel */}
@@ -175,7 +258,7 @@ export default function SimuladorColorCMYK() {
           <span className="text-[10px] uppercase font-bold text-zinc-400 block tracking-wider">
             Simular Absorción según el Tipo de Papel
           </span>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               { id: 'glossy', label: '✨ Satinado / Glossy', desc: 'Menor absorción, mantiene el brillo' },
               { id: 'bond', label: '📄 Papel Bond / Mate', desc: 'Absorbe más tinta, tonos opacos' },
@@ -197,7 +280,7 @@ export default function SimuladorColorCMYK() {
           </div>
         </div>
 
-        {/* Nota Legal / Disclaimer */}
+        {/* Nota Legal */}
         <div className="bg-zinc-950/60 p-4 rounded-2xl border border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-[10px] text-zinc-500 leading-relaxed">
             🛡️ <strong>Nota de Color:</strong> Los monitores emiten luz directa (RGB) mientras que la tinta absorbe luz (CMYK). Para lograr colores neón exactos se requieren tintas especiales de la escala PANTONE®.
