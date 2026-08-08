@@ -272,9 +272,9 @@ export default function UtilidadesPage() {
       </div>
 
       {/* Main Content */}
-      <main className="w-full max-w-7xl mx-auto px-4 md:px-6 py-10 z-10 flex flex-col items-center">
+      <main className="w-full max-w-7xl mx-auto px-4 md:px-6 py-6 z-10 flex flex-col items-center">
         
-        <div className="text-center mb-8 space-y-2">
+        <div className="text-center mb-6 space-y-2">
           <h1 className={`text-3xl md:text-5xl font-light tracking-tight ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}`}>
             Simulador de <span className="font-semibold text-red-500">Pliegos & Multi-Impresión</span>
           </h1>
@@ -282,39 +282,21 @@ export default function UtilidadesPage() {
             Calcula y visualiza la cantidad exacta de piezas que rinde tu pliego de papel
           </p>
         </div>
-{/* BANNER / BOTÓN DESTACADO A MOCKUP 3D */}
-<div className="w-full max-w-2xl mx-auto mb-8 p-4 rounded-2xl bg-linear-to-r from-red-950/40 via-zinc-900 to-red-950/40 border border-red-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-  <div>
-    <span className="text-xs font-bold uppercase tracking-wider text-red-400 block">NUEVA HERRAMIENTA 3D</span>
-    <p className="text-sm font-light text-zinc-200">Prueba tus logos en Camisetas y Tazas en tiempo real 360°</p>
-  </div>
-  <Link 
-  href="/utilidades/mockup-3d" 
-  className="relative group block overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/80 p-6 backdrop-blur-xl transition-all duration-300 hover:border-red-500/80 hover:shadow-[0_0_30px_rgba(239,68,68,0.25)]"
->
-  <div className="flex items-start justify-between mb-4">
-    <div className="w-12 h-12 rounded-2xl bg-red-600/10 border border-red-500/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-      🔍
-    </div>
-    <span className="text-[10px] font-extrabold uppercase tracking-widest text-red-400 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/30 animate-pulse">
-      PRO CONTROL
-    </span>
-  </div>
 
-  <span className="text-[10px] font-extrabold uppercase tracking-widest text-red-500 block mb-1">
-    Control de Calidad de Arte
-  </span>
-  <h3 className="text-base font-black uppercase tracking-wide text-white group-hover:text-red-500 transition-colors">
-    Verificador de Resolución / DPI
-  </h3>
-  <p className="text-xs text-zinc-400 mt-2 leading-relaxed font-medium">
-    Analiza tus imágenes en milisegundos. Evalúa píxeles de origen, DPI efectivos por tamaño de impresión y previene errores de pixelado antes de imprimir.
-  </p>
+        {/* BOTÓN SUTIL / COMPACTO ESTILO PÍLDORA APPLE */}
+        <div className="mb-8">
+          <Link 
+            href="/utilidades/mockup-3d" 
+            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/10 bg-zinc-900/80 hover:border-red-500/60 hover:bg-zinc-900 backdrop-blur-xl shadow-lg transition-all text-xs font-medium text-zinc-300 hover:text-white group"
+          >
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-red-400 group-hover:text-red-300">
+              Verificador de Resolución / DPI
+            </span>
+            <span className="text-zinc-500 group-hover:text-zinc-300 transition-colors">→</span>
+          </Link>
+        </div>
 
-  {/* Glow dinámico hover */}
-  <div className="absolute -inset-x-20 -bottom-20 h-32 bg-red-600/10 blur-3xl rounded-full group-hover:bg-red-600/20 transition-all" />
-</Link>
-</div>
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Panel de Controles */}
