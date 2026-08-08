@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import SimuladorColorCMYK from '@/app/components/SimuladorColorCMYK';
 import Footer from '../../components/Footer';
 
@@ -7,10 +8,17 @@ export default function SimuladorColorPage() {
   return (
     <div className="min-h-screen bg-[#040001] text-zinc-100 flex flex-col justify-between font-sans selection:bg-red-600 selection:text-white">
       
-      {/* Header Minimalista con Wordmark NU-DESIGN */}
+      {/* Header Oficial con Wordmark SVG */}
       <header className="w-full px-6 py-5 flex justify-between items-center border-b border-white/10 bg-zinc-950/80 backdrop-blur-2xl sticky top-0 z-50">
-        <Link href="/" className="font-black text-sm tracking-[0.3em] uppercase text-white hover:text-red-500 transition-colors">
-          NU<span className="text-red-600">-</span>DESIGN
+        <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+          <Image
+            src="/wordmark-blanco.svg"
+            alt="Logo Oficial"
+            width={150}
+            height={32}
+            className="h-8 w-auto object-contain"
+            priority
+          />
         </Link>
         <Link href="/utilidades" className="text-xs uppercase tracking-widest text-zinc-400 hover:text-red-500 font-bold transition-all flex items-center gap-1.5">
           ← Volver a Utilidades
