@@ -429,35 +429,38 @@ export default function VerificadorDPI() {
       {analysis && !isAnalyzing && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start print:block">
           
-          {/* Lupa / Zoom 100% Simulador */}
-          <div className="lg:col-span-5 bg-zinc-950 border border-white/10 rounded-3xl p-6 flex flex-col items-center justify-center space-y-4 shadow-2xl relative overflow-hidden">
-            
-            <div className="w-full flex justify-between items-center">
-              <span className="text-[10px] uppercase font-bold text-zinc-400">Vista Previa Original</span>
-              <span className="text-[10px] uppercase font-bold text-red-500">🔎 Lupa Zoom 100% Real</span>
-            </div>
+          {/* Lupa / Zoom 100% Simulador Ampliado */}
+<div className="lg:col-span-5 bg-zinc-950 border border-white/10 rounded-3xl p-6 flex flex-col items-center justify-center space-y-5 shadow-2xl relative overflow-hidden">
+  
+  <div className="w-full flex justify-between items-center">
+    <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-400">Vista Previa Original</span>
+    <span className="text-[10px] uppercase font-bold tracking-wider text-red-500">🔎 Lupa Zoom 100% Real</span>
+  </div>
 
-            <div className="w-full grid grid-cols-2 gap-3">
-              <div className="h-48 rounded-2xl border border-white/10 bg-zinc-900/80 flex items-center justify-center p-2 relative overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={analysis.previewUrl} alt="Preview" className="max-w-full max-h-full object-contain rounded-xl" />
-              </div>
+  {/* Contenedores de Imágenes Agrandados */}
+  <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+    
+    {/* Vista Previa Original - Agrandado de h-48 a h-72 */}
+    <div className="h-72 rounded-2xl border border-white/10 bg-zinc-900/80 flex items-center justify-center p-3 relative overflow-hidden shadow-inner">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={analysis.previewUrl} alt="Preview" className="max-w-full max-h-full object-contain rounded-xl drop-shadow-md" />
+    </div>
 
-              {/* Canvas de Zoom Simulación de Nitidez */}
-              <div className="h-48 rounded-2xl border border-red-500/30 bg-zinc-900/80 flex flex-col items-center justify-center p-2 relative overflow-hidden">
-                <canvas ref={zoomCanvasRef} width={180} height={180} className="w-full h-full object-cover rounded-xl" />
-                <span className="absolute bottom-2 left-2 bg-black/80 px-2 py-0.5 rounded text-[8px] font-mono text-zinc-300">
-                  {calculatedDpi >= 280 ? 'Nítido (300 DPI)' : 'Simulación Difuminada'}
-                </span>
-              </div>
-            </div>
-            
-            <div className="w-full text-left border-t border-white/10 pt-3 space-y-1">
-              <span className="text-xs font-extrabold text-white block truncate">{analysis.fileName}</span>
-              <span className="text-[11px] font-semibold text-zinc-400 block">Peso: {analysis.fileSizeMB} MB</span>
-            </div>
-          </div>
+    {/* Canvas de Zoom Nitidez - Agrandado de h-48 a h-72 */}
+    <div className="h-72 rounded-2xl border border-red-500/40 bg-zinc-900/80 flex flex-col items-center justify-center p-2 relative overflow-hidden shadow-inner">
+      <canvas ref={zoomCanvasRef} width={280} height={280} className="w-full h-full object-cover rounded-xl" />
+      <span className="absolute bottom-3 left-3 bg-black/85 backdrop-blur-md px-2.5 py-1 rounded-lg text-[9px] font-mono font-bold text-zinc-200 border border-white/10">
+        {calculatedDpi >= 280 ? '🟢 Nítido (300 DPI)' : '🔴 Simulación Difuminada'}
+      </span>
+    </div>
 
+  </div>
+  
+  <div className="w-full text-left border-t border-white/10 pt-3 space-y-1">
+    <span className="text-xs font-extrabold text-white block truncate">{analysis.fileName}</span>
+    <span className="text-[11px] font-semibold text-zinc-400 block">Peso de archivo: {analysis.fileSizeMB} MB</span>
+  </div>
+</div>
           {/* Panel de Controles Avanzado */}
           <div className="lg:col-span-7 bg-zinc-900/80 border border-white/10 rounded-3xl p-6 space-y-6 backdrop-blur-2xl shadow-2xl">
             
