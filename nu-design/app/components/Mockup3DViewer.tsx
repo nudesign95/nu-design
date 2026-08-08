@@ -1,338 +1,239 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 
-export interface FormatItem {
-  id: string;
-  title: string;
-  category: string;
-  widthInches: number;
-  heightInches: number;
-  bleed: number;
-  safeMargin: number;
-  recommendedMaterial: string;
-  regionFormat: string;
-  keywords: string[];
+interface ImageAnalysis {
+  fileName: string;
+  fileSizeMB: string;
+  widthPx: number;
+  heightPx: number;
+  dpi300WidthInches: number;
+  dpi300HeightInches: number;
+  dpi150WidthInches: number;
+  dpi150HeightInches: number;
+  status: 'excelente' | 'aceptable' | 'baja';
+  previewUrl: string;
 }
 
-// LIBRERÍA EXTENSIBLE DE FORMATOS (Base para los 200+ tamaños)
-export const FORMAT_DATABASE: FormatItem[] = [
-  // --- TARJETERÍA Y PVC ---
-  {
-    id: 'tarjeta-presentacion-std',
-    title: 'Tarjeta de Presentación Estándar',
-    category: 'Tarjetería & Corporativo',
-    widthInches: 3.5,
-    heightInches: 2.0,
-    bleed: 0.125,
-    safeMargin: 0.125,
-    recommendedMaterial: 'Cartonité 14pt / 16pt (Mate o Brillo UV)',
-    regionFormat: 'US / RD Standard',
-    keywords: ['tarjeta', 'presentacion', 'billetera', 'ejecutiva', 'card', 'contacto']
-  },
-  {
-    id: 'carnet-pvc-std',
-    title: 'Carnet PVC / Fotocheck (CR80)',
-    category: 'Identificación & PVC',
-    widthInches: 3.375,
-    heightInches: 2.125,
-    bleed: 0.0625,
-    safeMargin: 0.125,
-    recommendedMaterial: 'Plástico PVC 30mil (Calibre Estándar)',
-    regionFormat: 'Estándar ISO CR80 (Tarjeta de Crédito)',
-    keywords: ['carnet', 'pvc', 'fotocheck', 'identificacion', 'gafete', 'membresia', 'cr80']
-  },
+export default function VerificadorDPI() {
+  const [targetWidth, setTargetWidth] = useState<number>(3.5); // Pulgadas deseadas
+  const [targetHeight, setTargetHeight] = useState<number>(2.0);
+  const [analysis, setAnalysis] = useState<ImageAnalysis | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // --- TAGS Y ETIQUETAS ---
-  {
-    id: 'tag-ropa-colgante',
-    title: 'Tag / Etiqueta Colgante para Ropa',
-    category: 'Etiquetas & Tags',
-    widthInches: 2.0,
-    heightInches: 3.5,
-    bleed: 0.125,
-    safeMargin: 0.125,
-    recommendedMaterial: 'Cartonité 14pt con Troquel / Perforación de 1/8"',
-    regionFormat: 'Estándar Ropa / Retail',
-    keywords: ['tag', 'etiqueta', 'ropa', 'colgante', 'tienda', 'marca', 'precio']
-  },
-  {
-    id: 'sticker-cuaderno-std',
-    title: 'Sticker para Cuaderno Escolar',
-    category: 'Etiquetas & Tags',
-    widthInches: 3.5,
-    heightInches: 2.5,
-    bleed: 0.125,
-    safeMargin: 0.125,
-    recommendedMaterial: 'Vinil Adhesivo Mate / LAMINADO Impermeable',
-    regionFormat: 'Estándar Escolar US / RD',
-    keywords: ['sticker', 'cuaderno', 'libreta', 'escolar', 'materia', 'pegatina', 'calcomania']
-  },
+  const processFile = (file: File) => {
+    if (!file.type.startsWith('image/')) return;
 
-  // --- MENÚS (RESTAURANTE / BAR) ---
-  {
-    id: 'menu-horizontal-tabloide',
-    title: 'Menú Horizontal Tabloide (11" x 17")',
-    category: 'Menús & Gastronomía',
-    widthInches: 17.0,
-    heightInches: 11.0,
-    bleed: 0.125,
-    safeMargin: 0.25,
-    recommendedMaterial: 'Sintético PVC Lavable / Impresión Encapsulada Rigidizada',
-    regionFormat: 'Tabloide Horizontal (11x17")',
-    keywords: ['menu', 'horizontal', 'tabloide', 'restaurante', 'comida', 'carta']
-  },
-  {
-    id: 'menu-vertical-carta',
-    title: 'Menú Vertical Carta (8.5" x 11")',
-    category: 'Menús & Gastronomía',
-    widthInches: 8.5,
-    heightInches: 11.0,
-    bleed: 0.125,
-    safeMargin: 0.25,
-    recommendedMaterial: 'Cartón Rígido Tapas Duras o Vinil Lavable',
-    regionFormat: 'Carta Vertical (8.5x11")',
-    keywords: ['menu', 'vertical', 'carta', 'restaurante', 'platos', 'bebidas']
-  },
-  {
-    id: 'menu-bar-portavaso',
-    title: 'Menú de Bar / Coctelería (Tira Delgada)',
-    category: 'Menús & Gastronomía',
-    widthInches: 4.25,
-    heightInches: 11.0,
-    bleed: 0.125,
-    safeMargin: 0.2,
-    recommendedMaterial: 'Sintético Acuaflex 100% Resistente a Humedad',
-    regionFormat: '1/2 Carta Vertical / Menú Bar',
-    keywords: ['menu', 'bar', 'tragos', 'coctel', 'cocteleria', 'bebidas', 'tira']
-  },
-  {
-    id: 'menu-bar-triangular',
-    title: 'Menú de Mesa / Hablador Triangular',
-    category: 'Menús & Gastronomía',
-    widthInches: 4.0,
-    heightInches: 6.0,
-    bleed: 0.125,
-    safeMargin: 0.2,
-    recommendedMaterial: 'Cartonité 16pt con Armado Cónico / Pliegue',
-    regionFormat: 'Hablador de Mesa',
-    keywords: ['menu', 'hablador', 'mesa', 'triangular', 'bar', 'promo']
-  }
-];
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
 
-export default function AsesorVisorTamano() {
-  const [query, setQuery] = useState('');
-  const [selectedItem, setSelectedItem] = useState<FormatItem>(FORMAT_DATABASE[0]);
-  const [unit, setUnit] = useState<'in' | 'cm' | 'mm'>('in');
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    img.onload = () => {
+      const w = img.naturalWidth;
+      const h = img.naturalHeight;
 
-  // Buscador filtrado
-  const filteredFormats = FORMAT_DATABASE.filter((item) => {
-    const q = query.toLowerCase().trim();
-    if (!q) return true;
-    return (
-      item.title.toLowerCase().includes(q) ||
-      item.category.toLowerCase().includes(q) ||
-      item.keywords.some((kw) => kw.toLowerCase().includes(q))
-    );
-  });
+      // Cálculo de dimensiones máximas de impresión
+      const wInches300 = w / 300;
+      const hInches300 = h / 300;
+      const wInches150 = w / 150;
+      const hInches150 = h / 150;
 
-  // Convertidor de Unidades
-  const formatVal = (valInches: number) => {
-    if (unit === 'cm') return (valInches * 2.54).toFixed(2) + ' cm';
-    if (unit === 'mm') return (valInches * 25.4).toFixed(1) + ' mm';
-    return valInches.toFixed(2) + '"';
+      // Calcular DPI resultante según las medidas deseadas del usuario
+      const currentDpiW = w / targetWidth;
+      const currentDpiH = h / targetHeight;
+      const avgDpi = Math.min(currentDpiW, currentDpiH);
+
+      let status: 'excelente' | 'aceptable' | 'baja' = 'excelente';
+      if (avgDpi < 150) {
+        status = 'baja';
+      } else if (avgDpi < 280) {
+        status = 'aceptable';
+      }
+
+      setAnalysis({
+        fileName: file.name,
+        fileSizeMB: (file.size / (1024 * 1024)).toFixed(2),
+        widthPx: w,
+        heightPx: h,
+        dpi300WidthInches: parseFloat(wInches300.toFixed(2)),
+        dpi300HeightInches: parseFloat(hInches300.toFixed(2)),
+        dpi150WidthInches: parseFloat(wInches150.toFixed(2)),
+        dpi150HeightInches: parseFloat(hInches150.toFixed(2)),
+        status,
+        previewUrl: objectUrl
+      });
+    };
+
+    img.src = objectUrl;
   };
 
-  // Renderizado del Plano Técnico 2D
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) processFile(file);
+  };
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
+  };
 
-    // Fondo Minimalista Obscuro
-    ctx.fillStyle = '#09090b';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Dibuja la cuadrícula técnica de fondo
-    ctx.fillStyle = '#18181b';
-    for (let x = 0; x < canvas.width; x += 20) {
-      for (let y = 0; y < canvas.height; y += 20) {
-        ctx.fillRect(x, y, 1, 1);
-      }
-    }
-
-    // Cálculo dinámico de escala para ajustar al canvas (Proporcional)
-    const padding = 80;
-    const availW = canvas.width - padding * 2;
-    const availH = canvas.height - padding * 2;
-
-    const scaleW = availW / (selectedItem.widthInches + selectedItem.bleed * 2);
-    const scaleH = availH / (selectedItem.heightInches + selectedItem.bleed * 2);
-    const scale = Math.min(scaleW, scaleH);
-
-    // Dimensiones en Píxeles
-    const wPx = selectedItem.widthInches * scale;
-    const hPx = selectedItem.heightInches * scale;
-    const bleedPx = selectedItem.bleed * scale;
-    const safePx = selectedItem.safeMargin * scale;
-
-    const x = (canvas.width - wPx) / 2;
-    const y = (canvas.height - hPx) / 2;
-
-    // 1. Área de Sangrado / Demasía (Línea Roja)
-    ctx.fillStyle = 'rgba(239, 68, 68, 0.08)';
-    ctx.strokeStyle = '#ef4444';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([6, 6]);
-    ctx.strokeRect(x - bleedPx, y - bleedPx, wPx + bleedPx * 2, hPx + bleedPx * 2);
-    ctx.fillRect(x - bleedPx, y - bleedPx, wPx + bleedPx * 2, hPx + bleedPx * 2);
-
-    // 2. Borde Real de Corte / Producto (Línea Azul)
-    ctx.setLineDash([]);
-    ctx.fillStyle = '#18181b';
-    ctx.fillRect(x, y, wPx, hPx);
-
-    ctx.strokeStyle = '#3b82f6';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(x, y, wPx, hPx);
-
-    // 3. Zona Segura para Texto e Logos (Línea Verde)
-    ctx.strokeStyle = '#22c55e';
-    ctx.lineWidth = 1.2;
-    ctx.setLineDash([4, 4]);
-    ctx.strokeRect(x + safePx, y + safePx, wPx - safePx * 2, hPx - safePx * 2);
-
-    // Cota / Indicador de medida central
-    ctx.setLineDash([]);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 14px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText(`${selectedItem.widthInches}" x ${selectedItem.heightInches}"`, canvas.width / 2, canvas.height / 2 + 5);
-
-  }, [selectedItem]);
+  // DPI calculado para el tamaño objetivo
+  const calculatedDpi = analysis
+    ? Math.round(Math.min(analysis.widthPx / targetWidth, analysis.heightPx / targetHeight))
+    : 0;
 
   return (
     <div className="w-full space-y-8">
       
-      {/* BUSCADOR ESTILO APPLE */}
-      <div className="w-full relative">
-        <div className="relative z-10 bg-zinc-900/90 border border-white/15 p-2 rounded-2xl backdrop-blur-2xl shadow-2xl flex items-center gap-3">
-          <div className="pl-4 text-zinc-400">🔍</div>
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar formato: Ej. 'carnet pvc', 'menu vertical', 'tag', 'sticker cuaderno'..."
-            className="w-full bg-transparent text-sm text-white placeholder-zinc-500 px-2 py-3.5 focus:outline-none font-medium"
-          />
-          {query && (
-            <button onClick={() => setQuery('')} className="pr-4 text-xs text-zinc-500 hover:text-white">
-              Limpiar
-            </button>
-          )}
-        </div>
-        <div className="absolute -inset-1 bg-gradient-to-r from-red-600/20 to-purple-600/10 rounded-2xl blur-xl -z-10 opacity-70" />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* LISTA LATERAL DE FORMATOS (200+ Ítems) */}
-        <div className="lg:col-span-4 bg-zinc-900/70 border border-white/10 rounded-3xl p-4 max-h-137.5 overflow-y-auto space-y-2 backdrop-blur-2xl">
-          <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 block px-3 py-1">
-            Formatos Disponibles ({filteredFormats.length})
+      {/* Carga de Archivo (Drag & Drop) */}
+      <div
+        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleDrop}
+        onClick={() => fileInputRef.current?.click()}
+        className={`w-full border-2 border-dashed rounded-3xl p-8 text-center transition-all cursor-pointer backdrop-blur-2xl ${
+          isDragging ? 'border-red-500 bg-red-500/10' : 'border-white/15 bg-zinc-900/60 hover:border-white/30'
+        }`}
+      >
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept="image/png, image/jpeg, image/webp, image/tiff"
+          className="hidden"
+        />
+        <div className="max-w-md mx-auto space-y-3">
+          <span className="text-4xl block">📁</span>
+          <h3 className="text-sm font-extrabold uppercase text-white tracking-wider">
+            Sube o arrastra tu archivo / arte aquí
+          </h3>
+          <p className="text-xs text-zinc-400">
+            Soporta imágenes en formato PNG, JPG, WEBP o TIFF. Analizaremos sus píxeles de origen al instante.
+          </p>
+          <span className="inline-block px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-full text-xs font-bold uppercase tracking-wider shadow-lg transition-all">
+            Seleccionar Imagen
           </span>
-
-          {filteredFormats.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setSelectedItem(item)}
-              className={`w-full text-left p-3.5 rounded-2xl border transition-all cursor-pointer block ${
-                selectedItem.id === item.id
-                  ? 'bg-red-600/20 border-red-500/80 text-white shadow-lg'
-                  : 'bg-zinc-950/40 border-white/5 text-zinc-400 hover:border-white/20 hover:text-zinc-200'
-              }`}
-            >
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-xs font-bold">{item.title}</span>
-                <span className="text-[9px] font-semibold text-zinc-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
-                  {item.widthInches}" x {item.heightInches}"
-                </span>
-              </div>
-              <span className="text-[10px] text-zinc-500 block">{item.category}</span>
-            </button>
-          ))}
-
-          {filteredFormats.length === 0 && (
-            <div className="p-8 text-center text-xs text-zinc-500">
-              No se encontraron formatos con ese término.
-            </div>
-          )}
         </div>
-
-        {/* PLANO TÉCNICO INTERACTIVO */}
-        <div className="lg:col-span-8 space-y-4">
-          <div className="bg-zinc-950 border border-white/10 rounded-3xl p-4 relative overflow-hidden flex flex-col items-center justify-center shadow-2xl">
-            
-            {/* Header del Plano */}
-            <div className="w-full flex justify-between items-center mb-3 px-2">
-              <div>
-                <h2 className="text-sm font-extrabold text-white uppercase tracking-wider">{selectedItem.title}</h2>
-                <span className="text-[10px] text-zinc-400">{selectedItem.regionFormat}</span>
-              </div>
-
-              {/* Selector de Unidades */}
-              <div className="flex bg-zinc-900 p-1 rounded-xl border border-white/10 text-[10px] font-bold">
-                {(['in', 'cm', 'mm'] as const).map((u) => (
-                  <button
-                    key={u}
-                    onClick={() => setUnit(u)}
-                    className={`px-3 py-1 rounded-lg uppercase transition-all ${
-                      unit === u ? 'bg-red-600 text-white' : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    {u}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Canvas Plano Técnico */}
-            <canvas
-              ref={canvasRef}
-              width={640}
-              height={400}
-              className="w-full h-auto max-w-full rounded-2xl border border-white/10 shadow-inner"
-            />
-
-            {/* Leyenda Técnica */}
-            <div className="w-full mt-4 flex justify-around text-[10px] text-zinc-400 bg-zinc-900/80 p-3 rounded-2xl border border-white/10">
-              <span className="flex items-center gap-1.5 font-medium"><span className="w-2.5 h-2.5 rounded-full bg-red-500 inline-block" /> Sangrado: {formatVal(selectedItem.bleed)}</span>
-              <span className="flex items-center gap-1.5 font-medium"><span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" /> Borde Real: {formatVal(selectedItem.widthInches)} x {formatVal(selectedItem.heightInches)}</span>
-              <span className="flex items-center gap-1.5 font-medium"><span className="w-2.5 h-2.5 rounded-full bg-green-500 inline-block" /> Margen Seguro: {formatVal(selectedItem.safeMargin)}</span>
-            </div>
-          </div>
-
-          {/* Tarjeta de Especificación Rápida */}
-          <div className="bg-zinc-900/80 border border-white/10 rounded-3xl p-5 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div>
-              <span className="text-[10px] uppercase font-bold text-red-500 block mb-1">Material Sugerido</span>
-              <p className="text-xs text-zinc-200 font-medium">{selectedItem.recommendedMaterial}</p>
-            </div>
-            <Link
-              href={`/cotizacion?producto=${encodeURIComponent(selectedItem.title)}&tamano=${selectedItem.widthInches}x${selectedItem.heightInches}`}
-              className="px-6 py-3 bg-red-600 hover:bg-red-500 text-white rounded-full text-xs font-extrabold uppercase tracking-widest shadow-xl transition-all shrink-0"
-            >
-              ✨ Cotizar este Formato
-            </Link>
-          </div>
-
-        </div>
-
       </div>
+
+      {/* Resultados de Análisis */}
+      {analysis && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Vista Previa de la Imagen */}
+          <div className="lg:col-span-5 bg-zinc-950 border border-white/10 rounded-3xl p-6 flex flex-col items-center justify-center space-y-4 shadow-2xl">
+            <div className="w-full h-64 relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-900 flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={analysis.previewUrl}
+                alt="Vista Previa"
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
+            
+            <div className="w-full text-left space-y-1">
+              <span className="text-xs font-bold text-white block truncate">{analysis.fileName}</span>
+              <span className="text-[11px] text-zinc-400 block">Peso: {analysis.fileSizeMB} MB</span>
+            </div>
+          </div>
+
+          {/* Panel de Diagnóstico de DPI */}
+          <div className="lg:col-span-7 bg-zinc-900/70 border border-white/10 rounded-3xl p-6 space-y-6 backdrop-blur-2xl shadow-2xl">
+            
+            {/* Status Badge */}
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 block">Resolución Nativa</span>
+                <p className="text-lg font-extrabold text-white mt-0.5">{analysis.widthPx} x {analysis.heightPx} px</p>
+              </div>
+
+              <span className={`px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider border ${
+                calculatedDpi >= 280
+                  ? 'bg-green-500/10 border-green-500/30 text-green-400'
+                  : calculatedDpi >= 150
+                  ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-400'
+                  : 'bg-red-500/10 border-red-500/30 text-red-400'
+              }`}>
+                {calculatedDpi >= 280 ? '🟢 Óptimo 300 DPI' : calculatedDpi >= 150 ? '🟡 Aceptable' : '🔴 Baja Calidad'}
+              </span>
+            </div>
+
+            {/* Simulación del Tamaño que Quiere Imprimir */}
+            <div className="space-y-3">
+              <label className="text-xs uppercase font-bold text-zinc-300 block">
+                ¿A qué tamaño deseas imprimir este arte? (Pulgadas)
+              </label>
+              
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <span className="text-[10px] uppercase font-semibold text-zinc-500 block mb-1">Ancho (Pulgadas)</span>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={targetWidth}
+                    onChange={(e) => setTargetWidth(Math.max(0.1, parseFloat(e.target.value) || 0.1))}
+                    className="w-full bg-zinc-950 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500"
+                  />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-semibold text-zinc-500 block mb-1">Alto (Pulgadas)</span>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={targetHeight}
+                    onChange={(e) => setTargetHeight(Math.max(0.1, parseFloat(e.target.value) || 0.1))}
+                    className="w-full bg-zinc-950 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-red-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Indicador de DPI Resultante */}
+            <div className="bg-zinc-950 p-4 rounded-2xl border border-white/10 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-zinc-300">DPI Resultante a {targetWidth}" x {targetHeight}"</span>
+                <span className="text-base font-extrabold text-white">{calculatedDpi} DPI</span>
+              </div>
+
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                {calculatedDpi >= 280
+                  ? '✅ Tu imagen tiene resolución suficiente para impresión Offset o Digital de alta nitidez (300 DPI).'
+                  : calculatedDpi >= 150
+                  ? '⚠️ La calidad es apta para Lonas o Gran Formato (150 DPI), pero podría perder algo de detalle en textos muy pequeños.'
+                  : '❌ La imagen se verá pixelada o borrosa al imprimir a este tamaño. Se recomienda buscar un archivo de mayor tamaño.'}
+              </p>
+            </div>
+
+            {/* Máximas Dimensiones Recomendadas */}
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="bg-white/5 p-3.5 rounded-2xl border border-white/10">
+                <span className="text-[9px] uppercase font-bold text-zinc-400 block">Máximo Alta Nitidez (300 DPI)</span>
+                <p className="text-xs font-extrabold text-white mt-1">
+                  {analysis.dpi300WidthInches}" x {analysis.dpi300HeightInches}"
+                </p>
+              </div>
+              <div className="bg-white/5 p-3.5 rounded-2xl border border-white/10">
+                <span className="text-[9px] uppercase font-bold text-zinc-400 block">Máximo Gran Formato (150 DPI)</span>
+                <p className="text-xs font-extrabold text-white mt-1">
+                  {analysis.dpi150WidthInches}" x {analysis.dpi150HeightInches}"
+                </p>
+              </div>
+            </div>
+
+            {/* Cotizar */}
+            <Link
+              href={`/cotizacion?producto=Impresion&tamano=${targetWidth}x${targetHeight}`}
+              className="w-full block text-center py-3.5 bg-red-600 hover:bg-red-500 text-white rounded-full text-xs font-extrabold uppercase tracking-widest shadow-xl transition-all"
+            >
+              ✨ Cotizar Impresión con esta Imagen
+            </Link>
+
+          </div>
+
+        </div>
+      )}
 
     </div>
   );
