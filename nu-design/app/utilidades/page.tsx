@@ -290,20 +290,29 @@ export default function UtilidadesPage() {
   </div>
   <Link 
   href="/utilidades/mockup-3d" 
-  className="bg-zinc-900 border border-white/10 p-6 rounded-3xl hover:border-red-500 transition-all group block"
+  className="relative group block overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/80 p-6 backdrop-blur-xl transition-all duration-300 hover:border-red-500/80 hover:shadow-[0_0_30px_rgba(239,68,68,0.25)]"
 >
-  <div className="flex justify-between items-start mb-4">
-    <span className="text-3xl">📐</span>
-    <span className="text-[10px] font-bold uppercase tracking-wider text-red-500 bg-red-500/10 px-2.5 py-1 rounded-full border border-red-500/20">
-      Interactivo
+  <div className="flex items-start justify-between mb-4">
+    <div className="w-12 h-12 rounded-2xl bg-red-600/10 border border-red-500/30 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+      🔍
+    </div>
+    <span className="text-[10px] font-extrabold uppercase tracking-widest text-red-400 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/30 animate-pulse">
+      PRO CONTROL
     </span>
   </div>
-  <h3 className="text-sm font-extrabold uppercase text-white group-hover:text-red-500 transition-colors">
-    Asesor de Tamaños & Sangrado
+
+  <span className="text-[10px] font-extrabold uppercase tracking-widest text-red-500 block mb-1">
+    Control de Calidad de Arte
+  </span>
+  <h3 className="text-base font-black uppercase tracking-wide text-white group-hover:text-red-500 transition-colors">
+    Verificador de Resolución / DPI
   </h3>
-  <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
-    Consulta medidas recomendadas por la IA, prueba la escala real sobre objetos cotidianos y verifica márgenes de seguridad.
+  <p className="text-xs text-zinc-400 mt-2 leading-relaxed font-medium">
+    Analiza tus imágenes en milisegundos. Evalúa píxeles de origen, DPI efectivos por tamaño de impresión y previene errores de pixelado antes de imprimir.
   </p>
+
+  {/* Glow dinámico hover */}
+  <div className="absolute -inset-x-20 -bottom-20 h-32 bg-red-600/10 blur-3xl rounded-full group-hover:bg-red-600/20 transition-all" />
 </Link>
 </div>
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
