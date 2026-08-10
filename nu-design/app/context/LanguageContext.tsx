@@ -1,34 +1,40 @@
 'use client';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Language = 'ES' | 'EN' | 'FR';
 
 interface LanguageContextType {
-  currentLang: Language;
-  changeLanguage: (lang: Language) => void;
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  currentLang: Language; // Mantenido para retrocompatibilidad
+  changeLanguage: (lang: Language) => void; // Mantenido para retrocompatibilidad
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
-  // Inicialización síncrona desde localStorage para evitar setState en efectos
-  const [currentLang, setCurrentLang] = useState<Language>(() => {
-    if (typeof window !== 'undefined') {
-      const savedLang = localStorage.getItem('nu_language');
-      if (savedLang === 'ES' || savedLang === 'EN' || savedLang === 'FR') {
-        return savedLang;
-      }
-    }
-    return 'ES';
-  });
+  const [language, setLanguageState] = useState<Language>('ES');
 
-  const changeLanguage = (lang: Language) => {
-    setCurrentLang(lang);
+  useEffect(() => {
+    const savedLang = localStorage.getItem('nu_lang') || localStorage.getItem('nu_language');
+    if (savedLang === 'ES' || savedLang === 'EN' || savedLang === 'FR') {
+      setLanguageState(savedLang as Language);
+    }
+  }, []);
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    localStorage.setItem('nu_lang', lang);
     localStorage.setItem('nu_language', lang);
   };
 
   return (
-    <LanguageContext.Provider value={{ currentLang, changeLanguage }}>
+    <LanguageContext.Provider value={{ 
+      language, 
+      setLanguage, 
+      currentLang: language, 
+      changeLanguage: setLanguage 
+    }}>
       {children}
     </LanguageContext.Provider>
   );
