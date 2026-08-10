@@ -71,13 +71,11 @@ export default function ContratarPage() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
       >
-        <div className="flex items-center space-x-2">
-          {/* Marca en esquina móvil cambiada a AGENCY */}
-          <Link href="/" className="md:hidden font-extrabold text-xs tracking-[0.25em] uppercase text-zinc-200">
-            AGENCY
-          </Link>
+        <div className="flex items-center space-x-3">
+  {/* Wordmark Adaptativo SVG para Móvil y Desktop */}
+  <WordmarkLogo className="h-6 md:h-8 w-auto" />
 
-          <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
+  <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
             <Link href="/" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">inicio</Link>
             <Link href="/portafolio" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">portafolio</Link>
             <Link href="/contratar" className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${

@@ -3,7 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import Footer from './components/Footer';
+import Footer from '@/app/components/Footer';
+import WordmarkLogo from '@/app/components/WordmarkLogo';
 
 const translations = {
   ES: {
@@ -214,10 +215,11 @@ export default function Home() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40"
       >
-        <div className="flex items-center space-x-2">
-          <span className="md:hidden font-bold text-sm tracking-widest uppercase">NU-DESIGN</span>
-          
-          <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
+        <div className="flex items-center space-x-3">
+  {/* Wordmark Adaptativo SVG para Móvil y Desktop */}
+  <WordmarkLogo className="h-6 md:h-8 w-auto" />
+
+  <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
             {/* 1. Botón INICIO */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link 
