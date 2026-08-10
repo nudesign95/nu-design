@@ -4,6 +4,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import SecurityProvider from './components/SecurityProvider';
 import CookieBanner from './components/CookieBanner';
+import AppLoader from './components/AppLoader';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nudesign.agency'),
@@ -164,6 +165,9 @@ export default function RootLayout({
       </head>
 
       <body className="select-none bg-[#e3e3e3] dark:bg-[#040001] text-zinc-900 dark:text-zinc-100 transition-colors duration-500 font-sans selection:bg-red-600 selection:text-white">
+        {/* Intro de entrada tipo Apple */}
+        <AppLoader />
+
         <SecurityProvider>
           <LanguageProvider>
             {children}

@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Footer from '../components/Footer';
 import WordmarkLogo from '../components/WordmarkLogo';
 
+
 export default function ContratarPage() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [currentLang, setCurrentLang] = useState<'ES' | 'EN' | 'FR'>('ES');
