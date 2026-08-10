@@ -134,8 +134,27 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <head>
+        {/* Script Anti-Parpadeo de Tema (FOUC) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var savedTheme = localStorage.getItem('nu_theme');
+                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (savedTheme === 'dark' || (!savedTheme && supportDarkMode)) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+        {/* Esquema JSON-LD Datos Estructurados Google */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -144,7 +163,7 @@ export default function RootLayout({
         />
       </head>
 
-      <body className="select-none">
+      <body className="select-none bg-[#e3e3e3] dark:bg-[#040001] text-zinc-900 dark:text-zinc-100 transition-colors duration-500 font-sans selection:bg-red-600 selection:text-white">
         <SecurityProvider>
           <LanguageProvider>
             {children}
@@ -153,7 +172,7 @@ export default function RootLayout({
           </LanguageProvider>
         </SecurityProvider>
 
-        {/* Google Analytics con tu ID real */}
+        {/* Google Analytics con ID real */}
         <GoogleAnalytics gaId="G-29J66PT6PQ" />
       </body>
     </html>
