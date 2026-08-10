@@ -7,6 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Turnstile } from '@marsidev/react-turnstile';
 import { useLanguage } from '../context/LanguageContext';
 import Footer from '../components/Footer';
+import WordmarkLogo from '../components/WordmarkLogo';
 
 // Inicialización limpia de Supabase
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://m3c3m0sc0kic0.supabase.co';
@@ -598,12 +599,11 @@ export default function CotizacionPage() {
           transition={{ duration: 0.8 }} 
           className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
         >
-          <div className="flex items-center space-x-2">
-            <Link href="/" className="md:hidden font-extrabold text-xs tracking-[0.25em] uppercase text-zinc-200">
-              AGENCY
-            </Link>
+          <div className="flex items-center space-x-3">
+  {/* Wordmark Adaptativo SVG para Móvil y Desktop */}
+  <WordmarkLogo className="h-6 md:h-8 w-auto" />
 
-            <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
+  <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
               <Link href="/" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.inicio}</Link>
               <Link href="/portafolio" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.portafolio}</Link>
               <Link href="/contratar" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.contratar}</Link>

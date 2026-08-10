@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import Footer from '../components/Footer';
+import WordmarkLogo from '../components/WordmarkLogo';
 
 const categoryDescriptions: { [key: string]: { title: string; text: string } } = {
   'Branding': {
@@ -175,12 +176,11 @@ export default function PortafolioPage() {
       
       {/* Top Navigation Bar Unificada */}
       <motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8 }} className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative">
-        <div className="flex items-center space-x-2">
-          <Link href="/" className="md:hidden font-extrabold text-xs tracking-[0.25em] uppercase text-zinc-200">
-            AGENCY
-          </Link>
+       <div className="flex items-center space-x-3">
+  {/* Wordmark Adaptativo SVG para Móvil y Desktop */}
+  <WordmarkLogo className="h-6 md:h-8 w-auto" />
 
-          <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
+  <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
             <Link href="/" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">inicio</Link>
             <Link href="/portafolio" className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
               theme === 'dark' 
