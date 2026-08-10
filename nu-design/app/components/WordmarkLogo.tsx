@@ -8,7 +8,7 @@ interface WordmarkLogoProps {
 
 export default function WordmarkLogo({ className = 'h-6 sm:h-8 w-auto' }: WordmarkLogoProps) {
   return (
-    <Link href="/" className="flex items-center shrink-0 hover:opacity-85 transition-opacity">
+    <Link href="/" className="flex items-center shrink-0 hover:opacity-80 transition-opacity">
       <Image
         src="/wordmark-blanco.svg"
         alt="NU-DESIGN Agency"
