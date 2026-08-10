@@ -130,7 +130,9 @@ export default function PortafolioPage() {
     return 'dark';
   });
 
-  const { currentLang, changeLanguage } = useLanguage();
+  const { language, setLanguage } = useLanguage();
+  const currentLang = language;
+  const changeLanguage = setLanguage;
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Todos');
