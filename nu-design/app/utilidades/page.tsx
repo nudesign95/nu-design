@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import Footer from '../components/Footer';
 import WordmarkLogo from '../components/WordmarkLogo';
+import { useLanguage } from '../context/LanguageContext';
+import { dictionary } from '../lib/translations';
 
 type UnitType = 'pulg' | 'cm' | 'mm' | 'pies' | 'yardas';
 
@@ -27,9 +29,20 @@ const PRESETS: Preset[] = [
 
 export default function UtilidadesPage() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [currentLang, setCurrentLang] = useState<'ES' | 'EN' | 'FR'>('ES');
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Conexión Global al Contexto de Idioma
+  const { language, setLanguage } = useLanguage();
+  const navT = dictionary[language as keyof typeof dictionary]?.nav || {
+    inicio: 'inicio',
+    portafolio: 'portafolio',
+    contratar: 'contratar',
+    contacto: 'contacto',
+    utilidades: 'utilidades',
+    cotizacion: 'Cotización',
+    whatsapp: 'Whatsapp',
+  };
 
   // 1. Hoja Principal (Pliego)
   const [sheetWidth, setSheetWidth] = useState<number>(8.5);
@@ -37,7 +50,7 @@ export default function UtilidadesPage() {
   const [unit, setUnit] = useState<UnitType>('pulg');
   const [selectedPreset, setSelectedPreset] = useState<string>("Carta (Letter)");
 
-  // 2. Pieza / Elemento a imprimir (Ej. Tarjeta 3.5x2)
+  // 2. Pieza / Elemento a imprimir
   const [pieceWidth, setPieceWidth] = useState<number>(3.5);
   const [pieceHeight, setPieceHeight] = useState<number>(2);
   const [rotatePiece, setRotatePiece] = useState<boolean>(false);
@@ -51,9 +64,7 @@ export default function UtilidadesPage() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('nu_theme') as 'dark' | 'light' | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
+    if (savedTheme) setTheme(savedTheme);
   }, []);
 
   useEffect(() => {
@@ -102,7 +113,6 @@ export default function UtilidadesPage() {
     }
   };
 
-  // CÁLCULO DE MULTIPLICACIÓN AUTOMÁTICA
   const actualPW = rotatePiece ? pieceHeight : pieceWidth;
   const actualPH = rotatePiece ? pieceWidth : pieceHeight;
 
@@ -143,7 +153,7 @@ export default function UtilidadesPage() {
         )}
       </motion.div>
 
-      {/* Top Navigation Bar Unificada */}
+      {/* Header Unificado */}
       <motion.header 
         initial={{ y: -20, opacity: 0 }} 
         animate={{ y: 0, opacity: 1 }} 
@@ -151,19 +161,18 @@ export default function UtilidadesPage() {
         className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40 relative"
       >
         <div className="flex items-center space-x-3">
-          {/* Wordmark Adaptativo SVG (Sustituye textos 'AGENCY' / 'NU-DESIGN') */}
           <WordmarkLogo className="h-6 md:h-8 w-auto" />
 
           <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
-            <Link href="/" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">inicio</Link>
-            <Link href="/portafolio" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">portafolio</Link>
-            <Link href="/contratar" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">contratar</Link>
-            <Link href="/contacto" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">contacto</Link>
+            <Link href="/" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{navT.inicio}</Link>
+            <Link href="/portafolio" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{navT.portafolio}</Link>
+            <Link href="/contratar" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{navT.contratar}</Link>
+            <Link href="/contacto" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{navT.contacto}</Link>
             <Link href="/utilidades" className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
               theme === 'dark' 
                 ? 'bg-white/10 border border-red-500/40 text-red-500 font-semibold shadow-[0_0_15px_rgba(239,68,68,0.3)]' 
                 : 'bg-black/10 border border-red-500/50 text-red-600 font-semibold'
-            }`}>utilidades</Link>
+            }`}>{navT.utilidades}</Link>
           </nav>
         </div>
 
@@ -178,16 +187,16 @@ export default function UtilidadesPage() {
               }`}
             >
               <span>IDIOMAS</span>
-              <span className="text-red-500 font-bold ml-1">({currentLang})</span>
+              <span className="text-red-500 font-bold ml-1">({language})</span>
             </button>
             <AnimatePresence>
               {isLangOpen && (
                 <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className={`absolute right-0 mt-2 w-36 backdrop-blur-2xl border rounded-xl shadow-2xl overflow-hidden z-50 py-1 ${
                   theme === 'dark' ? 'bg-black/90 border-white/15 text-zinc-200' : 'bg-white/95 border-black/10 text-zinc-800'
                 }`}>
-                  <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Español</button>
-                  <button onClick={() => { setCurrentLang('EN'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">English</button>
-                  <button onClick={() => { setCurrentLang('FR'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Français</button>
+                  <button onClick={() => { setLanguage('ES'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Español</button>
+                  <button onClick={() => { setLanguage('EN'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">English</button>
+                  <button onClick={() => { setLanguage('FR'); setIsLangOpen(false); }} className="w-full text-left px-4 py-2 text-xs hover:bg-red-500/10 text-zinc-300">Français</button>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -198,7 +207,7 @@ export default function UtilidadesPage() {
               ? 'bg-white/10 border border-white/20 text-white hover:border-emerald-500/60'
               : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60'
           }`}>
-            <span>Whatsapp</span>
+            <span>{navT.whatsapp}</span>
           </a>
 
           <Link href="/cotizacion" className={`block backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal transition-all ${
@@ -206,7 +215,7 @@ export default function UtilidadesPage() {
               ? 'bg-white/10 border border-white/20 text-white hover:border-red-500/60'
               : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-red-500/60'
           }`}>
-            Cotización
+            {navT.cotizacion}
           </Link>
 
           <button 
@@ -233,32 +242,32 @@ export default function UtilidadesPage() {
           >
             <div className="flex flex-col space-y-6 text-xl font-medium tracking-wide">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
-                <span>Inicio</span>
+                <span>{navT.inicio}</span>
                 <span>→</span>
               </Link>
               <Link href="/portafolio" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
-                <span>Portafolio</span>
+                <span>{navT.portafolio}</span>
                 <span>→</span>
               </Link>
               <Link href="/contratar" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
-                <span>Contratar</span>
+                <span>{navT.contratar}</span>
                 <span>→</span>
               </Link>
               <Link href="/contacto" onClick={() => setIsMobileMenuOpen(false)} className="opacity-80 hover:opacity-100 border-b border-zinc-500/20 pb-3 flex justify-between items-center">
-                <span>Contacto</span>
+                <span>{navT.contacto}</span>
                 <span>→</span>
               </Link>
               <Link href="/utilidades" onClick={() => setIsMobileMenuOpen(false)} className="text-red-500 font-bold border-b border-zinc-500/20 pb-3 flex justify-between items-center">
-                <span>Utilidades</span>
+                <span>{navT.utilidades}</span>
                 <span>→</span>
               </Link>
             </div>
             <div className="flex flex-col space-y-4 pt-6 border-t border-zinc-500/20">
               <span className="text-xs uppercase tracking-widest opacity-50 font-semibold">Seleccionar Idioma</span>
               <div className="flex items-center gap-3">
-                <button onClick={() => { setCurrentLang('ES'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Español</button>
-                <button onClick={() => { setCurrentLang('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
-                <button onClick={() => { setCurrentLang('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${currentLang === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
+                <button onClick={() => { setLanguage('ES'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${language === 'ES' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Español</button>
+                <button onClick={() => { setLanguage('EN'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${language === 'EN' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>English</button>
+                <button onClick={() => { setLanguage('FR'); setIsMobileMenuOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-semibold border ${language === 'FR' ? 'bg-red-600 border-red-500 text-white' : 'border-zinc-500/30'}`}>Français</button>
               </div>
             </div>
           </motion.div>
@@ -285,7 +294,6 @@ export default function UtilidadesPage() {
 
         {/* ACCESOS RÁPIDOS ESTILO PÍLDORA APPLE */}
         <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
-          {/* Botón Verificador DPI */}
           <Link 
             href="/utilidades/mockup-3d" 
             className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/10 bg-zinc-900/80 hover:border-red-500/60 hover:bg-zinc-900 backdrop-blur-xl shadow-lg transition-all text-xs font-medium text-zinc-300 hover:text-white group"
@@ -297,7 +305,6 @@ export default function UtilidadesPage() {
             <span className="text-zinc-500 group-hover:text-zinc-300 transition-colors">→</span>
           </Link>
 
-          {/* Botón Simulador RGB -> CMYK */}
           <Link 
             href="/utilidades/simulador-color" 
             className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/10 bg-zinc-900/80 hover:border-emerald-500/60 hover:bg-zinc-900 backdrop-blur-xl shadow-lg transition-all text-xs font-medium text-zinc-300 hover:text-white group"
@@ -387,10 +394,8 @@ export default function UtilidadesPage() {
 
           </div>
 
-          {/* ÁREA DE VISUALIZACIÓN CON TABLA Y MULTIPLICACIÓN */}
+          {/* ÁREA DE VISUALIZACIÓN */}
           <div className="lg:col-span-8 space-y-6">
-            
-            {/* TABLA RESUMEN DE RENDIMIENTO DE IMPRENTA */}
             <div className={`p-6 rounded-3xl border shadow-xl grid grid-cols-2 md:grid-cols-4 gap-4 text-center ${theme === 'dark' ? 'bg-zinc-900/60 border-white/15' : 'bg-white/80 border-zinc-300'}`}>
               <div className="border-r border-white/10 pr-2">
                 <span className="text-[10px] uppercase opacity-60 block">Rendimiento Total</span>
@@ -414,23 +419,18 @@ export default function UtilidadesPage() {
               </div>
             </div>
 
-            {/* CANVAS INTERACTIVO QUE DUPLICA LA IMAGEN EN TODA LA HOJA */}
             <div className={`p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl flex flex-col items-center justify-center relative min-h-125 overflow-hidden ${theme === 'dark' ? 'bg-black/50 border-white/15' : 'bg-white/60 border-zinc-300'}`}>
-              
-              {/* Regla Superior */}
               <div className="w-full max-w-lg flex justify-between items-end border-b border-red-500/50 pb-1 mb-6 text-[10px] font-mono opacity-80 text-red-500">
                 <span>0 {unit}</span>
                 <span className="font-bold">HOJA: {sheetWidth} {unit}</span>
               </div>
 
               <div className="flex items-center space-x-6">
-                {/* Regla Lateral */}
                 <div className="h-80 flex flex-col justify-between items-end border-r border-red-500/50 pr-2 text-[10px] font-mono opacity-80 text-red-500">
                   <span>0</span>
                   <span className="font-bold">{sheetHeight}</span>
                 </div>
 
-                {/* DIBUJO DE LA HOJA MULTIPLICANDO LA IMAGEN N VECES */}
                 <motion.div 
                   animate={{ width: displayWidth, height: displayHeight }}
                   transition={{ type: "spring", stiffness: 200, damping: 20 }}
@@ -473,7 +473,6 @@ export default function UtilidadesPage() {
 
       </main>
 
-      {/* Footer Global Unificado */}
       <Footer />
 
     </div>

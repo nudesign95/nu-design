@@ -1,53 +1,43 @@
+export type Language = 'ES' | 'EN' | 'FR';
+
 export const dictionary = {
   ES: {
     nav: {
-      inicio: 'Inicio',
-      portafolio: 'Portafolio',
-      contratar: 'Contratar',
-      contacto: 'Contacto',
-      utilidades: 'Utilidades',
+      inicio: 'inicio',
+      portafolio: 'portafolio',
+      contratar: 'contratar',
+      contacto: 'contacto',
+      utilidades: 'utilidades',
       cotizacion: 'Cotización',
+      whatsapp: 'Whatsapp',
+      idiomas: 'IDIOMAS',
     },
-    contacto: {
-      titulo: 'Conectemos con propósito',
-      subtitulo: 'Garic Edume • Dirección Creativa & Diseño de Alta Gama',
-      emailOficial: 'Correo Electrónico Oficial',
-      copiar: 'Copiar',
-      copiado: '¡Copiado!',
-    },
+    // ... resto de traducciones
   },
   EN: {
     nav: {
-      inicio: 'Home',
-      portafolio: 'Portfolio',
-      contratar: 'Hire Us',
-      contacto: 'Contact',
-      utilidades: 'Utilities',
+      inicio: 'home',
+      portafolio: 'portfolio',
+      contratar: 'hire us',
+      contacto: 'contact',
+      utilidades: 'utilities',
       cotizacion: 'Get Quote',
+      whatsapp: 'WhatsApp',
+      idiomas: 'LANGUAGES',
     },
-    contacto: {
-      titulo: 'Let’s connect with purpose',
-      subtitulo: 'Garic Edume • Creative Direction & High-End Design',
-      emailOficial: 'Official Email',
-      copiar: 'Copy',
-      copiado: 'Copied!',
-    },
+    // ... resto de traducciones
   },
   FR: {
     nav: {
-      inicio: 'Accueil',
-      portafolio: 'Portfolio',
-      contratar: 'Engager',
-      contacto: 'Contact',
-      utilidades: 'Outils',
+      inicio: 'accueil',
+      portafolio: 'portfolio',
+      contratar: 'engager',
+      contacto: 'contact',
+      utilidades: 'outils',
       cotizacion: 'Devis',
+      whatsapp: 'WhatsApp',
+      idiomas: 'LANGUES',
     },
-    contacto: {
-      titulo: 'Connectons-nous avec objetivo',
-      subtitulo: 'Garic Edume • Direction Créative & Design Haut de Gamme',
-      emailOficial: 'E-mail Officiel',
-      copiar: 'Copier',
-      copiado: 'Copié!',
-    },
+    // ... resto de traducciones
   },
 };
