@@ -164,8 +164,9 @@ export default function Home() {
       title: 'Branding',
       desc: t.brandingDesc,
       svg: (
-        <svg className="w-6 h-6 text-red-500 fill-current" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
         </svg>
       )
     },
@@ -173,8 +174,8 @@ export default function Home() {
       title: 'Producción Gráfica',
       desc: t.produccionDesc,
       svg: (
-        <svg className="w-6 h-6 text-red-500 fill-current" viewBox="0 0 24 24">
-          <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-4 11H9v-5h6v5zm4-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" />
+        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zM17 9V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
         </svg>
       )
     },
@@ -182,8 +183,8 @@ export default function Home() {
       title: 'Packaging',
       desc: t.packagingDesc,
       svg: (
-        <svg className="w-6 h-6 text-red-500 fill-current" viewBox="0 0 24 24">
-          <path d="M20 6h-4.18C15.4 4.84 14.3 4 13 4c-.28 0-.53.04-.79.1-.11-.03-.23-.07-.35-.07-.55 0-1 .45-1 1 0 .28.11.53.29.71L10 7H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-7-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM4 19V9h16v10H4z" />
+        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
         </svg>
       )
     },
@@ -191,8 +192,8 @@ export default function Home() {
       title: 'Diseño Web',
       desc: t.webDesc,
       svg: (
-        <svg className="w-6 h-6 text-red-500 fill-current" viewBox="0 0 24 24">
-          <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z" />
+        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h6l-.75-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
       )
     }
@@ -598,48 +599,50 @@ export default function Home() {
 
       </main>
 
-      {/* FASE 2: SECCIÓN DE SERVICIOS PRINCIPALES (LIQUID GLASS STYLE) */}
-      <section className="w-full max-w-5xl mx-auto px-4 py-8 md:py-12 z-10">
+      {/* FASE 2: SECCIÓN DE SERVICIOS EN LÍNEA HORIZONTAL ANCHA (FULL HORIZONTAL ROW) */}
+      <section className="w-full px-4 md:px-8 py-8 md:py-12 z-10">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className={`p-6 md:p-10 rounded-3xl backdrop-blur-2xl border shadow-2xl ${
+          className={`w-full p-6 md:p-10 rounded-3xl backdrop-blur-2xl border shadow-2xl ${
             theme === 'dark' 
               ? 'bg-zinc-900/40 border-white/10' 
               : 'bg-white/60 border-black/10'
           }`}
         >
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          <div className="flex flex-col lg:flex-row items-center gap-8 justify-between">
             
-            {/* Título de la Sección */}
-            <div className="md:col-span-4 text-left border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-6">
+            {/* Título a la izquierda */}
+            <div className="lg:w-1/4 text-left lg:border-r border-white/10 lg:pr-8 pb-4 lg:pb-0 border-b lg:border-b-0 w-full">
               <h2 className="text-2xl md:text-3xl font-light tracking-tight">
                 {t.solucionesTitulo} <br />
                 <span className="font-semibold text-red-500">{t.solucionesElevan}</span>
               </h2>
             </div>
 
-            {/* Cuadrícula de 4 Servicios */}
-            <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-5 text-left">
+            {/* Los 4 servicios en UNA SOLA FILA HORIZONTAL (grid 4 cols) */}
+            <div className="lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full text-left">
               {mainServicesList.map((item, idx) => (
                 <motion.div 
                   key={idx} 
-                  whileHover={{ y: -4, scale: 1.02 }}
+                  whileHover={{ y: -6, scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleServiceClick(item.title)}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer group ${
+                  className={`p-5 rounded-2xl border transition-all cursor-pointer group flex flex-col justify-between ${
                     theme === 'dark' 
-                      ? 'bg-white/5 border-white/10 hover:border-red-500/50 hover:bg-white/10 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]' 
+                      ? 'bg-white/5 border-white/10 hover:border-red-500/50 hover:bg-white/10 hover:shadow-[0_0_25px_rgba(239,68,68,0.25)]' 
                       : 'bg-black/5 border-black/10 hover:border-red-500/50 hover:bg-black/10'
                   }`}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                    {item.svg}
+                  <div>
+                    <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      {item.svg}
+                    </div>
+                    <h3 className="text-base font-semibold mb-1.5 group-hover:text-red-500 transition-colors">{item.title}</h3>
+                    <p className="text-xs opacity-75 leading-relaxed font-light">{item.desc}</p>
                   </div>
-                  <h3 className="text-sm font-semibold mb-1 group-hover:text-red-500 transition-colors">{item.title}</h3>
-                  <p className="text-[11px] opacity-75 leading-relaxed font-light">{item.desc}</p>
                 </motion.div>
               ))}
             </div>
