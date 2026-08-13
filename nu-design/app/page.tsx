@@ -25,22 +25,22 @@ const translations = {
     descubreMas: 'Descubre más',
     solucionesTitulo: 'Soluciones que',
     solucionesElevan: 'elevan tu marca',
-    nosotrosTag: '01',
+    nosotrosTag: 'SOBRE NOSOTROS',
     nosotrosTitulo: 'Diseño con propósito. Identidad con carácter.',
-    cotizaTag: '02',
+    cotizaTag: 'COTIZACIÓN',
     cotizaTitulo: '¿Tienes un proyecto en mente?',
     cotizaSub: 'Cotiza con nosotros.',
     cotizaDesc: 'Cuéntanos tu idea y recibe una propuesta personalizada y sin compromiso.',
     cotizaBtn: 'Solicitar cotización',
     cotizaDetail: 'Es rápido y sencillo',
-    contactoTag: '03',
+    contactoTag: 'CONTACTO',
     contactoTitulo: 'Conectemos con propósito',
     contactoDesc: '¿Tienes un proyecto en mente? Cuéntanos tu visión y la convertimos en una identidad visual que deja huella. Ya sea branding, packaging, producción gráfica o un desafío creativo fuera de lo común — estamos a un mensaje de distancia.',
     contactoSubDesc: 'Respondemos rápido, cotizamos claro, y trabajamos contigo hasta que tu marca se vea como merece.',
     contactoCTA: 'Escríbenos y empecemos.',
-    horarioTitle: 'Horario',
+    horarioTitle: 'HORARIO',
     horarioVal: 'Lun – Vie: 8:00 AM – 6:30 PM\nSáb: 8:00 AM – 12:00 PM',
-    ubicacionTitle: 'Ubicación',
+    ubicacionTitle: 'UBICACIÓN',
     ubicacionVal: 'República Dominicana'
   },
   EN: {
@@ -61,22 +61,22 @@ const translations = {
     descubreMas: 'Discover more',
     solucionesTitulo: 'Solutions that',
     solucionesElevan: 'elevate your brand',
-    nosotrosTag: '01',
+    nosotrosTag: 'ABOUT US',
     nosotrosTitulo: 'Design with purpose. Identity with character.',
-    cotizaTag: '02',
+    cotizaTag: 'QUOTE',
     cotizaTitulo: 'Have a project in mind?',
     cotizaSub: 'Get a quote with us.',
     cotizaDesc: 'Tell us your idea and receive a tailored, no-obligation proposal.',
     cotizaBtn: 'Request a quote',
     cotizaDetail: 'Fast and simple',
-    contactoTag: '03',
+    contactoTag: 'CONTACT',
     contactoTitulo: "Let's connect with purpose",
     contactoDesc: 'Have a project in mind? Share your vision and we will convert it into a lasting visual identity. Whether branding, packaging, print production or a creative challenge — we are just a message away.',
     contactoSubDesc: 'We reply fast, quote clearly, and work with you until your brand looks as it deserves.',
     contactoCTA: "Write us and let's start.",
-    horarioTitle: 'Hours',
+    horarioTitle: 'HOURS',
     horarioVal: 'Mon – Fri: 8:00 AM – 6:30 PM\nSat: 8:00 AM – 12:00 PM',
-    ubicacionTitle: 'Location',
+    ubicacionTitle: 'LOCATION',
     ubicacionVal: 'Dominican Republic'
   },
   FR: {
@@ -97,22 +97,22 @@ const translations = {
     descubreMas: 'Découvrir plus',
     solucionesTitulo: 'Des solutions qui',
     solucionesElevan: 'élèvent votre marque',
-    nosotrosTag: '01',
+    nosotrosTag: 'À PROPOS DE NOUS',
     nosotrosTitulo: 'Design avec objectif. Identité avec caractère.',
-    cotizaTag: '02',
+    cotizaTag: 'DEVIS',
     cotizaTitulo: 'Un projet en tête ?',
     cotizaSub: 'Obtenez un devis avec nous.',
     cotizaDesc: 'Racontez-nous votre idée et recevez une proposition personnalisée et sans engagement.',
     cotizaBtn: 'Demander un devis',
     cotizaDetail: 'Rapide et simple',
-    contactoTag: '03',
+    contactoTag: 'CONTACT',
     contactoTitulo: 'Connectons-nous avec objectif',
     contactoDesc: 'Un projet en tête ? Partagez votre vision et nous la transformerons en une identité visuelle marquante. Branding, packaging, production graphique ou défi créatif — nous sommes à un message.',
     contactoSubDesc: 'Réponse rapide, devis clair, nous travaillons avec vous jusqu’à ce que votre marque brille.',
     contactoCTA: 'Écrivez-nous et commençons.',
-    horarioTitle: 'Horaires',
+    horarioTitle: 'HORAIRES',
     horarioVal: 'Lun – Ven: 8:00 – 18:30\nSam: 8:00 – 12:00',
-    ubicacionTitle: 'Emplacement',
+    ubicacionTitle: 'EMPLACEMENT',
     ubicacionVal: 'République Dominicaine'
   }
 };
@@ -233,24 +233,46 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
+      {/* FONDO CINEMÁTICO LIQUID AMBIENT GLOW (CON CLASES CANÓNICAS TAILWIND) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {theme === 'dark' ? (
+          <>
+            <div className="absolute top-10 left-1/2 -translate-x-1/2 w-200 h-125 bg-red-600/15 rounded-full blur-[180px]"></div>
+            <div className="absolute top-[40%] right-[-25] w-125 h-125 bg-red-900/10 rounded-full blur-[160px]"></div>
+          </>
+        ) : (
+          <div className="absolute top-10 left-1/2 -translate-x-1/2 w-200 h-125 bg-orange-200/40 rounded-full blur-[160px]"></div>
+        )}
+      </div>
+
       {/* Top Navigation Bar */}
       <motion.header 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full px-5 md:px-10 py-5 flex items-center justify-between z-40 sticky top-0 backdrop-blur-2xl border-b border-white/5"
+        className="w-full px-6 md:px-12 py-5 flex items-center justify-between z-40 sticky top-0 backdrop-blur-2xl border-b border-white/10"
       >
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-4">
           <WordmarkLogo className="h-6 md:h-8 w-auto" />
 
-          <nav className="hidden md:flex items-center space-x-3 text-sm font-medium ml-6">
-            <Link href="/" className={`px-4 py-2 rounded-full transition-all ${
-              theme === 'dark' ? 'bg-white/10 text-white font-semibold' : 'bg-black/10 text-zinc-900 font-semibold'
-            }`}>{t.inicio}</Link>
-            <Link href="/portafolio" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.portafolio}</Link>
-            <Link href="/contratar" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.contratar}</Link>
-            <Link href="/contacto" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.contacto}</Link>
-            <Link href="/utilidades" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.utilidades}</Link>
+          <nav className="hidden md:flex items-center space-x-2 text-sm font-medium ml-8">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/" className={`px-4 py-2 rounded-full transition-all ${
+                theme === 'dark' ? 'bg-white/10 text-white font-semibold border border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-black/10 text-zinc-900 font-semibold'
+              }`}>{t.inicio}</Link>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/portafolio" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.portafolio}</Link>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/contratar" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.contratar}</Link>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/contacto" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.contacto}</Link>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/utilidades" className="px-4 py-2 rounded-full opacity-70 hover:opacity-100 transition-all">{t.utilidades}</Link>
+            </motion.div>
           </nav>
         </div>
 
@@ -299,13 +321,15 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          {/* Botón Cotización */}
+          {/* Botón Cotización Header */}
           <Link href="/cotizacion" className="hidden sm:block">
-            <button className={`px-6 py-2 rounded-full text-xs uppercase tracking-widest font-semibold transition-all border ${
-              theme === 'dark' ? 'border-white/20 text-white hover:border-red-500' : 'bg-red-600 border-red-600 text-white hover:bg-red-700'
-            }`}>
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-2 rounded-full text-xs uppercase tracking-widest font-semibold transition-all border border-white/20 hover:border-red-500 text-white backdrop-blur-xl bg-white/5"
+            >
               {t.cotizacion}
-            </button>
+            </motion.button>
           </Link>
 
           <button 
@@ -378,81 +402,90 @@ export default function Home() {
         <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
       </motion.div>
 
-      {/* 3. HERO PRINCIPAL COMMERCIAL */}
-      <section className="w-full max-w-7xl mx-auto px-6 py-12 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10">
+      {/* HERO PRINCIPAL COMMERCIAL FULL-BLEED */}
+      <section className="w-full max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10">
         
         {/* Columna Izquierda - Textos y CTAs */}
         <div className="lg:col-span-6 space-y-8 text-left">
-          <div className="space-y-4">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1]">
+          <div className="space-y-5">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08]">
               Identidades que <br />
-              <span className="text-red-600">dejan huella.</span>
+              <span className="text-red-600 drop-shadow-[0_0_25px_rgba(239,68,68,0.4)]">dejan huella.</span>
             </h1>
-            <p className={`text-sm sm:text-base font-light leading-relaxed max-w-xl ${
+            <p className={`text-base sm:text-lg font-light leading-relaxed max-w-xl ${
               theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'
             }`}>
               {t.heroTagline}
             </p>
           </div>
 
-          {/* Botones de Acción Principales */}
+          {/* Botones de Acción Principales con Vida */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
             
-            {/* WhatsApp CTA (Primer Nivel Jerárquico) */}
-            <a 
+            {/* WhatsApp CTA (Rojo Vivo) */}
+            <motion.a 
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.96 }}
               href="https://wa.me/18294608316" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="bg-red-600 hover:bg-red-700 text-white px-7 py-4 rounded-2xl shadow-xl flex items-center space-x-3 group transition-all"
+              className="bg-red-600 hover:bg-red-700 text-white px-8 py-4.5 rounded-2xl shadow-[0_0_30px_rgba(239,68,68,0.4)] flex items-center space-x-4 transition-all"
             >
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
                 <svg className="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
                   <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
                 </svg>
               </div>
               <div className="text-left">
-                <span className="block text-xs font-bold uppercase tracking-wider">WhatsApp</span>
-                <span className="block text-[11px] opacity-80 font-light">{t.whatsappBtn}</span>
+                <span className="block text-xs font-extrabold uppercase tracking-wider">WhatsApp</span>
+                <span className="block text-[11px] opacity-90 font-light">{t.whatsappBtn}</span>
               </div>
-            </a>
+            </motion.a>
 
-            {/* Cotización CTA (Segundo Nivel Jerárquico) */}
-            <Link 
-              href="/cotizacion"
-              className={`border px-7 py-4 rounded-2xl flex items-center space-x-3 transition-all ${
-                theme === 'dark' ? 'border-white/20 bg-white/5 hover:border-red-500' : 'border-black/20 bg-black/5 hover:border-red-600'
-              }`}
-            >
-              <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center">
-                <svg className="w-5 h-5 text-red-500 fill-current" viewBox="0 0 24 24">
-                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2z"/>
-                </svg>
-              </div>
-              <div className="text-left">
-                <span className="block text-xs font-bold uppercase tracking-wider">{t.cotizacion}</span>
-                <span className="block text-[11px] opacity-80 font-light">{t.cotizacionBtn}</span>
-              </div>
-            </Link>
+            {/* Cotización CTA (Glass Minimal) */}
+            <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.96 }}>
+              <Link 
+                href="/cotizacion"
+                className={`border px-8 py-4.5 rounded-2xl flex items-center space-x-4 transition-all backdrop-blur-xl ${
+                  theme === 'dark' ? 'border-white/20 bg-white/5 hover:border-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]' : 'border-black/20 bg-black/5 hover:border-red-600'
+                }`}
+              >
+                <div className="w-9 h-9 rounded-full bg-red-500/10 flex items-center justify-center">
+                  <svg className="w-5 h-5 text-red-500 fill-current" viewBox="0 0 24 24">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2z"/>
+                  </svg>
+                </div>
+                <div className="text-left">
+                  <span className="block text-xs font-extrabold uppercase tracking-wider">{t.cotizacion}</span>
+                  <span className="block text-[11px] opacity-80 font-light">{t.cotizacionBtn}</span>
+                </div>
+              </Link>
+            </motion.div>
 
           </div>
 
           {/* Checks de Confianza */}
-          <div className="flex items-center flex-wrap gap-6 pt-4 text-xs font-medium opacity-80">
-            <span className="flex items-center gap-1.5">
-              <span className="text-red-500">✓</span> {t.check1}
+          <div className="flex items-center flex-wrap gap-6 pt-2 text-xs font-medium opacity-80">
+            <span className="flex items-center gap-2">
+              <span className="text-red-500 font-bold">✓</span> {t.check1}
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="text-red-500">✓</span> {t.check2}
+            <span className="flex items-center gap-2">
+              <span className="text-red-500 font-bold">✓</span> {t.check2}
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="text-red-500">✓</span> {t.check3}
+            <span className="flex items-center gap-2">
+              <span className="text-red-500 font-bold">✓</span> {t.check3}
             </span>
           </div>
         </div>
 
-        {/* Columna Derecha - Mockup Adaptativo */}
+        {/* Columna Derecha - Mockup Grande Protagonista */}
         <div className="lg:col-span-6 relative flex items-center justify-center">
-          <div className="relative w-full max-w-lg aspect-4/3 rounded-3xl overflow-hidden shadow-2xl">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="relative w-full h-112.5 sm:h-137.5 rounded-3xl overflow-hidden shadow-2xl"
+          >
             <Image 
               src={theme === 'dark' ? '/mockup-dark.png' : '/mockup-light.png'}
               alt="NU-Design Portfolio Mockup"
@@ -460,15 +493,15 @@ export default function Home() {
               className="object-contain"
               priority
             />
-          </div>
+          </motion.div>
         </div>
 
       </section>
 
-      {/* 5. SECCIÓN DE SERVICIOS PRINCIPALES */}
-      <section className="w-full max-w-7xl mx-auto px-6 py-12 z-10">
-        <div className={`p-8 md:p-12 rounded-3xl border shadow-2xl ${
-          theme === 'dark' ? 'bg-zinc-900/40 border-white/10' : 'bg-white/80 border-black/10'
+      {/* SECCIÓN DE SERVICIOS PRINCIPALES */}
+      <section className="w-full max-w-7xl mx-auto px-6 md:px-12 py-12 z-10">
+        <div className={`p-8 md:p-12 rounded-3xl border backdrop-blur-2xl shadow-2xl ${
+          theme === 'dark' ? 'bg-zinc-900/50 border-white/10' : 'bg-white/80 border-black/10'
         }`}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
             
@@ -476,20 +509,24 @@ export default function Home() {
             <div className="md:col-span-4 text-left border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8">
               <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
                 {t.solucionesTitulo} <br />
-                <span className="text-red-600">{t.solucionesElevan}</span>
+                <span className="text-red-600 drop-shadow-[0_0_15px_rgba(239,68,68,0.3)]">{t.solucionesElevan}</span>
               </h2>
             </div>
 
             {/* Cuadrícula de 4 Servicios */}
             <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
               {serviciosData.map((item, idx) => (
-                <div key={idx} className="space-y-2 group cursor-pointer">
-                  <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <motion.div 
+                  key={idx} 
+                  whileHover={{ y: -4 }}
+                  className="space-y-2.5 p-4 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-3">
                     {item.svg}
                   </div>
                   <h3 className="text-base font-bold">{item.title}</h3>
                   <p className="text-xs opacity-75 leading-relaxed font-light">{item.desc}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
 
@@ -497,12 +534,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. FRANJA 01 — SOBRE NOSOTROS */}
-      <section className="w-full max-w-7xl mx-auto px-6 py-16 z-10">
+      {/* FRANJA 01 — SOBRE NOSOTROS */}
+      <section className="w-full max-w-7xl mx-auto px-6 md:px-12 py-16 z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Fotografía a la Izquierda */}
-          <div className="lg:col-span-5 relative w-full aspect-4/3 md:aspect-square rounded-3xl overflow-hidden shadow-2xl">
+          <div className="lg:col-span-5 relative w-full h-100 md:h-125 rounded-3xl overflow-hidden shadow-2xl border border-white/10">
             <Image 
               src="/fotochica.jpg" 
               alt="Sobre NuDesign"
@@ -513,10 +550,7 @@ export default function Home() {
 
           {/* Contenido Editorial a la Derecha */}
           <div className="lg:col-span-7 text-left space-y-6">
-            <span className="text-xs font-mono font-bold text-red-600 tracking-widest uppercase">
-              {t.nosotrosTag} — SOBRE NOSOTROS
-            </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
               {t.nosotrosTitulo}
             </h2>
 
@@ -532,7 +566,7 @@ export default function Home() {
               </p>
             </div>
 
-            <p className="text-xs font-semibold text-red-500 tracking-wider pt-2">
+            <p className="text-sm font-extrabold text-red-500 tracking-wider pt-2">
               NuDesign — Alta gama en cada detalle.
             </p>
           </div>
@@ -540,16 +574,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. FRANJA 02 — COTIZACIÓN */}
-      <section className="w-full max-w-7xl mx-auto px-6 py-12 z-10">
-        <div className={`p-8 md:p-12 rounded-3xl border shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 text-left ${
-          theme === 'dark' ? 'bg-gradient-to-r from-red-950/40 via-zinc-900/60 to-zinc-900/40 border-red-500/20' : 'bg-white border-zinc-200'
+      {/* FRANJA 02 — COTIZACIÓN */}
+      <section className="w-full max-w-7xl mx-auto px-6 md:px-12 py-12 z-10">
+        <div className={`p-8 md:p-14 rounded-3xl border shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 text-left ${
+          theme === 'dark' ? 'bg-linear-to-r from-red-950/40 via-zinc-900/60 to-zinc-900/40 border-red-500/20' : 'bg-white border-zinc-200'
         }`}>
           <div className="space-y-3 max-w-xl">
-            <span className="text-xs font-mono font-bold text-red-600 tracking-widest uppercase">
-              {t.cotizaTag} — COTIZACIÓN
-            </span>
-            <h2 className="text-2xl md:text-4xl font-extrabold tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">
               {t.cotizaTitulo} <br />
               <span className="text-red-600">{t.cotizaSub}</span>
             </h2>
@@ -559,27 +590,26 @@ export default function Home() {
           </div>
 
           <div>
-            <Link 
-              href="/cotizacion"
-              className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl text-xs uppercase tracking-widest font-bold shadow-xl flex items-center space-x-3 transition-all"
-            >
-              <span>{t.cotizaBtn}</span>
-              <span>→</span>
-            </Link>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link 
+                href="/cotizacion"
+                className="bg-red-600 hover:bg-red-700 text-white px-9 py-5 rounded-2xl text-xs uppercase tracking-widest font-extrabold shadow-[0_0_30px_rgba(239,68,68,0.4)] flex items-center space-x-3 transition-all"
+              >
+                <span>{t.cotizaBtn}</span>
+                <span>→</span>
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* 8. FRANJA 03 — CONTACTO */}
-      <section className="w-full max-w-7xl mx-auto px-6 py-16 z-10">
+      {/* FRANJA 03 — CONTACTO */}
+      <section className="w-full max-w-7xl mx-auto px-6 md:px-12 py-16 z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start text-left">
           
           {/* Columna Texto Contacto */}
           <div className="lg:col-span-6 space-y-6">
-            <span className="text-xs font-mono font-bold text-red-600 tracking-widest uppercase">
-              {t.contactoTag} — CONTACTO
-            </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
               {t.contactoTitulo}
             </h2>
             <p className="text-xs md:text-sm opacity-80 font-light leading-relaxed">
@@ -594,7 +624,7 @@ export default function Home() {
                 href="https://wa.me/18294608316" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-block text-red-600 font-bold text-sm hover:underline tracking-wider"
+                className="inline-block text-red-600 font-extrabold text-base hover:underline tracking-wider"
               >
                 {t.contactoCTA}
               </a>
@@ -602,33 +632,33 @@ export default function Home() {
           </div>
 
           {/* Columna Tarjeta de Datos */}
-          <div className={`lg:col-span-6 p-8 rounded-3xl border shadow-2xl space-y-6 ${
+          <div className={`lg:col-span-6 p-8 md:p-10 rounded-3xl border shadow-2xl space-y-6 backdrop-blur-2xl ${
             theme === 'dark' ? 'bg-zinc-900/60 border-white/10' : 'bg-white border-zinc-200'
           }`}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               
               {/* WhatsApp */}
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-bold text-red-500 block">WhatsApp</span>
-                <span className="text-xs font-medium block">+1 (829) 123-4567</span>
+              <div className="space-y-1.5">
+                <span className="text-[10px] uppercase font-bold text-red-500 tracking-widest block">WhatsApp</span>
+                <span className="text-sm font-semibold block">+1 (829) 123-4567</span>
               </div>
 
               {/* Correo */}
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-bold text-red-500 block">Correo</span>
-                <span className="text-xs font-medium block">hola@nudesign.com</span>
+              <div className="space-y-1.5">
+                <span className="text-[10px] uppercase font-bold text-red-500 tracking-widest block">Correo</span>
+                <span className="text-sm font-semibold block">hola@nudesign.com</span>
               </div>
 
               {/* Ubicación */}
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-bold text-red-500 block">{t.ubicacionTitle}</span>
-                <span className="text-xs font-medium block">{t.ubicacionVal}</span>
+              <div className="space-y-1.5">
+                <span className="text-[10px] uppercase font-bold text-red-500 tracking-widest block">{t.ubicacionTitle}</span>
+                <span className="text-sm font-semibold block">{t.ubicacionVal}</span>
               </div>
 
               {/* Horario */}
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-bold text-red-500 block">{t.horarioTitle}</span>
-                <span className="text-xs font-medium block whitespace-pre-line">{t.horarioVal}</span>
+              <div className="space-y-1.5">
+                <span className="text-[10px] uppercase font-bold text-red-500 tracking-widest block">{t.horarioTitle}</span>
+                <span className="text-xs font-semibold block whitespace-pre-line leading-normal">{t.horarioVal}</span>
               </div>
 
             </div>
@@ -640,31 +670,27 @@ export default function Home() {
       {/* Footer Unificado Completo */}
       <Footer />
 
-      {/* 9. FLOATING CHAT BUTTON ("Escribe ahora") */}
+      {/* FLOATING CHAT BUTTON ("Escribe ahora") */}
       <motion.div 
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.8, type: "spring", stiffness: 200 }}
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-30"
+        className="fixed bottom-6 right-6 z-30"
       >
         <motion.a 
-          whileHover={{ scale: 1.08 }}
+          whileHover={{ scale: 1.08, y: -2 }}
           whileTap={{ scale: 0.95 }}
           href="https://wa.me/18294608316" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className={`backdrop-blur-3xl border px-5 md:px-6 py-3 md:py-3.5 rounded-full flex items-center space-x-3 shadow-2xl hover:border-red-500/60 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all group ${
-            theme === 'dark'
-              ? 'bg-red-600 border-red-500 text-white'
-              : 'bg-red-600 border-red-500 text-white'
-          }`}
+          className="bg-red-600 text-white px-6 py-3.5 rounded-full flex items-center space-x-3 shadow-[0_0_30px_rgba(239,68,68,0.5)] hover:bg-red-700 transition-all border border-red-500"
         >
-          <div className="w-5 h-5 md:w-6 md:h-6 flex items-center justify-center">
+          <div className="w-5 h-5 flex items-center justify-center">
             <svg className="w-full h-full fill-current text-white" viewBox="0 0 24 24">
               <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z" />
             </svg>
           </div>
-          <span className="text-xs md:text-sm font-bold tracking-wide">{t.chat}</span>
+          <span className="text-xs md:text-sm font-extrabold tracking-wide">{t.chat}</span>
         </motion.a>
       </motion.div>
 
