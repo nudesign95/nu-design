@@ -17,7 +17,7 @@ const translations = {
     cotizacion: 'Cotización',
     searchPlaceholder: 'Hola, necesito...',
     rights: 'Nu-Design Derechos reservados 2026 - Design by Garic Edume',
-    chat: 'Chat now'
+    chat: 'Escribe ahora'
   },
   EN: {
     inicio: 'home',
@@ -29,7 +29,7 @@ const translations = {
     cotizacion: 'Quote',
     searchPlaceholder: 'Hello, I need...',
     rights: 'Nu-Design All rights reserved 2026 - Design by Garic Edume',
-    chat: 'Chat now'
+    chat: 'Write now'
   },
   FR: {
     inicio: 'accueil',
@@ -41,7 +41,7 @@ const translations = {
     cotizacion: 'Devis',
     searchPlaceholder: 'Bonjour, j\'ai besoin...',
     rights: 'Nu-Design Tous droits réservés 2026 - Design by Garic Edume',
-    chat: 'Discuter'
+    chat: 'Écrivez ahora'
   }
 };
 
@@ -216,10 +216,10 @@ export default function Home() {
         className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40"
       >
         <div className="flex items-center space-x-3">
-  {/* Wordmark Adaptativo SVG para Móvil y Desktop */}
-  <WordmarkLogo className="h-6 md:h-8 w-auto" />
+          {/* Wordmark Adaptativo SVG para Móvil y Desktop */}
+          <WordmarkLogo className="h-6 md:h-8 w-auto" />
 
-  <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
+          <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
             {/* 1. Botón INICIO */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link 
