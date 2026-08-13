@@ -14,18 +14,7 @@ const translations = {
     contacto: 'contacto',
     utilidades: 'utilidades',
     whatsapp: 'Whatsapp',
-    whatsappDesc: 'Hablemos de tu proyecto',
     cotizacion: 'Cotización',
-    cotizacionDesc: 'Recibe tu propuesta',
-    heroTitle1: 'Identidades que',
-    heroTitle2: 'dejan huella.',
-    heroSubhead: 'Branding, packaging y diseño editorial de alta gama para marcas que quieren destacar en ',
-    heroSubheadBold1: 'República Dominicana',
-    heroSubheadAnd: ' y el ',
-    heroSubheadBold2: 'Caribe.',
-    indicator1: 'Diseño estratégico',
-    indicator2: 'Calidad premium',
-    indicator3: 'Atención personalizada',
     searchPlaceholder: 'Hola, necesito...',
     rights: 'Nu-Design Derechos reservados 2026 - Design by Garic Edume',
     chat: 'Escribe ahora',
@@ -43,18 +32,7 @@ const translations = {
     contacto: 'contact',
     utilidades: 'utilities',
     whatsapp: 'Whatsapp',
-    whatsappDesc: "Let's talk about your project",
     cotizacion: 'Quote',
-    cotizacionDesc: 'Get your proposal',
-    heroTitle1: 'Identities that',
-    heroTitle2: 'leave a mark.',
-    heroSubhead: 'High-end branding, packaging, and editorial design for brands looking to stand out in ',
-    heroSubheadBold1: 'Dominican Republic',
-    heroSubheadAnd: ' and the ',
-    heroSubheadBold2: 'Caribbean.',
-    indicator1: 'Strategic design',
-    indicator2: 'Premium quality',
-    indicator3: 'Personalized service',
     searchPlaceholder: 'Hello, I need...',
     rights: 'Nu-Design All rights reserved 2026 - Design by Garic Edume',
     chat: 'Write now',
@@ -72,18 +50,7 @@ const translations = {
     contacto: 'contact',
     utilidades: 'utilitaires',
     whatsapp: 'Whatsapp',
-    whatsappDesc: 'Parlons de votre projet',
     cotizacion: 'Devis',
-    cotizacionDesc: 'Recevez votre proposition',
-    heroTitle1: 'Des identités qui',
-    heroTitle2: 'marquent los esprits.',
-    heroSubhead: 'Branding, packaging et design éditorial haut de gamme pour les marques qui souhaitent se démarquer en ',
-    heroSubheadBold1: 'République Dominicaine',
-    heroSubheadAnd: ' et dans la ',
-    heroSubheadBold2: 'Caraïbe.',
-    indicator1: 'Design stratégique',
-    indicator2: 'Qualité premium',
-    indicator3: 'Service personnalisé',
     searchPlaceholder: 'Bonjour, j\'ai besoin...',
     rights: 'Nu-Design Tous droits réservés 2026 - Design by Garic Edume',
     chat: 'Écrivez ahora',
@@ -91,7 +58,7 @@ const translations = {
     solucionesElevan: 'élèvent votre marque',
     brandingDesc: 'Stratégie et identité visuelle qui connectent et positionnent votre marque.',
     produccionDesc: 'Design graphique numérique et imprimé à fort impact.',
-    packagingDesc: 'Des designs d\'emballage qui protègent, comuniquent et vendent.',
+    packagingDesc: 'Des designs d\'emballage qui protègent, communiquent et vendent.',
     webDesc: 'Sites web modernes, fonctionnels et alignés avec votre marque.'
   }
 };
@@ -278,7 +245,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* FONDO CINEMÁTICO APPLE STYLED CON LUZ AMBIENTAL ROJA Y GLOW EXTENDIDO */}
+      {/* FONDO CINEMÁTICO APPLE STYLED */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -287,13 +254,12 @@ export default function Home() {
       >
         {theme === 'dark' ? (
           <>
-            <div className="absolute top-1/4 right-[5%] w-150 md:w-225 h-150 md:h-225 bg-[radial-gradient(circle,rgba(220,38,38,0.22)_0%,transparent_65%)] rounded-full blur-[100px] md:blur-[160px]"></div>
-            <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-162.5 md:w-225 h-112.5 md:h-150 bg-linear-to-tr from-red-950/30 via-red-800/20 to-transparent rounded-full blur-[120px] md:blur-[180px] transform -rotate-12"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-162.5 md:w-225 h-112.5 md:h-150 bg-linear-to-tr from-red-950/45 via-red-800/25 to-red-600/10 rounded-full blur-[120px] md:blur-[180px] transform -rotate-12"></div>
+            <div className="absolute top-1/4 left-1/3 w-87.5 h-87.5 bg-red-900/15 rounded-full blur-[140px]"></div>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#040001_85%)]"></div>
           </>
         ) : (
           <>
-            <div className="absolute top-1/4 right-[5%] w-150 md:w-200 h-150 md:h-200 bg-[radial-gradient(circle,rgba(239,68,68,0.15)_0%,transparent_65%)] rounded-full blur-[90px] md:blur-[140px]"></div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 md:w-250 h-125 md:h-175 bg-linear-to-b from-white via-zinc-200/80 to-zinc-300/40 rounded-full blur-[100px] md:blur-[150px]"></div>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#d9d9d9_90%)]"></div>
           </>
@@ -531,269 +497,106 @@ export default function Home() {
         <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
       </motion.div>
 
-      {/* =========================================================================
-          NUEVO HERO SUPERIOR - REFINAMIENTO DE LAYOUT, ESCALA DE MOCKUP Y REFLEJO
-         ========================================================================= */}
-      <main className="w-full max-w-375 mx-auto px-6 sm:px-10 lg:px-12 my-auto z-10 py-6 md:py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-          
-          {/* COLUMNA IZQUIERDA: CONTENIDO COMPLETO (45% Ancho visual / 5 Cols en lg) */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 flex flex-col items-start text-left space-y-6 md:space-y-7 z-20"
-          >
-            {/* H1 Editorial Premium */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.08] font-sans">
-              <span>{t.heroTitle1}</span>
-              <br />
-              <span className="bg-linear-to-r from-red-500 via-red-600 to-red-400 bg-clip-text text-transparent font-bold">
-                {t.heroTitle2}
-              </span>
-            </h1>
+      {/* Main Hero Section - JERARQUÍA REFINADA */}
+      <main className="w-full max-w-5xl mx-auto px-4 flex flex-col items-center text-center my-auto z-10 space-y-5 md:space-y-7 py-4">
+        
+        {/* Icono superior PROTAGÓNICO Y GRANDE */}
+        <motion.div 
+          initial={{ scale: 0.8, opacity: 0, y: 15 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="relative group cursor-pointer w-28 h-28 md:w-36 md:h-36 flex items-center justify-center"
+        >
+          <Image 
+            src={theme === 'dark' ? '/icon-dark.svg' : '/icon-light.svg'} 
+            alt="NU-Design Icon" 
+            width={144} 
+            height={144} 
+            className="w-full h-full object-contain drop-shadow-[0_12px_30px_rgba(255,0,0,0.3)] transition-transform duration-500 group-hover:scale-105" 
+            priority
+          />
+        </motion.div>
 
-            {/* Subheadline / Subtítulo */}
-            <p className={`text-base sm:text-lg font-normal leading-relaxed max-w-xl ${
-              theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'
-            }`}>
-              {t.heroSubhead}
-              <strong className={theme === 'dark' ? 'text-white' : 'text-zinc-900'}>{t.heroSubheadBold1}</strong>
-              {t.heroSubheadAnd}
-              <strong className={theme === 'dark' ? 'text-white' : 'text-zinc-900'}>{t.heroSubheadBold2}</strong>
-            </p>
+        {/* Wordmark ELEGANTE Y AMPLIO */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="w-72 sm:w-88 md:w-md flex items-center justify-center"
+        >
+          <Image 
+            src={theme === 'dark' ? '/wordmark-dark.svg' : '/wordmark-light.svg'} 
+            alt="NU-Design Wordmark" 
+            width={440} 
+            height={110} 
+            className="w-full h-auto object-contain drop-shadow-lg" 
+            priority
+          />
+        </motion.div>
 
-            {/* BOTONES LIQUID GLASS DE ALTA GAMA */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full pt-1">
-              
-              {/* Primary CTA: WhatsApp Liquid Glass (Estilo idéntico a Cotización) */}
-<motion.a
-  whileHover={{ y: -2, scale: 1.02 }}
-  whileTap={{ scale: 0.98 }}
-  href="https://wa.me/18294608316"
-  target="_blank"
-  rel="noopener noreferrer"
-  className={`relative group flex items-center space-x-4 px-6 py-3.5 rounded-full backdrop-blur-2xl transition-all duration-300 border shadow-lg h-full ${
-    theme === 'dark'
-      ? 'bg-white/5 border-emerald-500/40 text-white hover:bg-white/10 hover:border-emerald-500/80 hover:shadow-[0_0_25px_rgba(16,185,129,0.3)]'
-      : 'bg-black/5 border-emerald-600/40 text-zinc-900 hover:bg-black/10 hover:border-emerald-600/80 hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]'
-  }`}
->
-  <div className={`w-9 h-9 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110 border ${
-    theme === 'dark' 
-      ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400' 
-      : 'bg-emerald-600/15 border-emerald-600/30 text-emerald-600'
-  }`}>
-    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-    </svg>
-  </div>
-  
-  <div className="flex flex-col text-left">
-    <span className="text-sm font-semibold leading-tight">{t.whatsapp}</span>
-    <span className={`text-[11px] font-normal opacity-80 ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'}`}>{t.whatsappDesc}</span>
-  </div>
-</motion.a>
+        {/* ICONOS INTERACTIVOS COMPACTOS (MÁS PEQUEÑOS QUE EL WORDMARK) */}
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.35 }}
+          className="flex items-center flex-wrap justify-center gap-2.5 sm:gap-4 md:gap-5 pt-1"
+        >
+          {serviceIcons.map((service, index) => (
+            <motion.button
+              key={index}
+              whileHover={{ scale: 1.12, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleServiceClick(service.name)}
+              title={service.name}
+              className={`w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-xl backdrop-blur-2xl border flex items-center justify-center transition-all group relative cursor-pointer ${
+                theme === 'dark'
+                  ? 'bg-white/10 border-white/15 text-white/90 hover:text-red-500 hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.35)]'
+                  : 'bg-black/5 border-black/10 text-zinc-800 hover:text-red-600 hover:border-red-500/60 hover:shadow-[0_0_15px_rgba(239,68,68,0.25)]'
+              }`}
+            >
+              {service.svg}
+            </motion.button>
+          ))}
+        </motion.div>
 
-              {/* Secondary CTA: Cotización Liquid Glass */}
-              <motion.div
-                whileHover={{ y: -2, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Link
-                  href="/cotizacion"
-                  className={`relative group flex items-center space-x-4 px-6 py-3.5 rounded-full backdrop-blur-2xl transition-all duration-300 border overflow-hidden shadow-lg h-full ${
-                    theme === 'dark'
-                      ? 'bg-white/5 border-white/15 text-white hover:bg-white/10 hover:border-white/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]'
-                      : 'bg-black/5 border-black/15 text-zinc-900 hover:bg-black/10 hover:border-black/30 hover:shadow-[0_0_20px_rgba(0,0,0,0.1)]'
-                  }`}
-                >
-                  <div className={`w-9 h-9 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110 border ${
-                    theme === 'dark' 
-                      ? 'bg-white/10 border-white/20 text-white' 
-                      : 'bg-black/5 border-black/10 text-zinc-900'
-                  }`}>
-                    <svg className="w-4 h-4 fill-none stroke-current" strokeWidth="1.8" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
+        {/* Buscador Interactivo con Lupa SVG Minimalista */}
+        <motion.form 
+          onSubmit={handleSearchSubmit}
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className={`w-full max-w-2xl backdrop-blur-3xl border rounded-full px-5 md:px-8 py-3 md:py-4 flex items-center justify-between shadow-2xl focus-within:border-red-500/60 focus-within:shadow-[0_0_30px_rgba(239,68,68,0.25)] transition-all duration-500 relative overflow-hidden ${
+            theme === 'dark'
+              ? 'bg-black/40 border-white/20 text-white'
+              : 'bg-white/60 border-black/15 text-zinc-900'
+          }`}
+        >
+          <input 
+            type="text" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={t.searchPlaceholder} 
+            className={`w-full bg-transparent border-none outline-none text-xs sm:text-sm md:text-base font-normal tracking-wide z-10 ${
+              theme === 'dark' 
+                ? 'placeholder-zinc-400 text-white' 
+                : 'placeholder-zinc-600 text-zinc-900'
+            }`} 
+          />
+          <button type="submit" className="text-zinc-300 hover:text-red-500 transition-colors ml-3 cursor-pointer z-10" title="Buscar servicio">
+            <svg className="w-5 h-5 md:w-6 md:h-6 stroke-current fill-none" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+          </button>
+        </motion.form>
 
-                  <div className="flex flex-col text-left">
-                    <span className="text-sm font-semibold leading-tight">{t.cotizacion}</span>
-                    <span className={`text-[11px] font-normal opacity-80 ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'}`}>{t.cotizacionDesc}</span>
-                  </div>
-                </Link>
-              </motion.div>
-
-            </div>
-
-            {/* INDICADORES / INTERACTIVE HINTS DEBAJO DE LOS CTA */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-5 pt-2">
-              
-              {/* Hint 1 */}
-              <motion.div 
-                whileHover={{ x: 3 }}
-                className="flex items-center space-x-2 text-xs font-medium transition-colors group cursor-default"
-              >
-                <div className="w-4.5 h-4.5 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
-                  <svg className="w-2.5 h-2.5 fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
-                </div>
-                <span className={theme === 'dark' ? 'text-zinc-300 group-hover:text-white' : 'text-zinc-700 group-hover:text-black'}>
-                  {t.indicator1}
-                </span>
-              </motion.div>
-
-              {/* Hint 2 */}
-              <motion.div 
-                whileHover={{ x: 3 }}
-                className="flex items-center space-x-2 text-xs font-medium transition-colors group cursor-default"
-              >
-                <div className="w-4.5 h-4.5 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
-                  <svg className="w-2.5 h-2.5 fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                </div>
-                <span className={theme === 'dark' ? 'text-zinc-300 group-hover:text-white' : 'text-zinc-700 group-hover:text-black'}>
-                  {t.indicator2}
-                </span>
-              </motion.div>
-
-              {/* Hint 3 */}
-              <motion.div 
-                whileHover={{ x: 3 }}
-                className="flex items-center space-x-2 text-xs font-medium transition-colors group cursor-default"
-              >
-                <div className="w-4.5 h-4.5 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
-                  <svg className="w-2.5 h-2.5 fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0" />
-                  </svg>
-                </div>
-                <span className={theme === 'dark' ? 'text-zinc-300 group-hover:text-white' : 'text-zinc-700 group-hover:text-black'}>
-                  {t.indicator3}
-                </span>
-              </motion.div>
-
-            </div>
-
-            {/* BUSCADOR INTERACTIVO & ICONOS DE SERVICIO */}
-            <div className="w-full pt-3 space-y-3.5">
-              
-              {/* Iconos interactivos de servicios */}
-              <div className="flex items-center flex-wrap gap-2 sm:gap-2.5">
-                {serviceIcons.map((service, index) => (
-                  <motion.button
-                    key={index}
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleServiceClick(service.name)}
-                    title={service.name}
-                    className={`w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 rounded-xl backdrop-blur-2xl border flex items-center justify-center transition-all group relative cursor-pointer ${
-                      theme === 'dark'
-                        ? 'bg-white/10 border-white/15 text-white/90 hover:text-red-500 hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.35)]'
-                        : 'bg-black/5 border-black/10 text-zinc-800 hover:text-red-600 hover:border-red-500/60 hover:shadow-[0_0_15px_rgba(239,68,68,0.25)]'
-                    }`}
-                  >
-                    {service.svg}
-                  </motion.button>
-                ))}
-              </div>
-
-              {/* Formulario / Input de Búsqueda */}
-              <form 
-                onSubmit={handleSearchSubmit}
-                className={`w-full backdrop-blur-3xl border rounded-full px-4.5 py-2.5 flex items-center justify-between shadow-xl focus-within:border-red-500/60 focus-within:shadow-[0_0_30px_rgba(239,68,68,0.25)] transition-all duration-500 relative overflow-hidden ${
-                  theme === 'dark'
-                    ? 'bg-black/40 border-white/20 text-white'
-                    : 'bg-white/60 border-black/15 text-zinc-900'
-                }`}
-              >
-                <input 
-                  type="text" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={t.searchPlaceholder} 
-                  className={`w-full bg-transparent border-none outline-none text-xs sm:text-sm font-normal tracking-wide z-10 ${
-                    theme === 'dark' 
-                      ? 'placeholder-zinc-400 text-white' 
-                      : 'placeholder-zinc-600 text-zinc-900'
-                  }`} 
-                />
-                <button type="submit" className="text-zinc-300 hover:text-red-500 transition-colors ml-3 cursor-pointer z-10" title="Buscar servicio">
-                  <svg className="w-4.5 h-4.5 stroke-current fill-none" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                  </svg>
-                </button>
-              </form>
-
-              {/* Etiquetas Rápidas */}
-              <div className={`w-full text-[10px] sm:text-xs font-light leading-relaxed ${
-                theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
-              }`}>
-                <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Branding")}>Branding</span> • <span>PNG</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Logotipos")}>Logotipos</span> • <span>Creatividad</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("UX/UI")}>UX/UI</span> • <span>PDF</span> • <span>Diseño Editorial</span> • <span>RGB</span> • 
-                <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors ml-1" onClick={() => handleServiceClick("Landing Page")}>Landing Page</span> • <span>Vectorización</span> • <span>Calidad Premium</span> • <span>SVG</span> • <span>Flyers</span> • <span>AI</span>
-              </div>
-
-            </div>
-
-          </motion.div>
-
-          {/* COLUMNA DERECHA: MOCKUP PROTAGONISTA CON SOMBRA DE CONTACTO REALISTA Y REFLEJO */}
-<motion.div 
-  initial={{ opacity: 0, scale: 0.94, x: 20 }}
-  animate={{ opacity: 1, scale: 1, x: 0 }}
-  transition={{ duration: 1.2, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-  className="lg:col-span-7 flex flex-col items-center justify-center relative group w-full pl-0 lg:pl-6"
->
-  {/* 1. Luz Ambiental Roja de Fondo */}
-  <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] rounded-full blur-3xl transition-opacity duration-700 pointer-events-none ${
-    theme === 'dark'
-      ? 'bg-[radial-gradient(circle,rgba(220,38,38,0.22)_0%,transparent_70%)] opacity-90 group-hover:opacity-100'
-      : 'bg-[radial-gradient(circle,rgba(239,68,68,0.15)_0%,transparent_70%)] opacity-70 group-hover:opacity-90'
-  }`}></div>
-
-  {/* 2. Contenedor Principal del Mockup */}
-  <div className="relative w-full max-w-170 xl:max-w-190 aspect-4/3 flex items-center justify-center z-10">
-    <Image 
-      src={theme === 'dark' ? '/mockup-dark.png' : '/mockup-light.png'} 
-      alt="NU-Design Premium Showcase" 
-      fill
-      sizes="(max-width: 1024px) 100vw, 55vw"
-      className="object-contain transition-transform duration-700 hover:scale-[1.015]" 
-      priority
-    />
-  </div>
-
-  {/* 3. SOMBRA DE CONTACTO REALISTA (Avoid Floating Effect) */}
-  <div className={`w-full max-w-160 xl:max-w-180 h-5 -mt-6 sm:-mt-8 rounded-[100%] blur-md pointer-events-none z-10 transition-opacity ${
-    theme === 'dark'
-      ? 'bg-black/90 shadow-[0_10px_25px_rgba(0,0,0,0.95)]'
-      : 'bg-zinc-950/30 shadow-[0_10px_20px_rgba(0,0,0,0.25)]'
-  }`}></div>
-
-  {/* 4. REFLEJO SUAVE EN SUELO DE ESTUDIO (STUDIO FLOOR REFLECTION) */}
-  <div className="relative w-full max-w-170 xl:max-w-190 h-20 sm:h-28 -mt-4 overflow-hidden pointer-events-none opacity-25 dark:opacity-30 blur-[5px] select-none z-0">
-    <div className="relative w-full h-full transform scale-y-[-1]">
-      <Image 
-        src={theme === 'dark' ? '/mockup-dark.png' : '/mockup-light.png'} 
-        alt="Mockup Floor Reflection" 
-        fill
-        sizes="(max-width: 1024px) 100vw, 55vw"
-        className="object-contain" 
-      />
-    </div>
-    {/* Máscara de Degradado para que el reflejo se desvanezca naturalmente */}
-    <div className={`absolute inset-0 bg-linear-to-b ${
-      theme === 'dark'
-        ? 'from-transparent via-[#040001]/80 to-[#040001]'
-        : 'from-transparent via-[#e3e3e3]/80 to-[#e3e3e3]'
-    }`}></div>
-  </div>
-
-</motion.div>
-
+        {/* Bloque de Texto de Servicios */}
+        <div className={`w-full max-w-2xl text-[10px] sm:text-xs font-light leading-relaxed px-2 text-center pt-1 ${
+          theme === 'dark' ? 'text-zinc-300 opacity-80' : 'text-zinc-800 opacity-90'
+        }`}>
+          <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Branding")}>Branding</span> • <span>PNG</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Logotipos")}>Logotipos</span> • <span>Creatividad</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("UX/UI")}>UX/UI</span> • <span>PDF</span> • <span>Diseño Editorial</span> • <span>RGB</span> • 
+          <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors ml-1" onClick={() => handleServiceClick("Landing Page")}>Landing Page</span> • <span>Vectorización</span> • <span>Calidad Premium</span> • <span>SVG</span> • <span>Flyers</span> • <span>AI</span>
         </div>
+
       </main>
 
       {/* FASE 2: SECCIÓN DE SERVICIOS EN LÍNEA HORIZONTAL ANCHA (FULL HORIZONTAL ROW) */}
