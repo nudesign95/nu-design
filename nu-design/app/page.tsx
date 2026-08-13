@@ -34,23 +34,7 @@ const translations = {
     brandingDesc: 'Estrategia e identidad visual que conecta y posiciona tu marca.',
     produccionDesc: 'Diseño y piezas gráficas impresas y digitales de alto impacto.',
     packagingDesc: 'Diseños de empaque que protegen, comunican y venden.',
-    webDesc: 'Sitios web modernos, funcionales y alineados a tu marca.',
-    // Traducciones Sección Sobre Nosotros
-    aboutTag: '01 — SOBRE NOSOTROS',
-    aboutTitle1: 'Diseño con propósito.',
-    aboutTitle2: 'Identidad con ',
-    aboutTitle3: 'carácter.',
-    aboutP1: 'En NuDesign somos más que una agencia de diseño gráfico — somos arquitectos de identidad visual. Desde 2018, transformamos marcas en experiencias memorables a través de branding estratégico, packaging de lujo y producción gráfica de precisión.',
-    aboutP2: 'Cada proyecto nace de una premisa simple: el buen diseño no decora, comunica. Fusionamos la disciplina del minimalismo suizo con la sensibilidad del diseño japonés para crear identidades que no solo se ven bien — perduran.',
-    aboutP3: 'Trabajamos con marcas que entienden que su imagen es su primera promesa al mundo. Desde startups que buscan nacer con presencia dominante, hasta empresas consolidadas que necesitan reinventarse, cada trazo, cada paleta y cada pieza que entregamos está pensada para elevar tu marca al nivel que merece.',
-    aboutTagline: 'NuDesign — ',
-    aboutTaglineRed: 'Alta gama en cada detalle.',
-    aboutCard1Title: 'Desde 2018',
-    aboutCard1Desc: 'Experiencia que respalda resultados.',
-    aboutCard2Title: 'Diseño estratégico',
-    aboutCard2Desc: 'Soluciones que comunican, conectan y venden.',
-    aboutCard3Title: 'Marcas que confían',
-    aboutCard3Desc: 'Empresas que apuestan por la excelencia.'
+    webDesc: 'Sitios web modernos, funcionales y alineados a tu marca.'
   },
   EN: {
     inicio: 'home',
@@ -79,22 +63,7 @@ const translations = {
     brandingDesc: 'Strategy and visual identity that connects and positions your brand.',
     produccionDesc: 'High-impact print and digital graphic design.',
     packagingDesc: 'Packaging designs that protect, communicate and sell.',
-    webDesc: 'Modern, functional websites aligned with your brand.',
-    aboutTag: '01 — ABOUT US',
-    aboutTitle1: 'Design with purpose.',
-    aboutTitle2: 'Identity with ',
-    aboutTitle3: 'character.',
-    aboutP1: 'At NuDesign we are more than a graphic design agency — we are architects of visual identity. Since 2018, we transform brands into memorable experiences through strategic branding, luxury packaging, and precision graphic production.',
-    aboutP2: 'Every project stems from a simple premise: good design does not decorate, it communicates. We merge the discipline of Swiss minimalism with the sensitivity of Japanese design to create identities that not only look good — they endure.',
-    aboutP3: 'We work with brands that understand their image is their first promise to the world. From startups looking to be born with a dominant presence to established companies needing to reinvent themselves, every stroke, palette, and piece we deliver is designed to elevate your brand to the level it deserves.',
-    aboutTagline: 'NuDesign — ',
-    aboutTaglineRed: 'High-end in every detail.',
-    aboutCard1Title: 'Since 2018',
-    aboutCard1Desc: 'Experience backing solid results.',
-    aboutCard2Title: 'Strategic design',
-    aboutCard2Desc: 'Solutions that communicate, connect and sell.',
-    aboutCard3Title: 'Trusted brands',
-    aboutCard3Desc: 'Companies betting on excellence.'
+    webDesc: 'Modern, functional websites aligned with your brand.'
   },
   FR: {
     inicio: 'accueil',
@@ -123,22 +92,7 @@ const translations = {
     brandingDesc: 'Stratégie et identité visuelle qui connectent et positionnent votre marque.',
     produccionDesc: 'Design graphique numérique et imprimé à fort impact.',
     packagingDesc: 'Des designs d\'emballage qui protègent, comuniquent et vendent.',
-    webDesc: 'Sites web modernes, fonctionnels et alignés avec votre marque.',
-    aboutTag: '01 — À PROPOS DE NOUS',
-    aboutTitle1: 'Design avec un propósito.',
-    aboutTitle2: 'Identité avec du ',
-    aboutTitle3: 'caractère.',
-    aboutP1: 'Chez NuDesign, nous sommes plus qu’une agence de design graphique — nous sommes des architectes d’identité visuelle. Depuis 2018, nous transformons les marques en expériences mémorables.',
-    aboutP2: 'Chaque projet naît d’une prémisse simple: le bon design ne décore pas, il communique. Nous fusionnons le minimalisme suisse et la sensibilité du design japonais.',
-    aboutP3: 'Nous travaillons avec des marques qui comprennent que leur image est leur première promesse au monde. Chaque trait y chaque pièce sont conçus pour élever votre marque.',
-    aboutTagline: 'NuDesign — ',
-    aboutTaglineRed: 'Haut de gamme dans chaque détail.',
-    aboutCard1Title: 'Depuis 2018',
-    aboutCard1Desc: 'Une expérience qui garantit des résultats.',
-    aboutCard2Title: 'Design stratégique',
-    aboutCard2Desc: 'Des solutions qui communiquent et vendent.',
-    aboutCard3Title: 'Marques de confiance',
-    aboutCard3Desc: 'Des entreprises qui parient sur l’excellence.'
+    webDesc: 'Sites web modernes, fonctionnels et alignés avec votre marque.'
   }
 };
 
@@ -578,12 +532,12 @@ export default function Home() {
       </motion.div>
 
       {/* =========================================================================
-          HERO SUPERIOR (MANTENIDO 100% INTACTO SIN MODIFICACIONES)
+          NUEVO HERO SUPERIOR - REFINAMIENTO DE LAYOUT, ESCALA DE MOCKUP Y REFLEJO
          ========================================================================= */}
       <main className="w-full max-w-375 mx-auto px-6 sm:px-10 lg:px-12 my-auto z-10 py-6 md:py-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           
-          {/* COLUMNA IZQUIERDA: CONTENIDO COMPLETO */}
+          {/* COLUMNA IZQUIERDA: CONTENIDO COMPLETO (45% Ancho visual / 5 Cols en lg) */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -612,24 +566,23 @@ export default function Home() {
             {/* BOTONES LIQUID GLASS DE ALTA GAMA */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full pt-1">
               
-              {/* Primary CTA: WhatsApp Liquid Glass (Estilo idéntico a Cotización) */}
+              {/* Primary CTA: WhatsApp Liquid Glass */}
               <motion.a
                 whileHover={{ y: -2, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 href="https://wa.me/18294608316"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`relative group flex items-center space-x-4 px-6 py-3.5 rounded-full backdrop-blur-2xl transition-all duration-300 border shadow-lg h-full ${
+                className={`relative group flex items-center space-x-4 px-6 py-3.5 rounded-full backdrop-blur-2xl transition-all duration-300 border overflow-hidden shadow-2xl ${
                   theme === 'dark'
-                    ? 'bg-white/5 border-emerald-500/40 text-white hover:bg-white/10 hover:border-emerald-500/80 hover:shadow-[0_0_25px_rgba(16,185,129,0.3)]'
-                    : 'bg-black/5 border-emerald-600/40 text-zinc-900 hover:bg-black/10 hover:border-emerald-600/80 hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]'
+                    ? 'bg-linear-to-r from-red-600/30 via-red-900/20 to-white/5 border-red-500/40 text-white hover:border-red-500/80 hover:shadow-[0_0_30px_rgba(239,68,68,0.45)]'
+                    : 'bg-linear-to-r from-red-500/20 via-red-100/40 to-white/60 border-red-500/50 text-zinc-900 hover:border-red-600 hover:shadow-[0_0_25px_rgba(239,68,68,0.35)]'
                 }`}
               >
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110 border ${
-                  theme === 'dark' 
-                    ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400' 
-                    : 'bg-emerald-600/15 border-emerald-600/30 text-emerald-600'
-                }`}>
+                {/* Glow ambiental interno del botón */}
+                <div className="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+
+                <div className="w-9 h-9 rounded-full bg-red-600/80 group-hover:bg-red-500 text-white flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg shrink-0">
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                     <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
                   </svg>
@@ -785,41 +738,34 @@ export default function Home() {
 
           </motion.div>
 
-          {/* COLUMNA DERECHA: MOCKUP PROTAGONISTA CON SOMBRA DE CONTACTO REALISTA Y REFLEJO */}
+          {/* COLUMNA DERECHA: MOCKUP PROTAGONISTA AMPLIADO CON REFLEJO SUTIL (55% Ancho visual / 7 Cols en lg) */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.94, x: 20 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             transition={{ duration: 1.2, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7 flex flex-col items-center justify-center relative group w-full pl-0 lg:pl-6"
           >
-            {/* 1. Luz Ambiental Roja de Fondo */}
+            {/* Luz Ambiental Roja y Sombra Difuminada de Fondo */}
             <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] rounded-full blur-3xl transition-opacity duration-700 pointer-events-none ${
               theme === 'dark'
                 ? 'bg-[radial-gradient(circle,rgba(220,38,38,0.22)_0%,transparent_70%)] opacity-90 group-hover:opacity-100'
                 : 'bg-[radial-gradient(circle,rgba(239,68,68,0.15)_0%,transparent_70%)] opacity-70 group-hover:opacity-90'
             }`}></div>
 
-            {/* 2. Contenedor Principal del Mockup */}
+            {/* Contenedor Principal del Mockup con Escala Aumentada (560px–720px en Desktop) */}
             <div className="relative w-full max-w-170 xl:max-w-190 aspect-4/3 flex items-center justify-center z-10">
               <Image 
                 src={theme === 'dark' ? '/mockup-dark.png' : '/mockup-light.png'} 
                 alt="NU-Design Premium Showcase" 
                 fill
                 sizes="(max-width: 1024px) 100vw, 55vw"
-                className="object-contain transition-transform duration-700 hover:scale-[1.015]" 
+                className="object-contain drop-shadow-[0_25px_60px_rgba(0,0,0,0.65)] transition-transform duration-700 hover:scale-[1.015]" 
                 priority
               />
             </div>
 
-            {/* 3. SOMBRA DE CONTACTO REALISTA EN LA BASE (ANCLAJE FÍSICO) */}
-            <div className={`w-full max-w-160 xl:max-w-180 h-5 -mt-6 sm:-mt-8 rounded-[100%] blur-md pointer-events-none z-10 transition-opacity ${
-              theme === 'dark'
-                ? 'bg-black/90 shadow-[0_10px_25px_rgba(0,0,0,0.95)]'
-                : 'bg-zinc-950/30 shadow-[0_10px_20px_rgba(0,0,0,0.25)]'
-            }`}></div>
-
-            {/* 4. REFLEJO EN SUELO DE ESTUDIO */}
-            <div className="relative w-full max-w-170 xl:max-w-190 h-20 sm:h-28 -mt-4 overflow-hidden pointer-events-none opacity-25 dark:opacity-30 blur-[5px] select-none z-0">
+            {/* EFECTO DE REFLEJO EN SUELO STUDIO (VERTICALLY FLIPPED & FADED) */}
+            <div className="relative w-full max-w-170 xl:max-w-190 h-24 sm:h-32 -mt-8 sm:-mt-12 overflow-hidden pointer-events-none opacity-20 dark:opacity-25 blur-[6px] select-none z-0">
               <div className="relative w-full h-full transform scale-y-[-1]">
                 <Image 
                   src={theme === 'dark' ? '/mockup-dark.png' : '/mockup-light.png'} 
@@ -829,11 +775,11 @@ export default function Home() {
                   className="object-contain" 
                 />
               </div>
-              {/* Máscara de Degradado */}
+              {/* Máscara de Degradado para Desvanecer el Reflejo Progresivamente hacia Abajo */}
               <div className={`absolute inset-0 bg-linear-to-b ${
                 theme === 'dark'
-                  ? 'from-transparent via-[#040001]/80 to-[#040001]'
-                  : 'from-transparent via-[#e3e3e3]/80 to-[#e3e3e3]'
+                  ? 'from-transparent via-[#040001]/70 to-[#040001]'
+                  : 'from-transparent via-[#e3e3e3]/70 to-[#e3e3e3]'
               }`}></div>
             </div>
 
@@ -841,129 +787,6 @@ export default function Home() {
 
         </div>
       </main>
-
-      {/* =========================================================================
-          NUEVA SECCIÓN: 01 — SOBRE NOSOTROS (ESTÉTICA EDITORIAL PREMIUM)
-         ========================================================================= */}
-      <section className="w-full max-w-375 mx-auto px-6 sm:px-10 lg:px-12 py-16 md:py-24 z-10 relative overflow-hidden">
-        
-        {/* Decoración de Fondo: Líneas Abstractas y Glow Ambiental */}
-        <div className="absolute inset-0 pointer-events-none z-0 opacity-40">
-          <svg className="w-full h-full opacity-20 stroke-red-500/40 fill-none" viewBox="0 0 1200 800">
-            <path d="M-100,200 C300,100 500,600 1300,400" strokeWidth="1" />
-            <path d="M-100,300 C400,200 600,700 1300,500" strokeWidth="0.5" strokeDasharray="4 4" />
-          </svg>
-          <div className="absolute bottom-10 left-10 w-96 h-96 bg-red-600/10 rounded-full blur-[140px]"></div>
-        </div>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center z-10 relative"
-        >
-          
-          {/* FOTOGRAFÍA EDITORIAL CON ENCUADRE Y SOMBRA INTEGRADA (5 Cols) */}
-          <div className="lg:col-span-5 relative group">
-            
-            {/* Glow de Acento Detrás de la Foto */}
-            <div className="absolute -inset-2 bg-linear-to-r from-red-600/30 to-transparent rounded-3xl blur-2xl opacity-60 group-hover:opacity-90 transition-opacity duration-700"></div>
-
-            {/* Contenedor con Borde Suave e Imagen Cinematográfica */}
-            <div className={`relative rounded-2xl overflow-hidden border shadow-2xl transition-transform duration-700 group-hover:scale-[1.01] ${
-              theme === 'dark' 
-                ? 'border-white/15 bg-zinc-950/80 shadow-[0_20px_50px_rgba(0,0,0,0.8)]' 
-                : 'border-black/10 bg-white/80 shadow-[0_20px_40px_rgba(0,0,0,0.15)]'
-            }`}>
-              <div className="relative w-full aspect-4/5 sm:aspect-1/1 lg:aspect-4/5">
-                <Image 
-                  src="/fotochica.jpg" 
-                  alt="NuDesign Studio Creative Direction" 
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover object-center transition-transform duration-1000 group-hover:scale-105"
-                  priority
-                />
-                {/* Degradado Cinematográfico de Oscurecimiento Inferior */}
-                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-80"></div>
-              </div>
-            </div>
-
-            {/* TARJETA LIQUID GLASS FLOTANTE EN LA PARTE INFERIOR DE LA FOTO */}
-            <div className={`mt-4 sm:-mt-12 relative sm:absolute sm:-bottom-6 sm:left-4 sm:right-4 backdrop-blur-2xl border rounded-2xl p-4 sm:p-5 shadow-2xl z-20 ${
-              theme === 'dark'
-                ? 'bg-zinc-950/80 border-white/15 text-white'
-                : 'bg-white/85 border-black/10 text-zinc-900'
-            }`}>
-              <div className="grid grid-cols-3 gap-2 text-center sm:text-left divide-x divide-zinc-500/20">
-                <div className="px-2">
-                  <h4 className="text-xs font-semibold tracking-wide text-red-500">{t.aboutCard1Title}</h4>
-                  <p className="text-[10px] opacity-70 font-light leading-snug mt-0.5">{t.aboutCard1Desc}</p>
-                </div>
-                <div className="px-2 pl-3">
-                  <h4 className="text-xs font-semibold tracking-wide text-red-500">{t.aboutCard2Title}</h4>
-                  <p className="text-[10px] opacity-70 font-light leading-snug mt-0.5">{t.aboutCard2Desc}</p>
-                </div>
-                <div className="px-2 pl-3">
-                  <h4 className="text-xs font-semibold tracking-wide text-red-500">{t.aboutCard3Title}</h4>
-                  <p className="text-[10px] opacity-70 font-light leading-snug mt-0.5">{t.aboutCard3Desc}</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* COLUMNA DE TEXTO EDITORIAL SOFISTICADA (7 Cols) */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left space-y-6 lg:pl-4">
-            
-            {/* Tag Numérico de Sección */}
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full border border-red-500/30 bg-red-500/10 backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-              <span className="text-xs font-semibold tracking-widest text-red-500 uppercase">{t.aboutTag}</span>
-            </div>
-
-            {/* Título Principal Editorial */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight leading-[1.12]">
-              <span>{t.aboutTitle1}</span> <br />
-              <span>{t.aboutTitle2}</span>
-              <span className="text-red-500 font-bold underline decoration-red-500/40 decoration-2 underline-offset-8">
-                {t.aboutTitle3}
-              </span>
-            </h2>
-
-            {/* Línea Separadora Minimalista */}
-            <div className="w-16 h-0.5 bg-red-500/60 rounded-full"></div>
-
-            {/* Bloques de Párrafos Separados con Jerarquía */}
-            <div className={`space-y-4 text-xs sm:text-sm md:text-base font-normal leading-relaxed ${
-              theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'
-            }`}>
-              <p className="font-medium text-white/90 leading-relaxed">
-                {t.aboutP1}
-              </p>
-              
-              <p>
-                {t.aboutP2}
-              </p>
-
-              <p>
-                {t.aboutP3}
-              </p>
-            </div>
-
-            {/* Cierre / Tagline de Marca */}
-            <div className="pt-2 border-t border-zinc-500/20 w-full">
-              <p className="text-sm sm:text-base font-medium tracking-wide">
-                <span>{t.aboutTagline}</span>
-                <span className="text-red-500 font-semibold">{t.aboutTaglineRed}</span>
-              </p>
-            </div>
-
-          </div>
-
-        </motion.div>
-      </section>
 
       {/* FASE 2: SECCIÓN DE SERVICIOS EN LÍNEA HORIZONTAL ANCHA (FULL HORIZONTAL ROW) */}
       <section className="w-full px-4 md:px-8 py-8 md:py-12 z-10">
