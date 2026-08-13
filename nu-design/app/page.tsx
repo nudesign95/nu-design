@@ -278,7 +278,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* FONDO CINEMÁTICO APPLE STYLED CON LUZ AMBIENTAL ROJA */}
+      {/* FONDO CINEMÁTICO APPLE STYLED CON LUZ AMBIENTAL ROJA Y GLOW EXTENDIDO */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -287,13 +287,13 @@ export default function Home() {
       >
         {theme === 'dark' ? (
           <>
-            <div className="absolute top-1/3 right-10 md:right-1/4 w-125 md:w-175 h-125 md:h-175 bg-[radial-gradient(circle,rgba(220,38,38,0.18)_0%,transparent_65%)] rounded-full blur-[90px] md:blur-[140px]"></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-162.5 md:w-225 h-112.5 md:h-150 bg-linear-to-tr from-red-950/30 via-red-800/20 to-transparent rounded-full blur-[120px] md:blur-[180px] transform -rotate-12"></div>
+            <div className="absolute top-1/4 right-[5%] w-150 md:w-225 h-150 md:h-225 bg-[radial-gradient(circle,rgba(220,38,38,0.22)_0%,transparent_65%)] rounded-full blur-[100px] md:blur-[160px]"></div>
+            <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-162.5 md:w-225 h-112.5 md:h-150 bg-linear-to-tr from-red-950/30 via-red-800/20 to-transparent rounded-full blur-[120px] md:blur-[180px] transform -rotate-12"></div>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#040001_85%)]"></div>
           </>
         ) : (
           <>
-            <div className="absolute top-1/3 right-10 md:right-1/4 w-125 md:w-162.5 h-125 md:h-162.5 bg-[radial-gradient(circle,rgba(239,68,68,0.12)_0%,transparent_65%)] rounded-full blur-[80px] md:blur-[120px]"></div>
+            <div className="absolute top-1/4 right-[5%] w-150 md:w-200 h-150 md:h-200 bg-[radial-gradient(circle,rgba(239,68,68,0.15)_0%,transparent_65%)] rounded-full blur-[90px] md:blur-[140px]"></div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 md:w-250 h-125 md:h-175 bg-linear-to-b from-white via-zinc-200/80 to-zinc-300/40 rounded-full blur-[100px] md:blur-[150px]"></div>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#d9d9d9_90%)]"></div>
           </>
@@ -532,17 +532,17 @@ export default function Home() {
       </motion.div>
 
       {/* =========================================================================
-          NUEVO HERO SUPERIOR - EXPERIENCIA EDITORIAL LIQUID GLASS + MOCKUP
+          NUEVO HERO SUPERIOR - REFINAMIENTO DE LAYOUT, ESCALA DE MOCKUP Y REFLEJO
          ========================================================================= */}
-      <main className="w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 my-auto z-10 py-6 md:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-12 items-center">
+      <main className="w-full max-w-375 mx-auto px-6 sm:px-10 lg:px-12 my-auto z-10 py-6 md:py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           
-          {/* COLUMNA IZQUIERDA: CONTENIDO & CTAS (7 Cols) */}
+          {/* COLUMNA IZQUIERDA: CONTENIDO COMPLETO (45% Ancho visual / 5 Cols en lg) */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 flex flex-col items-start text-left space-y-6 md:space-y-8"
+            className="lg:col-span-5 flex flex-col items-start text-left space-y-6 md:space-y-7 z-20"
           >
             {/* H1 Editorial Premium */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.08] font-sans">
@@ -554,7 +554,7 @@ export default function Home() {
             </h1>
 
             {/* Subheadline / Subtítulo */}
-            <p className={`text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl ${
+            <p className={`text-base sm:text-lg font-normal leading-relaxed max-w-xl ${
               theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'
             }`}>
               {t.heroSubhead}
@@ -564,7 +564,7 @@ export default function Home() {
             </p>
 
             {/* BOTONES LIQUID GLASS DE ALTA GAMA */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full pt-1">
               
               {/* Primary CTA: WhatsApp Liquid Glass */}
               <motion.a
@@ -573,7 +573,7 @@ export default function Home() {
                 href="https://wa.me/18294608316"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`relative group flex items-center space-x-4 px-7 py-4 rounded-full backdrop-blur-2xl transition-all duration-300 border overflow-hidden shadow-2xl ${
+                className={`relative group flex items-center space-x-4 px-6 py-3.5 rounded-full backdrop-blur-2xl transition-all duration-300 border overflow-hidden shadow-2xl ${
                   theme === 'dark'
                     ? 'bg-linear-to-r from-red-600/30 via-red-900/20 to-white/5 border-red-500/40 text-white hover:border-red-500/80 hover:shadow-[0_0_30px_rgba(239,68,68,0.45)]'
                     : 'bg-linear-to-r from-red-500/20 via-red-100/40 to-white/60 border-red-500/50 text-zinc-900 hover:border-red-600 hover:shadow-[0_0_25px_rgba(239,68,68,0.35)]'
@@ -582,15 +582,15 @@ export default function Home() {
                 {/* Glow ambiental interno del botón */}
                 <div className="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
-                <div className="w-10 h-10 rounded-full bg-red-600/80 group-hover:bg-red-500 text-white flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg shrink-0">
-                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                <div className="w-9 h-9 rounded-full bg-red-600/80 group-hover:bg-red-500 text-white flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg shrink-0">
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                     <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
                   </svg>
                 </div>
                 
                 <div className="flex flex-col text-left">
-                  <span className="text-base font-semibold leading-tight">{t.whatsapp}</span>
-                  <span className={`text-xs font-normal opacity-80 ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'}`}>{t.whatsappDesc}</span>
+                  <span className="text-sm font-semibold leading-tight">{t.whatsapp}</span>
+                  <span className={`text-[11px] font-normal opacity-80 ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'}`}>{t.whatsappDesc}</span>
                 </div>
               </motion.a>
 
@@ -601,25 +601,25 @@ export default function Home() {
               >
                 <Link
                   href="/cotizacion"
-                  className={`relative group flex items-center space-x-4 px-7 py-4 rounded-full backdrop-blur-2xl transition-all duration-300 border overflow-hidden shadow-lg h-full ${
+                  className={`relative group flex items-center space-x-4 px-6 py-3.5 rounded-full backdrop-blur-2xl transition-all duration-300 border overflow-hidden shadow-lg h-full ${
                     theme === 'dark'
                       ? 'bg-white/5 border-white/15 text-white hover:bg-white/10 hover:border-white/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]'
                       : 'bg-black/5 border-black/15 text-zinc-900 hover:bg-black/10 hover:border-black/30 hover:shadow-[0_0_20px_rgba(0,0,0,0.1)]'
                   }`}
                 >
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110 border ${
+                  <div className={`w-9 h-9 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110 border ${
                     theme === 'dark' 
                       ? 'bg-white/10 border-white/20 text-white' 
                       : 'bg-black/5 border-black/10 text-zinc-900'
                   }`}>
-                    <svg className="w-5 h-5 fill-none stroke-current" strokeWidth="1.8" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 fill-none stroke-current" strokeWidth="1.8" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
 
                   <div className="flex flex-col text-left">
-                    <span className="text-base font-semibold leading-tight">{t.cotizacion}</span>
-                    <span className={`text-xs font-normal opacity-80 ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'}`}>{t.cotizacionDesc}</span>
+                    <span className="text-sm font-semibold leading-tight">{t.cotizacion}</span>
+                    <span className={`text-[11px] font-normal opacity-80 ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'}`}>{t.cotizacionDesc}</span>
                   </div>
                 </Link>
               </motion.div>
@@ -627,15 +627,15 @@ export default function Home() {
             </div>
 
             {/* INDICADORES / INTERACTIVE HINTS DEBAJO DE LOS CTA */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-3">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-5 pt-2">
               
               {/* Hint 1 */}
               <motion.div 
                 whileHover={{ x: 3 }}
-                className="flex items-center space-x-2 text-xs sm:text-sm font-medium transition-colors group cursor-default"
+                className="flex items-center space-x-2 text-xs font-medium transition-colors group cursor-default"
               >
-                <div className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
-                  <svg className="w-3 h-3 fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
+                <div className="w-4.5 h-4.5 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
+                  <svg className="w-2.5 h-2.5 fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                   </svg>
                 </div>
@@ -647,10 +647,10 @@ export default function Home() {
               {/* Hint 2 */}
               <motion.div 
                 whileHover={{ x: 3 }}
-                className="flex items-center space-x-2 text-xs sm:text-sm font-medium transition-colors group cursor-default"
+                className="flex items-center space-x-2 text-xs font-medium transition-colors group cursor-default"
               >
-                <div className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
-                  <svg className="w-3 h-3 fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
+                <div className="w-4.5 h-4.5 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
+                  <svg className="w-2.5 h-2.5 fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
                 </div>
@@ -662,10 +662,10 @@ export default function Home() {
               {/* Hint 3 */}
               <motion.div 
                 whileHover={{ x: 3 }}
-                className="flex items-center space-x-2 text-xs sm:text-sm font-medium transition-colors group cursor-default"
+                className="flex items-center space-x-2 text-xs font-medium transition-colors group cursor-default"
               >
-                <div className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
-                  <svg className="w-3 h-3 fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
+                <div className="w-4.5 h-4.5 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
+                  <svg className="w-2.5 h-2.5 fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0" />
                   </svg>
                 </div>
@@ -676,11 +676,11 @@ export default function Home() {
 
             </div>
 
-            {/* BUSCADOR INTERACTIVO & ICONOS DE SERVICIO (INTEGRADOS AL NUEVO HERO) */}
-            <div className="w-full pt-4 space-y-4">
+            {/* BUSCADOR INTERACTIVO & ICONOS DE SERVICIO */}
+            <div className="w-full pt-3 space-y-3.5">
               
               {/* Iconos interactivos de servicios */}
-              <div className="flex items-center flex-wrap gap-2 sm:gap-3">
+              <div className="flex items-center flex-wrap gap-2 sm:gap-2.5">
                 {serviceIcons.map((service, index) => (
                   <motion.button
                     key={index}
@@ -688,7 +688,7 @@ export default function Home() {
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleServiceClick(service.name)}
                     title={service.name}
-                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl backdrop-blur-2xl border flex items-center justify-center transition-all group relative cursor-pointer ${
+                    className={`w-8.5 h-8.5 sm:w-9.5 sm:h-9.5 rounded-xl backdrop-blur-2xl border flex items-center justify-center transition-all group relative cursor-pointer ${
                       theme === 'dark'
                         ? 'bg-white/10 border-white/15 text-white/90 hover:text-red-500 hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.35)]'
                         : 'bg-black/5 border-black/10 text-zinc-800 hover:text-red-600 hover:border-red-500/60 hover:shadow-[0_0_15px_rgba(239,68,68,0.25)]'
@@ -702,7 +702,7 @@ export default function Home() {
               {/* Formulario / Input de Búsqueda */}
               <form 
                 onSubmit={handleSearchSubmit}
-                className={`w-full backdrop-blur-3xl border rounded-full px-5 py-3 flex items-center justify-between shadow-xl focus-within:border-red-500/60 focus-within:shadow-[0_0_30px_rgba(239,68,68,0.25)] transition-all duration-500 relative overflow-hidden ${
+                className={`w-full backdrop-blur-3xl border rounded-full px-4.5 py-2.5 flex items-center justify-between shadow-xl focus-within:border-red-500/60 focus-within:shadow-[0_0_30px_rgba(239,68,68,0.25)] transition-all duration-500 relative overflow-hidden ${
                   theme === 'dark'
                     ? 'bg-black/40 border-white/20 text-white'
                     : 'bg-white/60 border-black/15 text-zinc-900'
@@ -720,7 +720,7 @@ export default function Home() {
                   }`} 
                 />
                 <button type="submit" className="text-zinc-300 hover:text-red-500 transition-colors ml-3 cursor-pointer z-10" title="Buscar servicio">
-                  <svg className="w-5 h-5 stroke-current fill-none" strokeWidth="2" viewBox="0 0 24 24">
+                  <svg className="w-4.5 h-4.5 stroke-current fill-none" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
                 </button>
@@ -738,31 +738,51 @@ export default function Home() {
 
           </motion.div>
 
-          {/* COLUMNA DERECHA: MOCKUP PROTAGONISTA EN FLOTACIÓN (5 Cols) */}
+          {/* COLUMNA DERECHA: MOCKUP PROTAGONISTA AMPLIADO CON REFLEJO SUTIL (55% Ancho visual / 7 Cols en lg) */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 flex items-center justify-center relative group"
+            initial={{ opacity: 0, scale: 0.94, x: 20 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ duration: 1.2, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-7 flex flex-col items-center justify-center relative group w-full pl-0 lg:pl-6"
           >
-            {/* Sombra y Glow ambiental detrás del mockup */}
-            <div className={`absolute inset-0 rounded-full blur-3xl transition-opacity duration-700 pointer-events-none ${
+            {/* Luz Ambiental Roja y Sombra Difuminada de Fondo */}
+            <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] rounded-full blur-3xl transition-opacity duration-700 pointer-events-none ${
               theme === 'dark'
-                ? 'bg-linear-to-tr from-red-600/25 to-transparent opacity-80 group-hover:opacity-100'
-                : 'bg-linear-to-tr from-red-500/15 to-transparent opacity-60 group-hover:opacity-90'
+                ? 'bg-[radial-gradient(circle,rgba(220,38,38,0.22)_0%,transparent_70%)] opacity-90 group-hover:opacity-100'
+                : 'bg-[radial-gradient(circle,rgba(239,68,68,0.15)_0%,transparent_70%)] opacity-70 group-hover:opacity-90'
             }`}></div>
 
-            {/* Renderizado dinámico del mockup según tema activo (mockup-dark.png / mockup-light.png) */}
-            <div className="relative w-full max-w-lg md:max-w-xl aspect-4/3 flex items-center justify-center">
+            {/* Contenedor Principal del Mockup con Escala Aumentada (560px–720px en Desktop) */}
+            <div className="relative w-full max-w-170 xl:max-w-190 aspect-4/3 flex items-center justify-center z-10">
               <Image 
                 src={theme === 'dark' ? '/mockup-dark.png' : '/mockup-light.png'} 
-                alt="NU-Design Showcase Mockup" 
+                alt="NU-Design Premium Showcase" 
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-transform duration-700 hover:scale-[1.02]" 
+                sizes="(max-width: 1024px) 100vw, 55vw"
+                className="object-contain drop-shadow-[0_25px_60px_rgba(0,0,0,0.65)] transition-transform duration-700 hover:scale-[1.015]" 
                 priority
               />
             </div>
+
+            {/* EFECTO DE REFLEJO EN SUELO STUDIO (VERTICALLY FLIPPED & FADED) */}
+            <div className="relative w-full max-w-170 xl:max-w-190 h-24 sm:h-32 -mt-8 sm:-mt-12 overflow-hidden pointer-events-none opacity-20 dark:opacity-25 blur-[6px] select-none z-0">
+              <div className="relative w-full h-full transform scale-y-[-1]">
+                <Image 
+                  src={theme === 'dark' ? '/mockup-dark.png' : '/mockup-light.png'} 
+                  alt="Mockup Floor Reflection" 
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                  className="object-contain" 
+                />
+              </div>
+              {/* Máscara de Degradado para Desvanecer el Reflejo Progresivamente hacia Abajo */}
+              <div className={`absolute inset-0 bg-linear-to-b ${
+                theme === 'dark'
+                  ? 'from-transparent via-[#040001]/70 to-[#040001]'
+                  : 'from-transparent via-[#e3e3e3]/70 to-[#e3e3e3]'
+              }`}></div>
+            </div>
+
           </motion.div>
 
         </div>
