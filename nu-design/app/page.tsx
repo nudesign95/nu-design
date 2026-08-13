@@ -18,12 +18,64 @@ const translations = {
     searchPlaceholder: 'Hola, necesito...',
     rights: 'Nu-Design Derechos reservados 2026 - Design by Garic Edume',
     chat: 'Escribe ahora',
+    
+    // Hero - Textos Principales
+    heroTitle1: 'Identidades que',
+    heroTitle2: 'dejan huella.',
+    heroDesc: 'Branding, packaging y diseño editorial de alta gama para marcas que quieren destacar en',
+    heroLocation: 'República Dominicana y el Caribe.',
+    heroBtnWA: 'Hablemos de tu proyecto',
+    heroBtnCot: 'Recibe tu propuesta',
+    feature1: 'Diseño estratégico',
+    feature2: 'Calidad premium',
+    feature3: 'Atención personalizada',
+    discoverMore: 'Descubre más',
+
+    // Soluciones & Servicios
     solucionesTitulo: 'Soluciones que',
     solucionesElevan: 'elevan tu marca',
-    brandingDesc: 'Estrategia e identidad visual que conecta y posiciona tu marca.',
-    produccionDesc: 'Diseño y piezas gráficas impresas y digitales de alto impacto.',
+    brandingTitle: 'Branding',
+    brandingDesc: 'Estrategia e identidad visual para marcas.',
+    produccionTitle: 'Producción Gráfica',
+    produccionDesc: 'Diseño y piezas gráficas impresas y digitales.',
+    packagingTitle: 'Packaging',
     packagingDesc: 'Diseños de empaque que protegen, comunican y venden.',
-    webDesc: 'Sitios web modernos, funcionales y alineados a tu marca.'
+    webTitle: 'Diseño Web',
+    webDesc: 'Sitios web modernos, funcionales y alineados con la identidad de la marca.',
+
+    // Franja 01 - Sobre Nosotros / Manifiesto
+    sec1Tag: '01 —— SOBRE NOSOTROS',
+    sec1Title1: 'Diseño con propósito.',
+    sec1Title2: 'Identidad con carácter.',
+    sec1Text1: 'En NuDesign somos más que una agencia de diseño gráfico — somos arquitectos de identidad visual. Desde 2018, transformamos marcas en experiencias memorables a través de branding estratégico, packaging de lujo y producción gráfica de precisión.',
+    sec1Text2: 'Cada proyecto nace de una premisa simple: el buen diseño no decora, comunica. Fusionamos la disciplina del minimalismo suizo con la sensibilidad del diseño japonés para crear identidades que no solo se ven bien — perduran.',
+    sec1Text3: 'Trabajamos con marcas que entienden que su imagen es su primera promesa al mundo. Desde startups que buscan nacer con presencia dominante, hasta empresas consolidadas que necesitan reinventarse, cada trazo, cada paleta y cada pieza que entregamos está pensada para elevar tu marca al nivel que merece.',
+    sec1Tagline: 'NuDesign — Alta gama en cada detalle.',
+
+    // Franja 02 - Cotización
+    sec2Tag: '02 —— COTIZACIÓN',
+    sec2Title1: '¿Tienes un proyecto',
+    sec2Title2: 'en mente?',
+    sec2Title3: 'Cotiza con nosotros.',
+    sec2Desc: 'Cuéntanos tu idea y recibe una propuesta personalizada y sin compromiso.',
+    sec2Btn: 'SOLICITAR COTIZACIÓN →',
+    sec2SubBtn: 'Es rápido y sencillo',
+
+    // Franja 03 - Contacto
+    sec3Tag: '03 —— CONTACTO',
+    sec3Title: 'Conectemos con propósito',
+    sec3Desc: '¿Tienes un proyecto en mente? Cuéntanos tu visión y la convertimos en una identidad visual que deja huella. Ya sea branding, packaging, producción gráfica o un desafío creativo fuera de lo común — estamos a un mensaje de distancia.',
+    sec3SubDesc: 'Respondemos rápido, cotizamos claro, y trabajamos contigo hasta que tu marca se vea como merece.',
+    sec3Action: 'Escríbenos y empecemos.',
+    contactWA: 'WhatsApp',
+    contactWAPhone: '+1 (829) 460-8316',
+    contactMail: 'Correo',
+    contactMailAddr: 'hola@nudesign.agency',
+    contactLoc: 'Ubicación',
+    contactLocVal: 'República Dominicana',
+    contactHours: 'Horario',
+    hoursWeek: 'Lun – Vie: 8:00 AM – 6:30 PM',
+    hoursSat: 'Sáb: 8:00 AM – 12:00 PM'
   },
   EN: {
     inicio: 'home',
@@ -36,12 +88,59 @@ const translations = {
     searchPlaceholder: 'Hello, I need...',
     rights: 'Nu-Design All rights reserved 2026 - Design by Garic Edume',
     chat: 'Write now',
+
+    heroTitle1: 'Identities that',
+    heroTitle2: 'leave a mark.',
+    heroDesc: 'High-end branding, packaging and editorial design for brands looking to stand out in',
+    heroLocation: 'Dominican Republic and the Caribbean.',
+    heroBtnWA: 'Let\'s talk about your project',
+    heroBtnCot: 'Get your quote',
+    feature1: 'Strategic design',
+    feature2: 'Premium quality',
+    feature3: 'Personalized attention',
+    discoverMore: 'Discover more',
+
     solucionesTitulo: 'Solutions that',
     solucionesElevan: 'elevate your brand',
-    brandingDesc: 'Strategy and visual identity that connects and positions your brand.',
+    brandingTitle: 'Branding',
+    brandingDesc: 'Strategy and visual identity for brands.',
+    produccionTitle: 'Graphic Production',
     produccionDesc: 'High-impact print and digital graphic design.',
+    packagingTitle: 'Packaging',
     packagingDesc: 'Packaging designs that protect, communicate and sell.',
-    webDesc: 'Modern, functional websites aligned with your brand.'
+    webTitle: 'Web Design',
+    webDesc: 'Modern, functional websites aligned with brand identity.',
+
+    sec1Tag: '01 —— ABOUT US',
+    sec1Title1: 'Design with purpose.',
+    sec1Title2: 'Identity with character.',
+    sec1Text1: 'At NuDesign we are more than a graphic design agency — we are visual identity architects. Since 2018, we transform brands into memorable experiences through strategic branding, luxury packaging and precision graphic production.',
+    sec1Text2: 'Every project stems from a simple premise: good design doesn\'t decorate, it communicates. We fuse Swiss minimalism discipline with Japanese design sensitivity to create identities that endure.',
+    sec1Text3: 'We work with brands that understand image is their first promise to the world. From startups to established companies, every stroke, palette and deliverable is built to elevate your brand.',
+    sec1Tagline: 'NuDesign — High end in every detail.',
+
+    sec2Tag: '02 —— QUOTATION',
+    sec2Title1: 'Have a project',
+    sec2Title2: 'in mind?',
+    sec2Title3: 'Get a quote with us.',
+    sec2Desc: 'Tell us your idea and receive a personalized, no-obligation proposal.',
+    sec2Btn: 'REQUEST QUOTE →',
+    sec2SubBtn: 'Fast and simple',
+
+    sec3Tag: '03 —— CONTACT',
+    sec3Title: 'Let\'s connect with purpose',
+    sec3Desc: 'Have a project in mind? Tell us your vision and we\'ll turn it into a visual identity that leaves a mark. Whether it\'s branding, packaging or a custom creative challenge — we are one message away.',
+    sec3SubDesc: 'We respond quickly, quote clearly, and work with you until your brand looks as it deserves.',
+    sec3Action: 'Write us and let\'s start.',
+    contactWA: 'WhatsApp',
+    contactWAPhone: '+1 (829) 460-8316',
+    contactMail: 'Email',
+    contactMailAddr: 'hola@nudesign.agency',
+    contactLoc: 'Location',
+    contactLocVal: 'Dominican Republic',
+    contactHours: 'Hours',
+    hoursWeek: 'Mon – Fri: 8:00 AM – 6:30 PM',
+    hoursSat: 'Sat: 8:00 AM – 12:00 PM'
   },
   FR: {
     inicio: 'accueil',
@@ -54,71 +153,61 @@ const translations = {
     searchPlaceholder: 'Bonjour, j\'ai besoin...',
     rights: 'Nu-Design Tous droits réservés 2026 - Design by Garic Edume',
     chat: 'Écrivez ahora',
+
+    heroTitle1: 'Des identités qui',
+    heroTitle2: 'laissent une empreinte.',
+    heroDesc: 'Branding haut de gamme, packaging et design éditorial pour les marques souhaitant se démarquer en',
+    heroLocation: 'République Dominicaine et la Caraïbe.',
+    heroBtnWA: 'Parlons de votre projet',
+    heroBtnCot: 'Recevez votre devis',
+    feature1: 'Design stratégique',
+    feature2: 'Qualité premium',
+    feature3: 'Attention personnalisée',
+    discoverMore: 'Découvrez plus',
+
     solucionesTitulo: 'Des solutions qui',
     solucionesElevan: 'élèvent votre marque',
-    brandingDesc: 'Stratégie et identité visuelle qui connectent et positionnent votre marque.',
-    produccionDesc: 'Design graphique numérique et imprimé à fort impact.',
+    brandingTitle: 'Branding',
+    brandingDesc: 'Stratégie et identité visuelle pour les marques.',
+    produccionTitle: 'Production Graphique',
+    produccionDesc: 'Design graphique numérique et imprimé.',
+    packagingTitle: 'Packaging',
     packagingDesc: 'Des designs d\'emballage qui protègent, communiquent et vendent.',
-    webDesc: 'Sites web modernes, fonctionnels et alignés avec votre marque.'
+    webTitle: 'Design Web',
+    webDesc: 'Sites web modernes, fonctionnels et alignés avec la marque.',
+
+    sec1Tag: '01 —— À PROPOS',
+    sec1Title1: 'Design avec but.',
+    sec1Title2: 'Identité avec caractère.',
+    sec1Text1: 'Chez NuDesign, nous sommes des architectes d\'identité visuelle. Depuis 2018, nous transformons les marques en expériences mémorables.',
+    sec1Text2: 'Chaque projet naît d\'une prémisse simple : le bon design communique. Nous fusionnons la discipline du minimalisme suisse avec le design japonais.',
+    sec1Text3: 'Nous travaillons avec des marques qui comprennent que leur image est leur première promesse au monde.',
+    sec1Tagline: 'NuDesign — Haut de gamme dans chaque détail.',
+
+    sec2Tag: '02 —— DEVIS',
+    sec2Title1: 'Un projet',
+    sec2Title2: 'en tête ?',
+    sec2Title3: 'Demandez un devis.',
+    sec2Desc: 'Racontez-nous votre idée et recevez une proposition personnalisée.',
+    sec2Btn: 'DEMANDER UN DEVIS →',
+    sec2SubBtn: 'Rapide et simple',
+
+    sec3Tag: '03 —— CONTACT',
+    sec3Title: 'Connectons-nous avec but',
+    sec3Desc: 'Un projet en tête ? Racontez-nous votre vision et transformons-la en una identité visuelle marquante.',
+    sec3SubDesc: 'Nous répondons rapidement et clairement hasta que votre marque resplendisse.',
+    sec3Action: 'Écrivez-nous et commençons.',
+    contactWA: 'WhatsApp',
+    contactWAPhone: '+1 (829) 460-8316',
+    contactMail: 'E-mail',
+    contactMailAddr: 'hola@nudesign.agency',
+    contactLoc: 'Localisation',
+    contactLocVal: 'République Dominicaine',
+    contactHours: 'Horaires',
+    hoursWeek: 'Lun – Ven: 8:00 AM – 6:30 PM',
+    hoursSat: 'Sam: 8:00 AM – 12:00 PM'
   }
 };
-
-const serviceIcons = [
-  { 
-    name: "Idea y Concepto", 
-    label: "Idea & Concept",
-    svg: (
-      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
-        <path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7zM9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1z"/>
-      </svg>
-    )
-  },
-  { 
-    name: "Branding", 
-    label: "Branding",
-    svg: (
-      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
-        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-      </svg>
-    )
-  },
-  { 
-    name: "Diseño Gráfico", 
-    label: "Graphic Design",
-    svg: (
-      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
-        <path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10c1.38 0 2.5-1.12 2.5-2.5 0-.61-.23-1.21-.64-1.67-.38-.45-.6-.1-.6-.78 0-.55.45-1 1-1h1.74c3.31 0 6-2.69 6-6 0-4.96-4.49-9.05-10-9.05zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 8 6.5 8s1.5.67 1.5 1.5S7.33 11 6.5 11zm3-4C8.67 7 8 6.33 8 5.5S8.67 4 9.5 4s1.5.67 1.5 1.5S10.33 7 9.5 7zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 4 14.5 4s1.5.67 1.5 1.5S15.33 7 14.5 7zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 8 17.5 8s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
-      </svg>
-    )
-  },
-  { 
-    name: "Diseño UI/UX", 
-    label: "UI/UX Design",
-    svg: (
-      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
-        <path d="M20 3H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v2h8v-2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H4V5h16v12z"/>
-      </svg>
-    )
-  },
-  { 
-    name: "Layout y Diagramación", 
-    label: "Layout",
-    svg: (
-      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
-        <path d="M4 11h5V5H4v6zm0 7h5v-5H4v6zm6 0h10v-5H10v6zm6-13v6h4V5h-4zm-6 6h4V5h-4v6z"/>
-      </svg>
-    )
-  },
-  { 
-    name: "Desarrollo Web", 
-    label: "Web Dev",
-    svg: (
-      <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
-        <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
-      </svg>
-    )
-  },
-];
 
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
@@ -157,45 +246,46 @@ export default function Home() {
 
   const handleServiceClick = (serviceName: string) => {
     setSearchQuery(serviceName);
+    window.location.href = `/cotizacion?search=${encodeURIComponent(serviceName)}`;
   };
 
   const mainServicesList = [
-    {
-      title: 'Branding',
-      desc: t.brandingDesc,
+    { 
+      title: t.brandingTitle, 
+      desc: t.brandingDesc, 
       svg: (
-        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
+        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="1.8" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
         </svg>
-      )
+      ) 
     },
-    {
-      title: 'Producción Gráfica',
-      desc: t.produccionDesc,
+    { 
+      title: t.produccionTitle, 
+      desc: t.produccionDesc, 
       svg: (
-        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
+        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="1.8" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zM17 9V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
         </svg>
-      )
+      ) 
     },
-    {
-      title: 'Packaging',
-      desc: t.packagingDesc,
+    { 
+      title: t.packagingTitle, 
+      desc: t.packagingDesc, 
       svg: (
-        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
+        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="1.8" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
         </svg>
-      )
+      ) 
     },
-    {
-      title: 'Diseño Web',
-      desc: t.webDesc,
+    { 
+      title: t.webTitle, 
+      desc: t.webDesc, 
       svg: (
-        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
+        <svg className="w-6 h-6 text-red-500 fill-none stroke-current" strokeWidth="1.8" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h6l-.75-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
-      )
+      ) 
     }
   ];
 
@@ -233,19 +323,17 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-1000 relative overflow-x-hidden py-4 md:py-6 ${
-      theme === 'dark' 
-        ? 'bg-[#040001] text-zinc-100' 
-        : 'bg-[#e3e3e3] text-zinc-900'
+    <div className={`min-h-dvh flex flex-col justify-between transition-colors duration-700 relative overflow-x-hidden ${
+      theme === 'dark' ? 'bg-[#040001] text-zinc-100' : 'bg-[#f4f4f4] text-zinc-900'
     }`}>
       
-      {/* Datos Estructurados Schema.org para Google */}
+      {/* Datos Estructurados Schema.org */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
 
-      {/* FONDO CINEMÁTICO APPLE STYLED */}
+      {/* FONDO CINEMÁTICO ILUMINADO CON TAILWIND V4 CANÓNICO */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -254,130 +342,63 @@ export default function Home() {
       >
         {theme === 'dark' ? (
           <>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-162.5 md:w-225 h-112.5 md:h-150 bg-linear-to-tr from-red-950/45 via-red-800/25 to-red-600/10 rounded-full blur-[120px] md:blur-[180px] transform -rotate-12"></div>
-            <div className="absolute top-1/4 left-1/3 w-87.5 h-87.5 bg-red-900/15 rounded-full blur-[140px]"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#040001_85%)]"></div>
+            <div className="absolute top-0 right-0 w-162.5 h-162.5 bg-linear-to-b from-red-900/20 via-red-950/10 to-transparent rounded-full blur-[140px]" />
+            <div className="absolute bottom-1/3 left-0 w-125 h-125 bg-red-950/15 rounded-full blur-[160px]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-112.5 bg-red-900/10 rounded-full blur-[180px] transform -rotate-12" />
           </>
         ) : (
           <>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 md:w-250 h-125 md:h-175 bg-linear-to-b from-white via-zinc-200/80 to-zinc-300/40 rounded-full blur-[100px] md:blur-[150px]"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#d9d9d9_90%)]"></div>
+            <div className="absolute top-0 right-0 w-150 h-150 bg-linear-to-b from-red-100/40 via-red-50/20 to-transparent rounded-full blur-[120px]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#e5e5e5_90%)]" />
           </>
         )}
       </motion.div>
 
-      {/* Top Navigation Bar */}
+      {/* HEADER NAV - GLASS MINIMAL CON JERARQUÍA COMPLETA */}
       <motion.header 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full px-5 md:px-10 py-4 flex items-center justify-between z-40"
+        transition={{ duration: 0.8 }}
+        className="w-full px-6 md:px-12 py-6 flex items-center justify-between z-40 relative"
       >
-        <div className="flex items-center space-x-3">
-          <WordmarkLogo className="h-6 md:h-8 w-auto" />
+        <div className="flex items-center space-x-10">
+          <WordmarkLogo className="h-6 md:h-7 w-auto" />
 
-          <nav className="hidden md:flex items-center space-x-3 text-base font-medium">
-            {/* 1. Botón INICIO */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link 
-                href="/" 
-                className={`px-4 py-2 rounded-full backdrop-blur-md shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all ${
-                  theme === 'dark' 
-                    ? 'bg-white/10 border border-red-500/40 text-white' 
-                    : 'bg-black/10 border border-red-500/50 text-zinc-900 font-semibold'
-                }`}
-              >
-                {t.inicio}
-              </Link>
-            </motion.div>
-            
-            {/* 2. Botón PORTAFOLIO */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link 
-                href="/portafolio" 
-                className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
-                  theme === 'dark' 
-                    ? 'bg-white/0 text-white/80 hover:text-white hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]' 
-                    : 'bg-black/0 text-zinc-800 hover:text-black hover:border-black/20 hover:bg-black/5 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)]'
-                }`}
-              >
-                {t.portafolio}
-              </Link>
-            </motion.div>
-
-            {/* 3. Botón CONTRATAR */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link 
-                href="/contratar" 
-                className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
-                  theme === 'dark' 
-                    ? 'bg-white/0 text-white/80 hover:text-white hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]' 
-                    : 'bg-black/0 text-zinc-800 hover:text-black hover:border-black/20 hover:bg-black/5 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)]'
-                }`}
-              >
-                {t.contratar}
-              </Link>
-            </motion.div>
-
-            {/* 4. Botón CONTACTO */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link 
-                href="/contacto" 
-                className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
-                  theme === 'dark' 
-                    ? 'bg-white/0 text-white/80 hover:text-white hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]' 
-                    : 'bg-black/0 text-zinc-800 hover:text-black hover:border-black/20 hover:bg-black/5 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)]'
-                }`}
-              >
-                {t.contacto}
-              </Link>
-            </motion.div>
-
-            {/* 5. Botón UTILIDADES */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link 
-                href="/utilidades" 
-                className={`px-4 py-2 rounded-full backdrop-blur-md transition-all ${
-                  theme === 'dark' 
-                    ? 'bg-white/0 text-white/80 hover:text-white hover:border-white/20 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]' 
-                    : 'bg-black/0 text-zinc-800 hover:text-black hover:border-black/20 hover:bg-black/5 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)]'
-                }`}
-              >
-                {t.utilidades}
-              </Link>
-            </motion.div>
+          <nav className="hidden md:flex items-center space-x-7 text-xs tracking-wider uppercase font-medium">
+            <Link href="/" className="text-red-500 font-bold border-b-2 border-red-500 pb-1">{t.inicio}</Link>
+            <Link href="/portafolio" className="opacity-75 hover:opacity-100 transition-opacity">{t.portafolio}</Link>
+            <Link href="/contratar" className="opacity-75 hover:opacity-100 transition-opacity">{t.contratar}</Link>
+            <Link href="/contacto" className="opacity-75 hover:opacity-100 transition-opacity">{t.contacto}</Link>
+            <Link href="/utilidades" className="opacity-75 hover:opacity-100 transition-opacity">{t.utilidades}</Link>
           </nav>
         </div>
 
-        <div className="flex items-center space-x-3 md:space-x-4">
+        <div className="flex items-center space-x-4">
           
-          {/* Selector de IDIOMAS */}
+          {/* SELECTOR DE IDIOMAS DESPLEGABLE */}
           <div className="relative hidden md:block" ref={langMenuRef}>
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button 
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className={`text-xs uppercase tracking-widest font-semibold px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center space-x-1 focus:outline-none ${
-                theme === 'dark'
-                  ? 'bg-white/5 border border-white/10 text-white hover:border-red-500/40 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)]'
-                  : 'bg-black/5 border border-black/10 text-zinc-900 hover:border-red-500/40 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)]'
+              className={`text-[11px] uppercase tracking-widest font-semibold px-4 py-2 rounded-full border transition-all flex items-center space-x-1.5 ${
+                theme === 'dark' 
+                  ? 'bg-white/3.5 backdrop-blur-[20px] border-white/12 text-white hover:border-white/25 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]' 
+                  : 'bg-black/3.5 backdrop-blur-[20px] border-black/12 text-zinc-900 hover:border-black/25'
               }`}
             >
               <span>IDIOMAS</span>
-              <span className="text-red-500 font-bold ml-1">({currentLang})</span>
-            </motion.button>
+              <span className="text-red-500 font-bold">({currentLang})</span>
+              <span className="text-[9px]">▼</span>
+            </button>
 
             <AnimatePresence>
               {isLangOpen && (
                 <motion.div 
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  initial={{ opacity: 0, y: -8, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  className={`absolute right-0 mt-2 w-36 backdrop-blur-2xl border rounded-xl shadow-2xl overflow-hidden z-50 py-1 ${
-                    theme === 'dark' 
-                      ? 'bg-black/90 border-white/15 text-zinc-200' 
-                      : 'bg-white/95 border-black/10 text-zinc-800'
+                  className={`absolute right-0 mt-2 w-36 border rounded-2xl shadow-2xl overflow-hidden z-50 py-1.5 ${
+                    theme === 'dark' ? 'bg-zinc-950/90 border-white/12 text-white backdrop-blur-2xl' : 'bg-white/95 border-black/10 text-zinc-900 backdrop-blur-2xl'
                   }`}
                 >
                   <button onClick={() => { setCurrentLang('ES'); setIsLangOpen(false); }} className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-red-500/10 ${currentLang === 'ES' ? 'text-red-500 font-bold' : ''}`}>
@@ -394,42 +415,35 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          {/* Botón WHATSAPP */}
-          <motion.a 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          {/* BOTÓN WHATSAPP HEADER */}
+          <a 
             href="https://wa.me/18294608316" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className={`hidden sm:flex backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal items-center space-x-2 transition-all ${
+            className={`hidden sm:flex px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide border transition-all ${
               theme === 'dark'
-                ? 'bg-white/10 border border-white/20 text-white hover:border-emerald-500/60 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]'
-                : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-emerald-600/60 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]'
+                ? 'bg-white/3.5 backdrop-blur-[20px] border-white/15 text-white hover:border-emerald-500/60 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]'
+                : 'bg-black/3.5 backdrop-blur-[20px] border-black/15 text-zinc-900 hover:border-emerald-600/60'
             }`}
           >
             <span>{t.whatsapp}</span>
-          </motion.a>
-          
-          {/* Botón COTIZACIÓN */}
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          </a>
+
+          {/* BOTÓN COTIZACIÓN HEADER */}
+          <Link 
+            href="/cotizacion" 
+            className={`px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide border transition-all ${
+              theme === 'dark'
+                ? 'bg-white/3.5 backdrop-blur-[20px] border-white/15 text-white hover:bg-white hover:text-black'
+                : 'bg-red-600 border-red-600 text-white hover:bg-red-700'
+            }`}
           >
-            <Link 
-              href="/cotizacion" 
-              className={`block backdrop-blur-2xl px-5 py-2 rounded-full text-xs md:text-sm font-normal transition-all ${
-                theme === 'dark'
-                  ? 'bg-white/10 border border-white/20 text-white hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]'
-                  : 'bg-black/5 border border-black/15 text-zinc-900 hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]'
-              }`}
-            >
-              {t.cotizacion}
-            </Link>
-          </motion.div>
+            {t.cotizacion}
+          </Link>
 
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="md:hidden text-xl p-2 focus:outline-none opacity-80 hover:opacity-100 z-50 text-white"
+            className="md:hidden text-2xl p-1 focus:outline-none"
             aria-label="Abrir Menú"
           >
             ☰
@@ -445,7 +459,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className={`fixed inset-0 z-30 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden ${
+            className={`fixed inset-0 z-50 backdrop-blur-3xl flex flex-col justify-between p-8 pt-24 md:hidden ${
               theme === 'dark' ? 'bg-black/95 text-white' : 'bg-white/95 text-zinc-900'
             }`}
           >
@@ -484,206 +498,305 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Theme Switcher con Liquid Glass */}
-      <motion.div 
-        initial={{ x: 20, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-2 md:space-y-3 z-30 p-1.5 rounded-full backdrop-blur-xl border shadow-2xl ${
-          theme === 'dark' ? 'bg-white/10 border-white/20' : 'bg-black/5 border-black/10'
-        }`}
-      >
-        <button onClick={() => setTheme('light')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white border border-zinc-300 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Claro"></button>
-        <button onClick={() => setTheme('dark')} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-zinc-950 border border-zinc-700 shadow-xl transition-transform hover:scale-110 focus:outline-none" title="Modo Oscuro"></button>
-      </motion.div>
+      {/* SELECTOR LATERAL DE TEMA LIQUID GLASS */}
+      <div className={`fixed right-4 top-1/2 -translate-y-1/2 flex flex-col space-y-2.5 z-50 p-2 rounded-full border shadow-2xl backdrop-blur-xl ${
+        theme === 'dark' ? 'bg-white/4 border-white/15' : 'bg-black/4 border-black/15'
+      }`}>
+        <button onClick={() => setTheme('light')} className="w-4 h-4 rounded-full bg-white border border-zinc-300 transition-transform hover:scale-125 focus:outline-none" title="Modo Claro" />
+        <button onClick={() => setTheme('dark')} className="w-4 h-4 rounded-full bg-zinc-950 border border-zinc-700 transition-transform hover:scale-125 focus:outline-none" title="Modo Oscuro" />
+      </div>
 
-      {/* Main Hero Section - JERARQUÍA REFINADA */}
-      <main className="w-full max-w-5xl mx-auto px-4 flex flex-col items-center text-center my-auto z-10 space-y-5 md:space-y-7 py-4">
-        
-        {/* Icono superior PROTAGÓNICO Y GRANDE */}
-        <motion.div 
-          initial={{ scale: 0.8, opacity: 0, y: 15 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative group cursor-pointer w-28 h-28 md:w-36 md:h-36 flex items-center justify-center"
-        >
-          <Image 
-            src={theme === 'dark' ? '/icon-dark.svg' : '/icon-light.svg'} 
-            alt="NU-Design Icon" 
-            width={144} 
-            height={144} 
-            className="w-full h-full object-contain drop-shadow-[0_12px_30px_rgba(255,0,0,0.3)] transition-transform duration-500 group-hover:scale-105" 
-            priority
-          />
-        </motion.div>
+      {/* HERO SECTION (40% CONTENIDO / 60% VISUAL MOCKUP DINÁMICO) */}
+      <main className="w-full max-w-7xl mx-auto px-6 md:px-12 pt-6 pb-16 z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          
+          {/* Izquierda (40% aprox.) */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="lg:col-span-5 flex flex-col space-y-6 text-left"
+          >
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-light tracking-tight leading-[1.08]">
+              {t.heroTitle1} <br />
+              <span className="font-semibold text-red-500">{t.heroTitle2}</span>
+            </h1>
 
-        {/* Wordmark ELEGANTE Y AMPLIO */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="w-72 sm:w-88 md:w-md flex items-center justify-center"
-        >
-          <Image 
-            src={theme === 'dark' ? '/wordmark-dark.svg' : '/wordmark-light.svg'} 
-            alt="NU-Design Wordmark" 
-            width={440} 
-            height={110} 
-            className="w-full h-auto object-contain drop-shadow-lg" 
-            priority
-          />
-        </motion.div>
+            <p className={`text-xs sm:text-sm md:text-base font-light leading-relaxed max-w-md ${
+              theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'
+            }`}>
+              {t.heroDesc} <strong className="font-medium text-current">{t.heroLocation}</strong>
+            </p>
 
-        {/* ICONOS INTERACTIVOS COMPACTOS (MÁS PEQUEÑOS QUE EL WORDMARK) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.35 }}
-          className="flex items-center flex-wrap justify-center gap-2.5 sm:gap-4 md:gap-5 pt-1"
-        >
-          {serviceIcons.map((service, index) => (
-            <motion.button
-              key={index}
-              whileHover={{ scale: 1.12, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleServiceClick(service.name)}
-              title={service.name}
-              className={`w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-xl backdrop-blur-2xl border flex items-center justify-center transition-all group relative cursor-pointer ${
-                theme === 'dark'
-                  ? 'bg-white/10 border-white/15 text-white/90 hover:text-red-500 hover:border-red-500/60 hover:shadow-[0_0_20px_rgba(239,68,68,0.35)]'
-                  : 'bg-black/5 border-black/10 text-zinc-800 hover:text-red-600 hover:border-red-500/60 hover:shadow-[0_0_15px_rgba(239,68,68,0.25)]'
-              }`}
-            >
-              {service.svg}
-            </motion.button>
-          ))}
-        </motion.div>
+            {/* CTAs Jerarquizados */}
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              
+              {/* WhatsApp CTA (Prioridad 01 - Liquid Glass + Accent Glow) */}
+              <a 
+                href="https://wa.me/18294608316" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group relative px-6 py-3.5 rounded-full text-xs md:text-sm font-semibold flex items-center space-x-3 transition-all duration-300 hover:-translate-y-0.5 active:scale-98 bg-red-600/90 text-white border border-red-500/50 shadow-[0_10px_30px_rgba(239,68,68,0.35)] hover:shadow-[0_15px_40px_rgba(239,68,68,0.5)] hover:border-red-400"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
+                  <svg className="w-4 h-4 fill-current text-white" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
+                </div>
+                <div className="text-left">
+                  <span className="block font-bold">{t.whatsapp}</span>
+                  <span className="block text-[10px] opacity-80 font-normal">{t.heroBtnWA}</span>
+                </div>
+              </a>
 
-        {/* Buscador Interactivo con Lupa SVG Minimalista */}
-        <motion.form 
-          onSubmit={handleSearchSubmit}
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className={`w-full max-w-2xl backdrop-blur-3xl border rounded-full px-5 md:px-8 py-3 md:py-4 flex items-center justify-between shadow-2xl focus-within:border-red-500/60 focus-within:shadow-[0_0_30px_rgba(239,68,68,0.25)] transition-all duration-500 relative overflow-hidden ${
-            theme === 'dark'
-              ? 'bg-black/40 border-white/20 text-white'
-              : 'bg-white/60 border-black/15 text-zinc-900'
-          }`}
-        >
-          <input 
-            type="text" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t.searchPlaceholder} 
-            className={`w-full bg-transparent border-none outline-none text-xs sm:text-sm md:text-base font-normal tracking-wide z-10 ${
-              theme === 'dark' 
-                ? 'placeholder-zinc-400 text-white' 
-                : 'placeholder-zinc-600 text-zinc-900'
-            }`} 
-          />
-          <button type="submit" className="text-zinc-300 hover:text-red-500 transition-colors ml-3 cursor-pointer z-10" title="Buscar servicio">
-            <svg className="w-5 h-5 md:w-6 md:h-6 stroke-current fill-none" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-            </svg>
-          </button>
-        </motion.form>
+              {/* Cotización CTA (Prioridad 02 - Liquid Glass Subordinado) */}
+              <Link 
+                href="/cotizacion" 
+                className={`px-6 py-3.5 rounded-full text-xs md:text-sm font-semibold border flex items-center space-x-3 transition-all duration-300 hover:-translate-y-0.5 active:scale-98 ${
+                  theme === 'dark' 
+                    ? 'bg-white/3.5 backdrop-blur-[20px] border-white/12 text-white hover:bg-white/10 hover:border-white/25 shadow-xl' 
+                    : 'bg-black/3.5 backdrop-blur-[20px] border-black/12 text-zinc-900 hover:bg-black/10'
+                }`}
+              >
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                  <svg className="w-4 h-4 stroke-current fill-none" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div className="text-left">
+                  <span className="block font-bold">{t.cotizacion}</span>
+                  <span className="block text-[10px] opacity-70 font-normal">{t.heroBtnCot}</span>
+                </div>
+              </Link>
 
-        {/* Bloque de Texto de Servicios */}
-        <div className={`w-full max-w-2xl text-[10px] sm:text-xs font-light leading-relaxed px-2 text-center pt-1 ${
-          theme === 'dark' ? 'text-zinc-300 opacity-80' : 'text-zinc-800 opacity-90'
-        }`}>
-          <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Branding")}>Branding</span> • <span>PNG</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("Logotipos")}>Logotipos</span> • <span>Creatividad</span> • <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors" onClick={() => handleServiceClick("UX/UI")}>UX/UI</span> • <span>PDF</span> • <span>Diseño Editorial</span> • <span>RGB</span> • 
-          <span className="font-semibold cursor-pointer hover:text-red-500 transition-colors ml-1" onClick={() => handleServiceClick("Landing Page")}>Landing Page</span> • <span>Vectorización</span> • <span>Calidad Premium</span> • <span>SVG</span> • <span>Flyers</span> • <span>AI</span>
+            </div>
+
+            {/* Micro-Trust Indicators */}
+            <div className="flex flex-wrap items-center gap-5 pt-3 text-[11px] font-light opacity-75">
+              <span className="flex items-center gap-1.5"><span className="text-red-500 font-bold">✓</span> {t.feature1}</span>
+              <span className="flex items-center gap-1.5"><span className="text-red-500 font-bold">✓</span> {t.feature2}</span>
+              <span className="flex items-center gap-1.5"><span className="text-red-500 font-bold">✓</span> {t.feature3}</span>
+            </div>
+          </motion.div>
+
+          {/* Derecha (60% aprox. - Visual Protagonista) */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.9, delay: 0.2 }}
+            className="lg:col-span-7 relative flex justify-center items-center"
+          >
+            <div className="relative w-full max-w-2xl aspect-16/11 rounded-[28px] overflow-hidden border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.35)] flex items-center justify-center bg-zinc-900/20 backdrop-blur-sm">
+              <Image 
+                src={theme === 'dark' ? '/mockup-dark.png' : '/mockup-light.png'} 
+                alt="Nu-Design Luxury Mockup" 
+                width={800} 
+                height={550} 
+                className="w-full h-full object-cover transition-opacity duration-500"
+                priority
+              />
+            </div>
+          </motion.div>
+
         </div>
 
+        <div className="w-full flex justify-center pt-10">
+          <span className="text-[10px] tracking-widest uppercase opacity-40 flex items-center gap-2">
+            ↓ {t.discoverMore}
+          </span>
+        </div>
       </main>
 
-      {/* FASE 2: SECCIÓN DE SERVICIOS EN LÍNEA HORIZONTAL ANCHA (FULL HORIZONTAL ROW) */}
-      <section className="w-full px-4 md:px-8 py-8 md:py-12 z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className={`w-full p-6 md:p-10 rounded-3xl backdrop-blur-2xl border shadow-2xl ${
-            theme === 'dark' 
-              ? 'bg-zinc-900/40 border-white/10' 
-              : 'bg-white/60 border-black/10'
-          }`}
-        >
+      {/* SERVICE GRID HORIZONTAL */}
+      <section className="w-full max-w-7xl mx-auto px-6 md:px-12 py-10 z-10">
+        <div className={`p-8 md:p-10 rounded-[28px] border backdrop-blur-[20px] transition-all ${
+          theme === 'dark' 
+            ? 'bg-white/3.5 border-white/12 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' 
+            : 'bg-black/2.5 border-black/10 shadow-xl'
+        }`}>
           <div className="flex flex-col lg:flex-row items-center gap-8 justify-between">
             
-            {/* Título a la izquierda */}
-            <div className="lg:w-1/4 text-left lg:border-r border-white/10 lg:pr-8 pb-4 lg:pb-0 border-b lg:border-b-0 w-full">
-              <h2 className="text-2xl md:text-3xl font-light tracking-tight">
+            <div className="lg:w-1/4 text-left border-b lg:border-b-0 lg:border-r border-white/10 pr-6 pb-6 lg:pb-0 w-full">
+              <h2 className="text-2xl font-light tracking-tight">
                 {t.solucionesTitulo} <br />
                 <span className="font-semibold text-red-500">{t.solucionesElevan}</span>
               </h2>
             </div>
 
-            {/* Los 4 servicios en UNA SOLA FILA HORIZONTAL (grid 4 cols) */}
-            <div className="lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full text-left">
+            <div className="lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
               {mainServicesList.map((item, idx) => (
-                <motion.div 
+                <div 
                   key={idx} 
-                  whileHover={{ y: -6, scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
                   onClick={() => handleServiceClick(item.title)}
-                  className={`p-5 rounded-2xl border transition-all cursor-pointer group flex flex-col justify-between ${
-                    theme === 'dark' 
-                      ? 'bg-white/5 border-white/10 hover:border-red-500/50 hover:bg-white/10 hover:shadow-[0_0_25px_rgba(239,68,68,0.25)]' 
-                      : 'bg-black/5 border-black/10 hover:border-red-500/50 hover:bg-black/10'
+                  className={`p-5 rounded-[20px] border transition-all duration-300 cursor-pointer hover:-translate-y-1 hover:border-red-500/40 hover:shadow-[0_10px_30px_rgba(239,68,68,0.15)] ${
+                    theme === 'dark' ? 'bg-white/3 border-white/10' : 'bg-white border-black/5'
                   }`}
                 >
-                  <div>
-                    <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      {item.svg}
-                    </div>
-                    <h3 className="text-base font-semibold mb-1.5 group-hover:text-red-500 transition-colors">{item.title}</h3>
-                    <p className="text-xs opacity-75 leading-relaxed font-light">{item.desc}</p>
+                  <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4">
+                    {item.svg}
                   </div>
-                </motion.div>
+                  <h3 className="text-sm font-semibold mb-1.5">{item.title}</h3>
+                  <p className="text-xs font-light opacity-75 leading-relaxed">{item.desc}</p>
+                </div>
               ))}
             </div>
 
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* Footer Unificado Completo */}
+      {/* FRANJA 01 — SOBRE NOSOTROS (50/50 EDITORIAL) */}
+      <section className="w-full max-w-7xl mx-auto px-6 md:px-12 py-16 z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <div className="lg:col-span-6 rounded-[28px] overflow-hidden border border-white/10 shadow-2xl aspect-4/3">
+            <Image 
+              src="/fotochica.jpg" 
+              alt="NuDesign Creative Process" 
+              width={700} 
+              height={525} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div className="lg:col-span-6 text-left space-y-5">
+            <span className="text-xs font-semibold text-red-500 tracking-widest uppercase">{t.sec1Tag}</span>
+            <h2 className="text-3xl md:text-4xl font-light tracking-tight leading-snug">
+              {t.sec1Title1} <br />
+              <span className="font-semibold">{t.sec1Title2}</span>
+            </h2>
+            
+            <div className={`space-y-4 text-xs md:text-sm font-light leading-relaxed ${
+              theme === 'dark' ? 'text-[#CCCCCC]' : 'text-zinc-800'
+            }`}>
+              <p>{t.sec1Text1}</p>
+              <p>{t.sec1Text2}</p>
+              <p>{t.sec1Text3}</p>
+            </div>
+
+            <p className="text-xs md:text-sm font-semibold text-red-500 pt-2">{t.sec1Tagline}</p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* FRANJA 02 — COTIZACIÓN (PREMIUM CTA PANEL) */}
+      <section className="w-full max-w-7xl mx-auto px-6 md:px-12 py-12 z-10">
+        <div className={`p-8 md:p-14 rounded-4xl border relative overflow-hidden backdrop-blur-[20px] ${
+          theme === 'dark' 
+            ? 'bg-linear-to-r from-red-950/20 via-zinc-950/80 to-zinc-900/60 border-white/12 shadow-[0_20px_50px_rgba(0,0,0,0.4)]' 
+            : 'bg-white border-black/10 shadow-2xl'
+        }`}>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            
+            <div className="md:col-span-8 text-left space-y-4">
+              <span className="text-xs font-semibold text-red-500 tracking-widest uppercase">{t.sec2Tag}</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight leading-tight">
+                {t.sec2Title1} <br />
+                <span className="font-semibold text-red-500">{t.sec2Title2}</span> <br />
+                {t.sec2Title3}
+              </h2>
+              <p className="text-xs md:text-sm font-light opacity-80 max-w-lg">{t.sec2Desc}</p>
+
+              <div className="pt-4">
+                <Link 
+                  href="/cotizacion" 
+                  className="inline-flex items-center space-x-3 bg-red-600/90 text-white px-8 py-4 rounded-full text-xs md:text-sm font-semibold shadow-[0_10px_30px_rgba(239,68,68,0.35)] hover:bg-red-600 hover:shadow-[0_15px_40px_rgba(239,68,68,0.5)] transition-all hover:-translate-y-0.5 active:scale-98"
+                >
+                  <span>{t.sec2Btn}</span>
+                </Link>
+              </div>
+            </div>
+
+            <div className="md:col-span-4 flex justify-center">
+              <div className="w-48 md:w-60 aspect-square rounded-2xl bg-red-500/5 border border-red-500/10 flex items-center justify-center p-6 backdrop-blur-md">
+                <svg className="w-24 h-24 text-red-500/80 stroke-current fill-none" strokeWidth="1" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* FRANJA 03 — CONTACTO (EDITORIAL + INFORMATION GLASS CARD) */}
+      <section className="w-full max-w-7xl mx-auto px-6 md:px-12 py-16 z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          
+          <div className="lg:col-span-6 text-left space-y-4">
+            <span className="text-xs font-semibold text-red-500 tracking-widest uppercase">{t.sec3Tag}</span>
+            <h2 className="text-3xl md:text-4xl font-light tracking-tight">{t.sec3Title}</h2>
+            <p className="text-xs md:text-sm font-light leading-relaxed opacity-80">{t.sec3Desc}</p>
+            <p className="text-xs md:text-sm font-light leading-relaxed opacity-80">{t.sec3SubDesc}</p>
+            <p className="text-xs md:text-sm font-semibold text-red-500 pt-2">{t.sec3Action}</p>
+          </div>
+
+          <div className="lg:col-span-6">
+            <div className={`p-8 md:p-10 rounded-[28px] border grid grid-cols-1 sm:grid-cols-2 gap-6 text-left backdrop-blur-[20px] ${
+              theme === 'dark' 
+                ? 'bg-white/3.5 border-white/12 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' 
+                : 'bg-white border-black/10 shadow-xl'
+            }`}>
+              
+              <div className="flex items-center space-x-3.5">
+                <div className="w-11 h-11 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg">💬</div>
+                <div>
+                  <span className="block text-[10px] uppercase font-semibold opacity-60 tracking-wider">{t.contactWA}</span>
+                  <span className="text-xs font-medium">{t.contactWAPhone}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3.5">
+                <div className="w-11 h-11 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg">✉️</div>
+                <div>
+                  <span className="block text-[10px] uppercase font-semibold opacity-60 tracking-wider">{t.contactMail}</span>
+                  <span className="text-xs font-medium">{t.contactMailAddr}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3.5">
+                <div className="w-11 h-11 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg">📍</div>
+                <div>
+                  <span className="block text-[10px] uppercase font-semibold opacity-60 tracking-wider">{t.contactLoc}</span>
+                  <span className="text-xs font-medium">{t.contactLocVal}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3.5">
+                <div className="w-11 h-11 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 text-lg">🕒</div>
+                <div>
+                  <span className="block text-[10px] uppercase font-semibold opacity-60 tracking-wider">{t.contactHours}</span>
+                  <span className="text-[11px] block">{t.hoursWeek}</span>
+                  <span className="text-[11px] block">{t.hoursSat}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* FOOTER */}
       <Footer />
 
-      {/* Floating Chat Now Button */}
+      {/* FLOATING CHAT PERMANENTE (LIQUID GLASS PILL) */}
       <motion.div 
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.8, type: "spring", stiffness: 200 }}
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-30"
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="fixed bottom-6 right-6 z-50"
       >
-        <motion.a 
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.95 }}
+        <a 
           href="https://wa.me/18294608316" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className={`backdrop-blur-3xl border px-4 sm:px-5 md:px-6 py-2.5 md:py-3.5 rounded-full flex items-center space-x-2.5 shadow-2xl hover:border-red-500/60 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] transition-all group ${
+          className={`px-5 py-3 rounded-full flex items-center space-x-3 border shadow-[0_15px_35px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-1 active:scale-95 group ${
             theme === 'dark'
-              ? 'bg-white/10 border-white/20 text-white'
-              : 'bg-white/80 border-black/15 text-zinc-900'
+              ? 'bg-zinc-950/80 backdrop-blur-[20px] border-white/15 text-white hover:border-red-500/50 hover:shadow-[0_0_25px_rgba(239,68,68,0.3)]'
+              : 'bg-white/90 backdrop-blur-[20px] border-black/15 text-zinc-900 hover:border-red-500/50'
           }`}
         >
-          <div className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
-            <Image 
-              src={theme === 'dark' ? '/icon-dark.svg' : '/icon-light.svg'} 
-              alt="Chat Icon" 
-              width={32} 
-              height={32} 
-              className="w-full h-full object-contain transition-transform group-hover:rotate-12" 
-            />
-          </div>
-          <span className="text-xs md:text-base font-medium tracking-wide">{t.chat}</span>
-        </motion.a>
+          <div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)] animate-pulse" />
+          <span className="text-xs font-semibold tracking-wide">{t.chat}</span>
+        </a>
       </motion.div>
 
     </div>
