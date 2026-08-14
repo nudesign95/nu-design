@@ -58,67 +58,67 @@ const categories = [
   'Redes Sociales'
 ];
 
-// 8 Fotografías por categoría
+// Fotografías organizadas por categoría con nombres descriptivos
 const projects = [
   // Branding (8 fotos)
-  { id: 101, title: 'Isologo & Sistema Visual de Marca', category: 'Branding', image: '/og-portafolio.jpg' },
-  { id: 102, title: 'Manual de Marca & Paleta de Colores', category: 'Branding', image: '/og-portafolio.jpg' },
-  { id: 103, title: 'Rediseño de Identidad Corporativa', category: 'Branding', image: '/og-portafolio.jpg' },
-  { id: 104, title: 'Brand Kit Básico para Startups', category: 'Branding', image: '/og-portafolio.jpg' },
-  { id: 105, title: 'Monograma Elegante para Marca Personal', category: 'Branding', image: '/og-portafolio.jpg' },
-  { id: 106, title: 'Iconografía Personalizada Corporativa', category: 'Branding', image: '/og-portafolio.jpg' },
-  { id: 107, title: 'Isotipo Exclusivo & Adaptaciones', category: 'Branding', image: '/og-portafolio.jpg' },
-  { id: 108, title: 'Mockup Profesional de Marca', category: 'Branding', image: '/og-portafolio.jpg' },
+  { id: 101, title: 'Isologo & Sistema Visual de Marca', category: 'Branding', image: '/portafolio/branding-01.jpg' },
+  { id: 102, title: 'Manual de Marca & Paleta de Colores', category: 'Branding', image: '/portafolio/branding-02.jpg' },
+  { id: 103, title: 'Rediseño de Identidad Corporativa', category: 'Branding', image: '/portafolio/branding-03.jpg' },
+  { id: 104, title: 'Brand Kit Básico para Startups', category: 'Branding', image: '/portafolio/branding-04.jpg' },
+  { id: 105, title: 'Monograma Elegante para Marca Personal', category: 'Branding', image: '/portafolio/branding-05.jpg' },
+  { id: 106, title: 'Iconografía Personalizada Corporativa', category: 'Branding', image: '/portafolio/branding-06.jpg' },
+  { id: 107, title: 'Isotipo Exclusivo & Adaptaciones', category: 'Branding', image: '/portafolio/branding-07.jpg' },
+  { id: 108, title: 'Mockup Profesional de Marca', category: 'Branding', image: '/portafolio/branding-08.jpg' },
 
   // Diseño Web (8 fotos)
-  { id: 201, title: 'Landing Page de Alta Conversión', category: 'Diseño Web', image: '/og-portafolio.jpg' },
-  { id: 202, title: 'Interfaz para E-commerce Responsivo', category: 'Diseño Web', image: '/og-portafolio.jpg' },
-  { id: 203, title: 'Sitio Web Corporativo UI/UX', category: 'Diseño Web', image: '/og-portafolio.jpg' },
-  { id: 204, title: 'Diseño de Newsletter Email Marketing', category: 'Diseño Web', image: '/og-portafolio.jpg' },
-  { id: 205, title: 'Banner Web Publicitario Digital', category: 'Diseño Web', image: '/og-portafolio.jpg' },
-  { id: 206, title: 'Prototipo Figma Interactivo', category: 'Diseño Web', image: '/og-portafolio.jpg' },
-  { id: 207, title: 'Firma Profesional para Correo HTML', category: 'Diseño Web', image: '/og-portafolio.jpg' },
-  { id: 208, title: 'Plataforma Web UI Adaptativa', category: 'Diseño Web', image: '/og-portafolio.jpg' },
+  { id: 201, title: 'Landing Page de Alta Conversión', category: 'Diseño Web', image: '/portafolio/disenoweb-01.jpg' },
+  { id: 202, title: 'Interfaz para E-commerce Responsivo', category: 'Diseño Web', image: '/portafolio/disenoweb-02.jpg' },
+  { id: 203, title: 'Sitio Web Corporativo UI/UX', category: 'Diseño Web', image: '/portafolio/disenoweb-03.jpg' },
+  { id: 204, title: 'Diseño de Newsletter Email Marketing', category: 'Diseño Web', image: '/portafolio/disenoweb-04.jpg' },
+  { id: 205, title: 'Banner Web Publicitario Digital', category: 'Diseño Web', image: '/portafolio/disenoweb-05.jpg' },
+  { id: 206, title: 'Prototipo Figma Interactivo', category: 'Diseño Web', image: '/portafolio/disenoweb-06.jpg' },
+  { id: 207, title: 'Firma Profesional para Correo HTML', category: 'Diseño Web', image: '/portafolio/disenoweb-07.jpg' },
+  { id: 208, title: 'Plataforma Web UI Adaptativa', category: 'Diseño Web', image: '/portafolio/disenoweb-08.jpg' },
 
   // Packaging (8 fotos)
-  { id: 301, title: 'Packaging Premium & Cajas Rígidas', category: 'Packaging', image: '/og-portafolio.jpg' },
-  { id: 302, title: 'Etiquetas Personalizadas para Botellas', category: 'Packaging', image: '/og-portafolio.jpg' },
-  { id: 303, title: 'Diseño de Bolsas Comerciales', category: 'Packaging', image: '/og-portafolio.jpg' },
-  { id: 304, title: 'Etiqueta Circular para Envases', category: 'Packaging', image: '/og-portafolio.jpg' },
-  { id: 305, title: 'Empaque Básico con Troquelado', category: 'Packaging', image: '/og-portafolio.jpg' },
-  { id: 306, title: 'Manga Impresa para Vasos', category: 'Packaging', image: '/og-portafolio.jpg' },
-  { id: 307, title: 'Envoltura de Producto Especial', category: 'Packaging', image: '/og-portafolio.jpg' },
-  { id: 308, title: 'Stickers Promocionales en Rollo', category: 'Packaging', image: '/og-portafolio.jpg' },
+  { id: 301, title: 'Packaging Premium & Cajas Rígidas', category: 'Packaging', image: '/portafolio/packaging-01.jpg' },
+  { id: 302, title: 'Etiquetas Personalizadas para Botellas', category: 'Packaging', image: '/portafolio/packaging-02.jpg' },
+  { id: 303, title: 'Diseño de Bolsas Comerciales', category: 'Packaging', image: '/portafolio/packaging-03.jpg' },
+  { id: 304, title: 'Etiqueta Circular para Envases', category: 'Packaging', image: '/portafolio/packaging-04.jpg' },
+  { id: 305, title: 'Empaque Básico con Troquelado', category: 'Packaging', image: '/portafolio/packaging-05.jpg' },
+  { id: 306, title: 'Manga Impresa para Vasos', category: 'Packaging', image: '/portafolio/packaging-06.jpg' },
+  { id: 307, title: 'Envoltura de Producto Especial', category: 'Packaging', image: '/portafolio/packaging-07.jpg' },
+  { id: 308, title: 'Stickers Promocionales en Rollo', category: 'Packaging', image: '/portafolio/packaging-08.jpg' },
 
   // Diseño Editorial (8 fotos)
-  { id: 401, title: 'Diseño de Revista Corporativa', category: 'Diseño Editorial', image: '/og-portafolio.jpg' },
-  { id: 402, title: 'Brochure Tríptico Institucional', category: 'Diseño Editorial', image: '/og-portafolio.jpg' },
-  { id: 403, title: 'Diagramación de Ebook Digital', category: 'Diseño Editorial', image: '/og-portafolio.jpg' },
-  { id: 404, title: 'Portada de Libro Impreso y Digital', category: 'Diseño Editorial', image: '/og-portafolio.jpg' },
-  { id: 405, title: 'Catálogo de Productos Multipágina', category: 'Diseño Editorial', image: '/og-portafolio.jpg' },
-  { id: 406, title: 'PDF Interactivo con Navegación', category: 'Diseño Editorial', image: '/og-portafolio.jpg' },
-  { id: 407, title: 'Menú Elegante para Restaurante', category: 'Diseño Editorial', image: '/og-portafolio.jpg' },
-  { id: 408, title: 'Programa Formal para Eventos', category: 'Diseño Editorial', image: '/og-portafolio.jpg' },
+  { id: 401, title: 'Diseño de Revista Corporativa', category: 'Diseño Editorial', image: '/portafolio/editorial-01.jpg' },
+  { id: 402, title: 'Brochure Tríptico Institucional', category: 'Diseño Editorial', image: '/portafolio/editorial-02.jpg' },
+  { id: 403, title: 'Diagramación de Ebook Digital', category: 'Diseño Editorial', image: '/portafolio/editorial-03.jpg' },
+  { id: 404, title: 'Portada de Libro Impreso y Digital', category: 'Diseño Editorial', image: '/portafolio/editorial-04.jpg' },
+  { id: 405, title: 'Catálogo de Productos Multipágina', category: 'Diseño Editorial', image: '/portafolio/editorial-05.jpg' },
+  { id: 406, title: 'PDF Interactivo con Navegación', category: 'Diseño Editorial', image: '/portafolio/editorial-06.jpg' },
+  { id: 407, title: 'Menú Elegante para Restaurante', category: 'Diseño Editorial', image: '/portafolio/editorial-07.jpg' },
+  { id: 408, title: 'Programa Formal para Eventos', category: 'Diseño Editorial', image: '/portafolio/editorial-08.jpg' },
 
   // Gran Formato (8 fotos)
-  { id: 501, title: 'Mural Corporativo para Oficinas', category: 'Gran Formato', image: '/og-portafolio.jpg' },
-  { id: 502, title: 'Lona Publicitaria de Alta Resolución', category: 'Gran Formato', image: '/og-portafolio.jpg' },
-  { id: 503, title: 'Back Panel para Conferencias', category: 'Gran Formato', image: '/og-portafolio.jpg' },
-  { id: 504, title: 'Roll Up Banner Comercial', category: 'Gran Formato', image: '/og-portafolio.jpg' },
-  { id: 505, title: 'Vinil Decorativo para Cristales', category: 'Gran Formato', image: '/og-portafolio.jpg' },
-  { id: 506, title: 'X Banner Promocional', category: 'Gran Formato', image: '/og-portafolio.jpg' },
-  { id: 507, title: 'Banner Publicitario Exterior', category: 'Gran Formato', image: '/og-portafolio.jpg' },
-  { id: 508, title: 'Display Promocional Punto de Venta', category: 'Gran Formato', image: '/og-portafolio.jpg' },
+  { id: 501, title: 'Mural Corporativo para Oficinas', category: 'Gran Formato', image: '/portafolio/granformato-01.jpg' },
+  { id: 502, title: 'Lona Publicitaria de Alta Resolución', category: 'Gran Formato', image: '/portafolio/granformato-02.jpg' },
+  { id: 503, title: 'Back Panel para Conferencias', category: 'Gran Formato', image: '/portafolio/granformato-03.jpg' },
+  { id: 504, title: 'Roll Up Banner Comercial', category: 'Gran Formato', image: '/portafolio/granformato-04.jpg' },
+  { id: 505, title: 'Vinil Decorativo para Cristales', category: 'Gran Formato', image: '/portafolio/granformato-05.jpg' },
+  { id: 506, title: 'X Banner Promocional', category: 'Gran Formato', image: '/portafolio/granformato-06.jpg' },
+  { id: 507, title: 'Banner Publicitario Exterior', category: 'Gran Formato', image: '/portafolio/granformato-07.jpg' },
+  { id: 508, title: 'Display Promocional Punto de Venta', category: 'Gran Formato', image: '/portafolio/granformato-08.jpg' },
 
   // Redes Sociales (8 fotos)
-  { id: 601, title: 'Carrusel Informativo para Instagram', category: 'Redes Sociales', image: '/og-portafolio.jpg' },
-  { id: 602, title: 'Kit de Plantillas para Instagram', category: 'Redes Sociales', image: '/og-portafolio.jpg' },
-  { id: 603, title: 'Historias Dinámicas Promocionales', category: 'Redes Sociales', image: '/og-portafolio.jpg' },
-  { id: 604, title: 'Banner Institucional para Facebook', category: 'Redes Sociales', image: '/og-portafolio.jpg' },
-  { id: 605, title: 'Portada Corporativa para LinkedIn', category: 'Redes Sociales', image: '/og-portafolio.jpg' },
-  { id: 606, title: 'Miniatura YouTube de Alto Impacto', category: 'Redes Sociales', image: '/og-portafolio.jpg' },
-  { id: 607, title: 'Banner de Canal para YouTube', category: 'Redes Sociales', image: '/og-portafolio.jpg' },
-  { id: 608, title: 'Portada Personalizada para Twitch', category: 'Redes Sociales', image: '/og-portafolio.jpg' }
+  { id: 601, title: 'Carrusel Informativo para Instagram', category: 'Redes Sociales', image: '/portafolio/redes-01.jpg' },
+  { id: 602, title: 'Kit de Plantillas para Instagram', category: 'Redes Sociales', image: '/portafolio/redes-02.jpg' },
+  { id: 603, title: 'Historias Dinámicas Promocionales', category: 'Redes Sociales', image: '/portafolio/redes-03.jpg' },
+  { id: 604, title: 'Banner Institucional para Facebook', category: 'Redes Sociales', image: '/portafolio/redes-04.jpg' },
+  { id: 605, title: 'Portada Corporativa para LinkedIn', category: 'Redes Sociales', image: '/portafolio/redes-05.jpg' },
+  { id: 606, title: 'Miniatura YouTube de Alto Impacto', category: 'Redes Sociales', image: '/portafolio/redes-06.jpg' },
+  { id: 607, title: 'Banner de Canal para YouTube', category: 'Redes Sociales', image: '/portafolio/redes-07.jpg' },
+  { id: 608, title: 'Portada Personalizada para Twitch', category: 'Redes Sociales', image: '/portafolio/redes-08.jpg' }
 ];
 
 export default function PortafolioPage() {
