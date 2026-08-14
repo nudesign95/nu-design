@@ -849,13 +849,13 @@ export default function Home() {
           >
             <div className="group relative w-full aspect-4/3 sm:aspect-square rounded-3xl overflow-hidden border border-white/15 shadow-2xl z-10">
               <Image 
-                src="/fotochica.JPG" 
-                alt="Diseñadora Nu-Design en estudio" 
-                fill
-                sizes="(max-width: 1024px) 100vw, 45vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-105" 
-                priority
-              />
+  src="/fotochica.jpg" 
+  alt="Diseñadora Nu-Design en estudio" 
+  fill
+  sizes="(max-width: 1024px) 100vw, 45vw"
+  className="object-cover transition-transform duration-700 group-hover:scale-105" 
+  priority
+/>
               <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
             </div>
 
@@ -913,54 +913,206 @@ export default function Home() {
       </section>
 
       {/* =========================================================================
-          NUEVA SECCIÓN 02: CTA COTIZACIÓN
-         ========================================================================= */}
-      <section className="w-full px-6 sm:px-12 md:px-25 py-12 md:py-16 z-10 relative">
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-red-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+    SECCIÓN 02: CTA COTIZACIÓN (Diseño Liquid Glass & Alto Impacto)
+    ========================================================================= */}
+<section className="w-full px-6 sm:px-12 md:px-25 py-12 md:py-16 z-10 relative">
+  {/* Luz de fondo ambiental */}
+  <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-red-600/15 rounded-full blur-[140px] pointer-events-none"></div>
 
-        <div className={`w-full p-8 md:p-12 rounded-3xl backdrop-blur-3xl border shadow-2xl transition-all relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-10 ${
-          theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'
-        }`}>
-          
-          {/* Left Side */}
-          <div className="flex-col flex space-y-4 lg:w-5/12 z-10">
-            <span className="text-xs uppercase tracking-widest text-red-500 font-bold">02 —</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-medium tracking-tight leading-tight">
-              {t.projectMind} <br/>
-              <span className="text-red-500 font-bold">{t.quoteUs}</span>
-            </h2>
-          </div>
-          
-          {/* Right Side */}
-          <div className="flex-col flex space-y-6 lg:w-7/12 z-10 w-full relative">
-            
-            {/* Se elimina max-w-md para que fluya, y se agrega padding right (pr-32) para no pisar la imagen */}
-            <p className={`text-base sm:text-lg font-light leading-relaxed pr-24 sm:pr-32 md:pr-48 ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}`}>
-              {t.quoteText}
-            </p>
-            
-            <div>
-              <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.98 }} className="inline-block">
-                 <Link href="/cotizacion" className="flex items-center space-x-4 bg-red-600 hover:bg-red-700 text-white px-6 py-3.5 rounded-2xl shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all">
-                    <div className="w-8 h-8 flex items-center justify-center border border-white/30 rounded-lg">
-                      <svg className="w-5 h-5 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                    </div>
-                    <div className="flex flex-col text-left">
-                      <span className="text-sm font-bold">{t.reqQuote}</span>
-                      <span className="text-[10px] font-light opacity-80">{t.reqQuoteDesc}</span>
-                    </div>
-                 </Link>
-              </motion.div>
-            </div>
-            
-            {/* Graphic posicionado a la derecha de forma absoluta */}
-            <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 w-32 h-40 md:w-44 md:h-52 lg:w-48 lg:h-56 pointer-events-none">
-               <Image src="/clipboard.png" alt="Cotización NuDesign" fill className="object-contain drop-shadow-2xl" />
-            </div>
+  <div className={`w-full p-8 md:p-12 rounded-3xl backdrop-blur-3xl border shadow-2xl transition-all relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-10 ${
+    theme === 'dark' ? 'bg-white/3 border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]' : 'bg-black/2 border-black/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.05)]'
+  }`}>
+    
+    {/* Lado Izquierdo: Títulos */}
+    <div className="flex-col flex space-y-4 lg:w-5/12 z-10">
+      <motion.h2 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-3xl sm:text-4xl md:text-5xl font-sans font-medium tracking-tight leading-tight"
+      >
+        {t.projectMind} <br/>
+        <span className="text-red-500 font-bold">{t.quoteUs}</span>
+      </motion.h2>
+    </div>
+    
+    {/* Lado Derecho: Texto enriquecido y Botón Liquid Glass Centrado */}
+    <div className="flex-col flex space-y-6 lg:w-7/12 z-10 w-full relative justify-center">
+      
+      <p className={`text-base sm:text-lg font-light leading-relaxed pr-24 sm:pr-32 md:pr-44 ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}`}>
+        {t.quoteText} Cuéntanos los detalles de tu visión y la convertiremos en una experiencia visual de alto impacto que posicione tu marca por encima de la competencia. Estamos listos para comenzar.
+      </p>
+      
+      {/* Contenedor del Botón Alineado */}
+      <div className="pt-2">
+        <motion.div 
+          whileHover={{ y: -3, scale: 1.03 }} 
+          whileTap={{ scale: 0.97 }} 
+          className="inline-block"
+        >
+           <Link href="/cotizacion" className="group relative flex items-center space-x-4 bg-red-600/90 hover:bg-red-600 text-white px-7 py-4 rounded-2xl shadow-[0_0_30px_rgba(220,38,38,0.4)] backdrop-blur-md border border-red-400/30 transition-all duration-300 overflow-hidden">
+              {/* Brillo interno tipo Liquid Glass */}
+              <div className="absolute inset-0 w-1/2 h-full bg-linear-to-r from-transparent via-white/20 to-transparent skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000"></div>
 
-          </div>
+              <div className="w-10 h-10 flex items-center justify-center border border-white/30 rounded-xl bg-white/10 backdrop-blur-sm group-hover:rotate-12 transition-transform duration-300">
+                <svg className="w-5 h-5 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-sm font-bold tracking-wide">{t.reqQuote}</span>
+                <span className="text-[11px] font-light text-red-100 opacity-90">{t.reqQuoteDesc}</span>
+              </div>
+           </Link>
+        </motion.div>
+      </div>
+      
+      {/* Gráfico del portapapeles absoluto con animación flotante */}
+      <motion.div 
+        animate={{ y: [-5, 5, -5] }}
+        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+        className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 w-32 h-40 md:w-44 md:h-52 lg:w-48 lg:h-56 pointer-events-none"
+      >
+         <Image src="/clipboard.png" alt="Cotización NuDesign" fill className="object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.5)]" />
+      </motion.div>
+
+    </div>
+  </div>
+</section>
+
+{/* =========================================================================
+    SECCIÓN 03: CONECTEMOS CON PROPÓSITO & GRID DE CONTACTO DINÁMICO
+    ========================================================================= */}
+<section className="w-full px-6 sm:px-12 md:px-25 py-16 z-10 relative">
+  <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+    
+    {/* Columna Izquierda: Título y Descripción con Vida */}
+    <div className="lg:col-span-5 flex flex-col space-y-6">
+      <motion.h2 
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        className="text-3xl sm:text-4xl md:text-5xl font-sans font-medium tracking-tight leading-tight"
+      >
+        Conectemos con <span className="text-red-500 font-bold">propósito</span>
+      </motion.h2>
+
+      <p className={`text-base sm:text-lg font-light leading-relaxed ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}`}>
+        ¿Tienes un proyecto en mente? Cuéntanos tu visión y la convertimos en una identidad visual que deja huella. Ya sea branding, packaging, producción gráfica o un desafío creativo fuera de lo común — estamos a un mensaje de distancia.
+      </p>
+
+      <p className={`text-sm font-light ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}`}>
+        Respondemos rápido, cotizamos claro, y trabajamos contigo hasta que tu marca se vea como merece.
+      </p>
+
+      <div className="pt-2">
+        <span className="text-red-500 font-bold text-base tracking-wide inline-block hover:translate-x-1 transition-transform cursor-pointer">
+          Escribamos y empecemos. →
+        </span>
+      </div>
+    </div>
+
+    {/* Columna Derecha: Los 4 Botones / Tarjetas de Contacto Rediseñados con Efecto Vivo */}
+    <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+      
+      {/* Tarjeta 1: WhatsApp */}
+      <motion.a 
+        href="https://wa.me/18294608316" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        whileHover={{ scale: 1.03, y: -4 }}
+        whileTap={{ scale: 0.98 }}
+        className={`group p-8 rounded-3xl border transition-all duration-300 relative overflow-hidden flex flex-col justify-between min-h-45 ${
+          theme === 'dark' 
+            ? 'bg-white/2 border-white/10 hover:border-red-500/50 hover:bg-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.2)]' 
+            : 'bg-black/1 border-black/10 hover:border-red-500/50 hover:bg-black/3 shadow-[0_4px_20px_rgba(0,0,0,0.03)]'
+        }`}
+      >
+        {/* Halo de luz dinámico al pasar el cursor */}
+        <div className="absolute -right-12 -top-12 w-32 h-32 bg-red-600/10 rounded-full blur-2xl group-hover:bg-red-600/25 transition-all duration-500"></div>
+
+        <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-red-600/10 border border-red-500/20 text-red-500 group-hover:scale-110 group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
+          <svg className="w-6 h-6 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
         </div>
-      </section>
+
+        <div className="space-y-1 mt-6 z-10">
+          <span className="text-xs uppercase tracking-wider font-medium opacity-60">Whatsapp</span>
+          <p className="text-lg sm:text-xl font-bold tracking-tight group-hover:text-red-500 transition-colors">+1 (829) 460-8316</p>
+        </div>
+      </motion.a>
+
+      {/* Tarjeta 2: Correo */}
+      <motion.a 
+        href="mailto:hola@nudesign.agency" 
+        whileHover={{ scale: 1.03, y: -4 }}
+        whileTap={{ scale: 0.98 }}
+        className={`group p-8 rounded-3xl border transition-all duration-300 relative overflow-hidden flex flex-col justify-between min-h-45 ${
+          theme === 'dark' 
+            ? 'bg-white/2 border-white/10 hover:border-red-500/50 hover:bg-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.2)]' 
+            : 'bg-black/1 border-black/10 hover:border-red-500/50 hover:bg-black/3 shadow-[0_4px_20px_rgba(0,0,0,0.03)]'
+        }`}
+      >
+        <div className="absolute -right-12 -top-12 w-32 h-32 bg-red-600/10 rounded-full blur-2xl group-hover:bg-red-600/25 transition-all duration-500"></div>
+
+        <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-red-600/10 border border-red-500/20 text-red-500 group-hover:scale-110 group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
+          <svg className="w-6 h-6 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+
+        <div className="space-y-1 mt-6 z-10">
+          <span className="text-xs uppercase tracking-wider font-medium opacity-60">Correo</span>
+          <p className="text-lg sm:text-xl font-bold tracking-tight group-hover:text-red-500 transition-colors">hola@nudesign.agency</p>
+        </div>
+      </motion.a>
+
+      {/* Tarjeta 3: Ubicación */}
+      <motion.div 
+        whileHover={{ scale: 1.03, y: -4 }}
+        whileTap={{ scale: 0.98 }}
+        className={`group p-8 rounded-3xl border transition-all duration-300 relative overflow-hidden flex flex-col justify-between min-h-45 cursor-default ${
+          theme === 'dark' 
+            ? 'bg-white/2 border-white/10 hover:border-red-500/50 hover:bg-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.2)]' 
+            : 'bg-black/1 border-black/10 hover:border-red-500/50 hover:bg-black/3 shadow-[0_4px_20px_rgba(0,0,0,0.03)]'
+        }`}
+      >
+        <div className="absolute -right-12 -top-12 w-32 h-32 bg-red-600/10 rounded-full blur-2xl group-hover:bg-red-600/25 transition-all duration-500"></div>
+
+        <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-red-600/10 border border-red-500/20 text-red-500 group-hover:scale-110 group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
+          <svg className="w-6 h-6 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+
+        <div className="space-y-1 mt-6 z-10">
+          <span className="text-xs uppercase tracking-wider font-medium opacity-60">Ubicación</span>
+          <p className="text-lg sm:text-xl font-bold tracking-tight group-hover:text-red-500 transition-colors">República Dominicana</p>
+        </div>
+      </motion.div>
+
+      {/* Tarjeta 4: Horario */}
+      <motion.div 
+        whileHover={{ scale: 1.03, y: -4 }}
+        whileTap={{ scale: 0.98 }}
+        className={`group p-8 rounded-3xl border transition-all duration-300 relative overflow-hidden flex flex-col justify-between min-h-45 cursor-default ${
+          theme === 'dark' 
+            ? 'bg-white/2 border-white/10 hover:border-red-500/50 hover:bg-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.2)]' 
+            : 'bg-black/1 border-black/10 hover:border-red-500/50 hover:bg-black/3 shadow-[0_4px_20px_rgba(0,0,0,0.03)]'
+        }`}
+      >
+        <div className="absolute -right-12 -top-12 w-32 h-32 bg-red-600/10 rounded-full blur-2xl group-hover:bg-red-600/25 transition-all duration-500"></div>
+
+        <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-red-600/10 border border-red-500/20 text-red-500 group-hover:scale-110 group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
+          <svg className="w-6 h-6 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+
+        <div className="space-y-1 mt-6 z-10">
+          <span className="text-xs uppercase tracking-wider font-medium opacity-60">Horario</span>
+          <p className="text-sm sm:text-base font-bold tracking-tight leading-relaxed group-hover:text-red-500 transition-colors">
+            Lun – Vie: 8:00 AM – 6:30 PM<br/>
+            Sáb: 8:00 AM – 12:00 PM
+          </p>
+        </div>
+      </motion.div>
+
+    </div>
+
+  </div>
+</section>
 
       {/* =========================================================================
           NUEVA SECCIÓN 03: CONECTEMOS CON PROPÓSITO (CONTACTO)
