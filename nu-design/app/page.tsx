@@ -921,8 +921,9 @@ export default function Home() {
         <div className={`w-full p-8 md:p-12 rounded-3xl backdrop-blur-3xl border shadow-2xl transition-all relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-10 ${
           theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'
         }`}>
+          
           {/* Left Side */}
-          <div className="flex-col flex space-y-4 lg:w-1/2 z-10">
+          <div className="flex-col flex space-y-4 lg:w-5/12 z-10">
             <span className="text-xs uppercase tracking-widest text-red-500 font-bold">02 —</span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-sans font-medium tracking-tight leading-tight">
               {t.projectMind} <br/>
@@ -931,12 +932,15 @@ export default function Home() {
           </div>
           
           {/* Right Side */}
-          <div className="flex-col flex space-y-6 lg:w-1/2 z-10 w-full">
-            <p className={`text-base sm:text-lg font-light leading-relaxed max-w-md ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}`}>
+          <div className="flex-col flex space-y-6 lg:w-7/12 z-10 w-full relative">
+            
+            {/* Se elimina max-w-md para que fluya, y se agrega padding right (pr-32) para no pisar la imagen */}
+            <p className={`text-base sm:text-lg font-light leading-relaxed pr-24 sm:pr-32 md:pr-48 ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'}`}>
               {t.quoteText}
             </p>
-            <div className="flex items-center gap-6">
-              <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            
+            <div>
+              <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.98 }} className="inline-block">
                  <Link href="/cotizacion" className="flex items-center space-x-4 bg-red-600 hover:bg-red-700 text-white px-6 py-3.5 rounded-2xl shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all">
                     <div className="w-8 h-8 flex items-center justify-center border border-white/30 rounded-lg">
                       <svg className="w-5 h-5 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
@@ -947,12 +951,13 @@ export default function Home() {
                     </div>
                  </Link>
               </motion.div>
-              
-              {/* Graphic right of the button */}
-              <div className="hidden sm:block relative w-24 h-32 md:w-28 md:h-36">
-                 <Image src="/clipboard.png" alt="Cotización NuDesign" fill className="object-contain drop-shadow-2xl" />
-              </div>
             </div>
+            
+            {/* Graphic posicionado a la derecha de forma absoluta */}
+            <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 w-32 h-40 md:w-44 md:h-52 lg:w-48 lg:h-56 pointer-events-none">
+               <Image src="/clipboard.png" alt="Cotización NuDesign" fill className="object-contain drop-shadow-2xl" />
+            </div>
+
           </div>
         </div>
       </section>
