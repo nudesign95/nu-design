@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
         
         {/* Enlaces Legales en una sola línea */}
-        <div className="flex flex-wrap justify-center md:justify-start gap-4 text-[11px] font-light">
+        <div className="flex flex-wrap justify-center md:justify-start gap-4 text-[13px] font-light">
           <Link href="/aviso-legal" className="hover:text-red-400 transition-colors">Aviso Legal</Link>
           <span>•</span>
           <Link href="/terminos" className="hover:text-red-400 transition-colors">Términos y Condiciones</Link>
@@ -20,8 +20,8 @@ export default function Footer() {
         </div>
 
         {/* Derechos de Autor */}
-        <div className="text-[10px] opacity-70 tracking-wide">
-          Nu-Design Derechos reservados 2026 - Design by Garic Edume
+        <div className="text-[13px] opacity-60 tracking-wide">
+          Design by Garic Edume - © 2024 All rights reserved.
         </div>
       </div>
     </footer>
