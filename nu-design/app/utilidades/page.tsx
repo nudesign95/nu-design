@@ -292,29 +292,55 @@ export default function UtilidadesPage() {
           </p>
         </div>
 
-        {/* ACCESOS RÁPIDOS ESTILO PÍLDORA APPLE */}
-        <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
+        {/* SELECTOR DE OTRAS UTILIDADES - BOTONES INTERACTIVOS */}
+        <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
+          
+          {/* Botón 1: Verificador de Resolución / DPI */}
           <Link 
             href="/utilidades/mockup-3d" 
-            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/10 bg-zinc-900/80 hover:border-red-500/60 hover:bg-zinc-900 backdrop-blur-xl shadow-lg transition-all text-xs font-medium text-zinc-300 hover:text-white group"
+            className="group relative flex items-center space-x-3.5 px-5 py-3 rounded-2xl bg-zinc-900/90 hover:bg-zinc-800/90 border border-white/10 hover:border-red-500/60 shadow-xl hover:shadow-[0_0_25px_rgba(239,68,68,0.25)] backdrop-blur-2xl transition-all duration-300 hover:-translate-y-0.5 active:scale-95 text-left cursor-pointer"
           >
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            <span className="text-[11px] font-bold uppercase tracking-wider text-red-400 group-hover:text-red-300">
-              Verificador de Resolución / DPI
+            <div className="w-9 h-9 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+              <svg className="w-4 h-4 stroke-current fill-none" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+              </svg>
+            </div>
+            <div>
+              <span className="block text-xs font-semibold text-white group-hover:text-red-400 transition-colors">
+                Verificador de Resolución / DPI
+              </span>
+              <span className="block text-[10px] text-zinc-400 font-light">
+                Comprobar calidad y medidas
+              </span>
+            </div>
+            <span className="text-zinc-500 group-hover:text-red-400 group-hover:translate-x-1 transition-all text-xs pl-1">
+              →
             </span>
-            <span className="text-zinc-500 group-hover:text-zinc-300 transition-colors">→</span>
           </Link>
 
+          {/* Botón 2: Simulador RGB a CMYK */}
           <Link 
             href="/utilidades/simulador-color" 
-            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/10 bg-zinc-900/80 hover:border-emerald-500/60 hover:bg-zinc-900 backdrop-blur-xl shadow-lg transition-all text-xs font-medium text-zinc-300 hover:text-white group"
+            className="group relative flex items-center space-x-3.5 px-5 py-3 rounded-2xl bg-zinc-900/90 hover:bg-zinc-800/90 border border-white/10 hover:border-emerald-500/60 shadow-xl hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] backdrop-blur-2xl transition-all duration-300 hover:-translate-y-0.5 active:scale-95 text-left cursor-pointer"
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 group-hover:text-emerald-300">
-              Simulador RGB → CMYK (Gama de Color)
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+              <svg className="w-4 h-4 stroke-current fill-none" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072" />
+              </svg>
+            </div>
+            <div>
+              <span className="block text-xs font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                Simulador RGB → CMYK
+              </span>
+              <span className="block text-[10px] text-zinc-400 font-light">
+                Previsualizar gama de color
+              </span>
+            </div>
+            <span className="text-zinc-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all text-xs pl-1">
+              →
             </span>
-            <span className="text-zinc-500 group-hover:text-zinc-300 transition-colors">→</span>
           </Link>
+
         </div>
 
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
