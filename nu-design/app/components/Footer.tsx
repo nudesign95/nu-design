@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { Lock } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -19,10 +20,20 @@ export default function Footer() {
           <Link href="/reembolsos" className="hover:text-red-400 transition-colors">Pagos y Reembolsos</Link>
         </div>
 
-        {/* Derechos de Autor */}
-        <div className="text-[13px] opacity-60 tracking-wide">
-          Design by Garic Edume - © 2024 All rights reserved.
+        {/* Derechos de Autor + Botón Discreto de Admin */}
+        <div className="text-[13px] opacity-60 tracking-wide flex items-center justify-center md:justify-end gap-2">
+          <span>Design by Garic Edume - © 2026 All rights reserved.</span>
+          
+          {/* Botón Discreto / Candado de Acceso */}
+          <Link 
+            href="/admin/login" 
+            title="Control Center Access"
+            className="p-1 rounded-md text-zinc-600 hover:text-red-500 hover:bg-white/5 transition-all duration-300"
+          >
+            <Lock className="w-3.5 h-3.5" />
+          </Link>
         </div>
+
       </div>
     </footer>
   );
