@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import { useParams } from 'next/navigation';
 import SignatureCanvas from 'react-signature-canvas';
-import { ShieldCheck, CheckCircle2, AlertTriangle, Loader2, Download } from 'lucide-react';
+import { ShieldCheck, CheckCircle2, AlertTriangle, Loader2, Printer } from 'lucide-react';
 import WordmarkLogo from '@/app/components/WordmarkLogo';
 
 export default function PublicContractPage() {
@@ -20,7 +20,6 @@ export default function PublicContractPage() {
   const [contract, setContract] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [signedSuccess, setSignedSuccess] = useState(false);
 
   useEffect(() => {
@@ -98,72 +97,13 @@ export default function PublicContractPage() {
     }
   };
 
-  // Convertir URL remota a Base64 para evitar bloqueos CORS en canvas móvil
-  const getBase64ImageFromUrl = async (imageUrl: string): Promise<string> => {
-    const res = await fetch(imageUrl);
-    const blob = await res.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
-
-  // Función para Descargar el PDF sin errores de seguridad/CORS
-  const handleDownloadPDF = async () => {
-    const element = document.getElementById('contract-document');
-    if (!element) return;
-
-    setDownloadingPdf(true);
-    try {
-      const html2canvas = (await import('html2canvas')).default;
-      const { jsPDF } = await import('jspdf');
-
-      // Si existe una firma en URL pública, la precargamos en formato DataURL
-      const signatureImgTag = document.getElementById('rendered-signature') as HTMLImageElement;
-      if (signatureImgTag && contract?.signature_url) {
-        try {
-          const base64Sig = await getBase64ImageFromUrl(contract.signature_url);
-          signatureImgTag.src = base64Sig;
-        } catch (e) {
-          console.warn('No se pudo convertir firma a base64:', e);
-        }
-      }
-
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: false,
-        backgroundColor: '#040001',
-        windowWidth: 800,
-      });
-
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Contrato_${contract.client_name.replace(/\s+/g, '_')}_${contract.token}.pdf`);
-    } catch (err: any) {
-      console.error('Error al generar PDF:', err);
-      alert('Hubo un inconveniente al generar el archivo. Se abrirá la vista de impresión.');
-      window.print();
-    } finally {
-      setDownloadingPdf(false);
-    }
+  const handlePrintOrPDF = () => {
+    window.print();
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#040001] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#111] text-white flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-red-500" />
       </div>
     );
@@ -171,163 +111,154 @@ export default function PublicContractPage() {
 
   if (!contract) {
     return (
-      <div className="min-h-screen bg-[#040001] text-white flex flex-col items-center justify-center p-4 text-center">
+      <div className="min-h-screen bg-[#111] text-white flex flex-col items-center justify-center p-4 text-center">
         <AlertTriangle className="w-12 h-12 text-red-500 mb-4" />
-        <h1 className="text-xl font-bold">Contrato no encontrado o enlace inválido</h1>
-        <p className="text-xs text-zinc-400 mt-2">Verifica el enlace proporcionado por Nu-Design Agency.</p>
+        <h1 className="text-xl font-bold">Contrato no encontrado</h1>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#040001] text-zinc-100 p-4 md:p-8 font-sans">
-      <div className="max-w-3xl mx-auto space-y-6">
+    <div className="min-h-screen bg-[#1e1e1e] py-8 px-2 md:px-4 text-zinc-900 font-serif">
+      
+      {/* Botones Flotantes (Ocultos en impresión/PDF) */}
+      <div className="max-w-4xl mx-auto mb-6 flex justify-between items-center print:hidden font-sans">
+        <span className="text-xs text-zinc-400">Estado: <strong className="text-white">{contract.status}</strong></span>
+        {signedSuccess && (
+          <button
+            onClick={handlePrintOrPDF}
+            className="px-6 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 transition cursor-pointer"
+          >
+            <Printer className="w-4 h-4" />
+            <span>Descargar / Imprimir PDF Oficial</span>
+          </button>
+        )}
+      </div>
+
+      {/* DOCUMENTO FORMAL MODELO PAPEL A4 */}
+      <div className="max-w-4xl mx-auto bg-white p-8 md:p-16 shadow-2xl rounded-sm text-zinc-900 leading-relaxed text-sm print:p-0 print:shadow-none print:w-full print:max-w-none">
         
-        {/* Documento Completo */}
-        <div id="contract-document" className="space-y-6 p-2 bg-[#040001] rounded-3xl">
-          
-          {/* Header */}
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-6 text-center space-y-3 backdrop-blur-xl">
-            <WordmarkLogo className="h-7 w-auto mx-auto" />
-            <h1 className="text-lg font-black uppercase tracking-wider text-red-500">Contrato de Prestación de Servicios</h1>
-            <p className="text-xs text-zinc-400">Emisión: {new Date(contract.created_at).toLocaleString('es-DO')}</p>
+        {/* Logo Superior */}
+        <div className="text-center pb-6 border-b border-zinc-200 mb-8">
+          <WordmarkLogo className="h-8 w-auto mx-auto mb-3 text-black" />
+          <h1 className="font-bold text-base md:text-lg tracking-wider text-zinc-900 uppercase">
+            Contrato de Prestación de Servicios de Diseño & Desarrollo
+          </h1>
+          <p className="text-xs text-zinc-500 font-sans mt-1">
+            Código Registro / Token: <span className="font-mono font-bold text-black">{contract.token}</span> | Emisión: {new Date(contract.created_at).toLocaleDateString('es-DO')}
+          </p>
+        </div>
+
+        {/* Encabezado y Partes */}
+        <div className="space-y-6 text-justify">
+          <p>
+            <strong>ENTRE: DE UNA PARTE</strong>, la empresa <strong>NU-DESIGN AGENCY / GARIC EDUME</strong>, representada por su titular Garic Edume, con domicilio social en Santo Domingo, República Dominicana, quien en lo que sigue del presente documento se denominará <strong>LA PRIMERA PARTE</strong>;
+          </p>
+
+          <p>
+            Y de la otra parte, <strong>{contract.client_name.toUpperCase()}</strong>
+            {contract.client_phone && `, con teléfono de contacto ${contract.client_phone}`}
+            {contract.client_email && `, correo electrónico ${contract.client_email}`}
+            {contract.client_address && `, con domicilio en ${contract.client_address}`},
+            quien en lo que sigue del presente documento se denominará <strong>LA SEGUNDA PARTE</strong>.
+          </p>
+
+          <p className="text-center font-bold tracking-widest py-2 border-y border-zinc-200 uppercase text-xs">
+            "HAN CONVENIDO Y PACTADO DE BUENA FE LO SIGUIENTE"
+          </p>
+
+          <div className="space-y-4">
+            <p>
+              <strong>PRIMERO: OBJETO Y ALCANCE DEL SERVICIO.</strong> LA PRIMERA PARTE se compromete a ejecutar a favor de LA SEGUNDA PARTE el siguiente proyecto:
+            </p>
+            <div className="p-4 bg-zinc-50 border-l-4 border-black font-sans text-xs italic">
+              {contract.project_type}
+            </div>
+
+            <p>
+              <strong>SEGUNDO: PLAZO DE ENTREGA.</strong> El plazo estimado para la conclusión y entrega del trabajo es de <strong>{contract.delivery_time}</strong>. Dicho plazo comenzará a contarse formalmente a partir de la firma digital de este contrato, la recepción del anticipo correspondiente y la entrega del 100% de los insumos requeridos.
+            </p>
+
+            <p>
+              <strong>TERCERO: CONDICIONES FINANCIERAS.</strong> El precio total acordado por los servicios profesionales descritos asciende a la suma de <strong>RD$ {parseFloat(contract.total_amount).toFixed(2)} PESOS DOMINICANOS</strong>, distribuidos de la siguiente forma:
+            </p>
+            <ul className="list-disc pl-6 space-y-1 text-xs font-sans">
+              <li><strong>Anticipo de inicio ({contract.advance_percent}%):</strong> RD$ {parseFloat(contract.advance_amount).toFixed(2)} a ser saldado a la firma de este contrato.</li>
+              <li><strong>Saldo restante ({100 - contract.advance_percent}%):</strong> RD$ {parseFloat(contract.remaining_amount).toFixed(2)} a ser saldado previa entrega final de los archivos editables o despliegue.</li>
+            </ul>
+
+            <p>
+              <strong>CUARTO: POLÍTICA DE CANCELACIÓN Y NO DEVOLUCIÓN.</strong> LA SEGUNDA PARTE dispondrá de un plazo de 24 horas a partir del pago inicial para solicitar la cancelación con reembolso del 100%, siempre que los trabajos no hayan iniciado. Transcurridas 24 horas o iniciado el trabajo, el anticipo del <strong>{contract.advance_percent}% NO ES REEMBOLSABLE</strong> bajo ningún concepto.
+            </p>
+
+            <p>
+              <strong>QUINTO: RETRASO EN LA ENTREGA DE RECURSOS.</strong> LA SEGUNDA PARTE se compromete a enviar los contenidos y archivos necesarios en un máximo de <strong>{contract.resource_limit_days} días hábiles</strong>. En caso contrario, el proyecto entrará en estado de pausa.
+            </p>
+
+            <p>
+              <strong>SEXTO: DERECHO DE EXHIBICIÓN Y PORTAFOLIO.</strong> LA PRIMERA PARTE conserva el derecho legal de publicar las piezas realizadas en su portafolio comercial (`nudesign.agency`), salvo que exista un acuerdo de confidencialidad (NDA) pactado por escrito.
+            </p>
           </div>
 
-          {/* Cuerpo del Contrato */}
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 space-y-6 text-xs leading-relaxed text-zinc-300 backdrop-blur-xl">
-            
-            <div className="border-b border-white/10 pb-4">
-              <h2 className="font-bold text-sm text-white uppercase mb-2">1. Las Partes</h2>
-              <p><strong className="text-white">Prestador:</strong> Garic Edume / Nu-Design Agency (nudesign.agency)</p>
-              <p><strong className="text-white">Cliente:</strong> {contract.client_name}</p>
-              {contract.client_phone && <p><strong className="text-white">Teléfono:</strong> {contract.client_phone}</p>}
-              {contract.client_email && <p><strong className="text-white">Correo:</strong> {contract.client_email}</p>}
-              {contract.client_address && <p><strong className="text-white">Dirección:</strong> {contract.client_address}</p>}
-            </div>
+          {/* Sección de Firma */}
+          <div className="pt-8 border-t border-zinc-300 mt-10 font-sans print:break-inside-avoid">
+            <h3 className="font-bold text-xs uppercase mb-4 text-center tracking-wider">FIRMA DE CONFORMIDAD Y ACEPTACIÓN</h3>
 
-            <div className="border-b border-white/10 pb-4">
-              <h2 className="font-bold text-sm text-white uppercase mb-2">2. Alcance del Proyecto</h2>
-              <p className="bg-black/40 p-3 rounded-xl border border-white/10 text-white font-mono">{contract.project_type}</p>
-              <p className="mt-2"><strong className="text-white">Plazo de Entrega:</strong> {contract.delivery_time} (Inicia tras recibir firma, anticipo e insumos requeridos).</p>
-            </div>
-
-            <div className="border-b border-white/10 pb-4 space-y-2">
-              <h2 className="font-bold text-sm text-white uppercase mb-2">3. Condiciones Financieras</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="bg-black/40 p-3 rounded-xl border border-white/10">
-                  <span className="text-[10px] text-zinc-400 block">Monto Total:</span>
-                  <span className="font-extrabold text-sm text-white">RD$ {parseFloat(contract.total_amount).toFixed(2)}</span>
-                </div>
-                <div className="bg-black/40 p-3 rounded-xl border border-white/10">
-                  <span className="text-[10px] text-zinc-400 block">Anticipo ({contract.advance_percent}%):</span>
-                  <span className="font-extrabold text-sm text-emerald-400">RD$ {parseFloat(contract.advance_amount).toFixed(2)}</span>
-                </div>
-                <div className="bg-black/40 p-3 rounded-xl border border-white/10">
-                  <span className="text-[10px] text-zinc-400 block">Restante ({100 - contract.advance_percent}%):</span>
-                  <span className="font-extrabold text-sm text-red-400">RD$ {parseFloat(contract.remaining_amount).toFixed(2)}</span>
+            {signedSuccess ? (
+              <div className="text-center space-y-3">
+                {contract.signature_url && (
+                  <div className="inline-block p-2 border-b-2 border-black mb-2">
+                    <img src={contract.signature_url} alt="Firma Registrada" className="h-16 object-contain mx-auto" />
+                  </div>
+                )}
+                <p className="text-xs font-bold text-black uppercase">{contract.client_name}</p>
+                <p className="text-[10px] text-zinc-500 font-mono">
+                  Firmado digitalmente el: {contract.signed_at ? new Date(contract.signed_at).toLocaleString('es-DO') : 'Registrado'}
+                </p>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Documento Firmado & Validador de Identidad Activo
                 </div>
               </div>
-              <p className="text-[11px] text-red-400 font-semibold pt-1">
-                * POLÍTICA DE NO DEVOLUCIÓN: El anticipo del {contract.advance_percent}% NO ES REEMBOLSABLE una vez transcurridas 24 horas del pago o iniciado el trabajo.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <h2 className="font-bold text-sm text-white uppercase">4. Cláusulas Importantes</h2>
-              <ul className="list-disc pl-4 space-y-2 text-[11px]">
-                <li><strong>Cancelación Gratuita:</strong> Reembolso del 100% si el cliente solicita cancelación en menos de 24 horas tras el pago y antes de iniciar trabajos.</li>
-                <li><strong>Retraso de Insumos:</strong> El cliente debe enviar imágenes/recursos en máximo {contract.resource_limit_days} días hábiles. Superado este plazo, el cronograma se congela.</li>
-                <li><strong>Contratiempos de la Agencia:</strong> En caso de fuerza mayor interna, se notificará al cliente con una nueva fecha prioritaria.</li>
-                <li><strong>Derecho de Exhibición:</strong> Nu-Design Agency se reserva el derecho de publicar el trabajo terminado en su portafolio salvo acuerdo escrito de confidencialidad (NDA).</li>
-              </ul>
-            </div>
-
-            {/* Módulo de Firma o Confirmación */}
-            <div className="border-t border-white/10 pt-6 space-y-4">
-              <h2 className="font-bold text-sm text-white uppercase flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-red-500" />
-                Firma Digital del Cliente (Obligatoria)
-              </h2>
-
-              {signedSuccess ? (
-                <div className="p-6 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-center space-y-4">
-                  <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
-                  <h3 className="font-bold text-emerald-400 text-sm">Contrato Firmado Correctamente</h3>
-
-                  {contract.signature_url && (
-                    <div className="bg-white p-3 rounded-2xl max-w-xs mx-auto border border-white/20 shadow-inner">
-                      <p className="text-[9px] text-zinc-500 uppercase font-extrabold mb-1">Firma Registrada:</p>
-                      <img 
-                        id="rendered-signature"
-                        src={contract.signature_url} 
-                        alt="Firma del Cliente" 
-                        className="h-16 object-contain mx-auto" 
-                        crossOrigin="anonymous"
-                      />
-                    </div>
-                  )}
-
-                  <p className="text-[11px] text-zinc-400">
-                    Gracias por confirmar las condiciones. Nu-Design Agency se pondrá en contacto para iniciar los trabajos.
-                  </p>
+            ) : (
+              <div className="space-y-4 print:hidden">
+                <p className="text-xs text-zinc-600 text-center">Para aceptar los términos descritos, por favor dibuje su firma en el recuadro a continuación:</p>
+                <div className="bg-zinc-100 border-2 border-dashed border-zinc-400 rounded-xl p-2 max-w-md mx-auto">
+                  <SignatureCanvas
+                    ref={sigCanvas}
+                    penColor="black"
+                    canvasProps={{ className: 'w-full h-36 rounded-lg bg-white cursor-crosshair' }}
+                  />
                 </div>
-              ) : (
-                <div className="space-y-3">
-                  <div className="bg-white rounded-2xl p-2 border border-zinc-300">
-                    <SignatureCanvas
-                      ref={sigCanvas}
-                      penColor="black"
-                      canvasProps={{ className: 'w-full h-40 rounded-xl cursor-crosshair' }}
-                    />
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <button
-                      type="button"
-                      onClick={clearSignature}
-                      className="text-xs text-zinc-400 hover:text-white underline cursor-pointer"
-                    >
-                      Borrar Firma
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleSign}
-                      disabled={submitting}
-                      className="px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 cursor-pointer"
-                    >
-                      {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirmar y Firmar Contrato'}
-                    </button>
-                  </div>
+                <div className="flex justify-center gap-4">
+                  <button
+                    type="button"
+                    onClick={clearSignature}
+                    className="text-xs text-zinc-500 hover:text-black underline cursor-pointer"
+                  >
+                    Borrar y reintentar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSign}
+                    disabled={submitting}
+                    className="px-6 py-2.5 bg-black hover:bg-zinc-800 text-white font-bold text-xs rounded-xl shadow-lg flex items-center gap-2 cursor-pointer"
+                  >
+                    {submitting ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : 'Aceptar y Firmar Digitalmente'}
+                  </button>
                 </div>
-              )}
-            </div>
-
+              </div>
+            )}
           </div>
 
         </div>
 
-        {/* Botón de Descarga */}
-        {signedSuccess && (
-          <div className="text-center pt-2">
-            <button
-              type="button"
-              onClick={handleDownloadPDF}
-              disabled={downloadingPdf}
-              className="px-8 py-4 bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs rounded-2xl shadow-xl flex items-center justify-center gap-2 mx-auto transition cursor-pointer"
-            >
-              {downloadingPdf ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" /> Generando Documento PDF...
-                </>
-              ) : (
-                <>
-                  <Download className="w-4 h-4" /> Descargar Copia Oficial en PDF
-                </>
-              )}
-            </button>
-          </div>
-        )}
+        {/* Pie de página oficial */}
+        <div className="mt-12 pt-4 border-t border-zinc-200 text-center text-[10px] text-zinc-400 font-sans">
+          Nu-Design Agency • Documento con validez de prestación de servicio digital • Dominican Republic
+        </div>
 
       </div>
+
     </div>
   );
 }
