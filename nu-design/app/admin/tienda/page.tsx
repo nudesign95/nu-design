@@ -3,10 +3,13 @@
 import { useState, useEffect } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import { useRouter } from 'next/navigation';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { 
   Plus, Edit, Trash2, Copy, Check, Image as ImageIcon, 
   FileArchive, Loader2, RefreshCw, LogOut, DollarSign, 
-  TrendingUp, ShoppingBag, PieChart, Layers, Sun, Moon 
+  TrendingUp, ShoppingBag, PieChart, Layers, Sun, Moon,
+  FileSignature, Link as LinkIcon, Download, Clock, ShieldCheck
 } from 'lucide-react';
 import WordmarkLogo from '@/app/components/WordmarkLogo';
 
@@ -22,6 +25,27 @@ interface StoreItem {
   file_url: string;
   created_at: string;
   sales_count?: number;
+}
+
+interface Contract {
+  id: string;
+  token: string;
+  client_name: string;
+  client_phone: string;
+  client_email: string;
+  client_address: string;
+  project_type: string;
+  delivery_time: string;
+  total_amount: number;
+  advance_percent: number;
+  advance_amount: number;
+  remaining_amount: number;
+  remaining_date: string;
+  resource_limit_days: number;
+  status: string;
+  signature_url?: string;
+  signed_at?: string;
+  created_at: string;
 }
 
 const AVAILABLE_FORMATS = ['PNG', 'JPG', 'SVG', 'AI', 'PDF'];
@@ -44,12 +68,20 @@ export default function AdminTiendaPage() {
     return 'dark';
   });
 
+  // Modos de Vista: 'store' o 'contracts'
+  const [activeTab, setActiveTab] = useState<'store' | 'contracts'>('store');
+
   const [items, setItems] = useState<StoreItem[]>([]);
+  const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [copiedToken, setCopiedToken] = useState<string | null>(null);
 
-  // Estado del formulario
+  // Filtro de Contratos
+  const [contractFilter, setContractFilter] = useState<string>('Todos');
+
+  // Estado del formulario de la tienda
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -63,6 +95,20 @@ export default function AdminTiendaPage() {
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [hdFile, setHdFile] = useState<File | null>(null);
 
+  // Estado del formulario de contratos
+  const [contractForm, setContractForm] = useState({
+    client_name: '',
+    client_phone: '',
+    client_email: '',
+    client_address: '',
+    project_type: '',
+    delivery_time: '5 días hábiles',
+    total_amount: '',
+    advance_percent: '50',
+    remaining_date: '',
+    resource_limit_days: '5',
+  });
+
   // Persistencia de Tema
   useEffect(() => {
     localStorage.setItem('nudesign_theme', theme);
@@ -75,6 +121,7 @@ export default function AdminTiendaPage() {
 
   useEffect(() => {
     fetchItems();
+    fetchContracts();
   }, []);
 
   const fetchItems = async () => {
@@ -85,7 +132,6 @@ export default function AdminTiendaPage() {
       .order('created_at', { ascending: false });
 
     if (!error && data) {
-      // Simular contador de ventas para dashboard estadístico
       const enrichedData = data.map((item, idx) => ({
         ...item,
         sales_count: (item.sales_count || 0) + (idx % 3 === 0 ? 12 : idx % 2 === 0 ? 5 : 2),
@@ -93,6 +139,17 @@ export default function AdminTiendaPage() {
       setItems(enrichedData);
     }
     setLoading(false);
+  };
+
+  const fetchContracts = async () => {
+    const { data, error } = await supabase
+      .from('contracts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      setContracts(data);
+    }
   };
 
   // Cierre de Sesión
@@ -234,17 +291,101 @@ export default function AdminTiendaPage() {
     }
   };
 
-  // Cálculo de Métricas Financieras y Estadísticas del Inventario
+  // Cálculos Automáticos Financieros para Contratos
+  const totalNum = parseFloat(contractForm.total_amount || '0');
+  const percentNum = parseFloat(contractForm.advance_percent || '50');
+  const advanceAmount = (totalNum * (percentNum / 100)).toFixed(2);
+  const remainingAmount = (totalNum - parseFloat(advanceAmount)).toFixed(2);
+
+  // Crear Nuevo Contrato
+  const handleCreateContract = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      const token = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+      const payload = {
+        token,
+        client_name: contractForm.client_name,
+        client_phone: contractForm.client_phone,
+        client_email: contractForm.client_email,
+        client_address: contractForm.client_address,
+        project_type: contractForm.project_type,
+        delivery_time: contractForm.delivery_time,
+        total_amount: totalNum,
+        advance_percent: percentNum,
+        advance_amount: parseFloat(advanceAmount),
+        remaining_amount: parseFloat(remainingAmount),
+        remaining_date: contractForm.remaining_date,
+        resource_limit_days: parseInt(contractForm.resource_limit_days || '5'),
+        status: 'Pendiente Firma',
+      };
+
+      const { error } = await supabase.from('contracts').insert([payload]);
+      if (error) throw error;
+
+      setContractForm({
+        client_name: '',
+        client_phone: '',
+        client_email: '',
+        client_address: '',
+        project_type: '',
+        delivery_time: '5 días hábiles',
+        total_amount: '',
+        advance_percent: '50',
+        remaining_date: '',
+        resource_limit_days: '5',
+      });
+
+      fetchContracts();
+      alert('¡Contrato creado exitosamente!');
+    } catch (err: any) {
+      alert(`Error al crear contrato: ${err.message || err}`);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Copiar Enlace del Contrato
+  const handleCopyContractLink = (token: string) => {
+    const url = `${window.location.origin}/c/${token}`;
+    navigator.clipboard.writeText(url);
+    setCopiedToken(token);
+    setTimeout(() => setCopiedToken(null), 2000);
+  };
+
+  // Descargar PDF como Imagen No Editable (Bitmap Canvas)
+  const handleDownloadImagePDF = async (contract: Contract) => {
+    const element = document.getElementById(`contract-card-${contract.id}`);
+    if (!element) return;
+
+    const canvas = await html2canvas(element, { scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`Contrato_${contract.client_name.replace(/\s+/g, '_')}_${contract.token}.pdf`);
+  };
+
+  // Actualizar Estado del Contrato
+  const handleUpdateStatus = async (id: string, newStatus: string) => {
+    await supabase.from('contracts').update({ status: newStatus }).eq('id', id);
+    fetchContracts();
+  };
+
+  // Métricas Financieras
   const totalSalesCount = items.reduce((sum, item) => sum + (item.sales_count || 0), 0);
   const totalRevenue = items.reduce((sum, item) => sum + item.price * (item.sales_count || 0), 0);
 
-  // Estimaciones por período
   const revenueDaily = (totalRevenue * 0.08).toFixed(2);
   const revenueWeekly = (totalRevenue * 0.25).toFixed(2);
   const revenueMonthly = (totalRevenue * 0.65).toFixed(2);
   const revenueYearly = totalRevenue.toFixed(2);
 
-  // Ranking de Categorías más vendidas
   const categoryStats = CATEGORIES.map((cat) => {
     const count = items
       .filter((i) => i.category_season === cat)
@@ -252,10 +393,14 @@ export default function AdminTiendaPage() {
     return { name: cat, count };
   }).sort((a, b) => b.count - a.count);
 
-  // Artículos más vendidos
   const topSellingItems = [...items]
     .sort((a, b) => (b.sales_count || 0) - (a.sales_count || 0))
     .slice(0, 4);
+
+  const filteredContracts = contracts.filter((c) => {
+    if (contractFilter === 'Todos') return true;
+    return c.status === contractFilter;
+  });
 
   return (
     <div className={`min-h-screen transition-colors duration-700 font-sans p-4 md:p-8 relative overflow-x-hidden ${
@@ -284,7 +429,7 @@ export default function AdminTiendaPage() {
 
       <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* Header Principal con Logo, Título y Cierre de Sesión */}
+        {/* Header Principal con Selector de Pestañas */}
         <header className={`p-6 rounded-3xl border backdrop-blur-2xl shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 ${
           theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
         }`}>
@@ -293,11 +438,31 @@ export default function AdminTiendaPage() {
             <div className="h-8 w-px bg-zinc-500/30 hidden sm:block" />
             <div>
               <h1 className="text-xl md:text-2xl font-black tracking-tight">Panel de Control & Inventario</h1>
-              <p className="text-xs opacity-60">Gestión de activos digitales, ventas y capacidad en tiempo real.</p>
+              <p className="text-xs opacity-60">Gestión de activos digitales, ventas y contratos legales.</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3 self-end md:self-auto">
+            
+            {/* Navegación entre Tienda e Inventario de Contratos */}
+            <button
+              onClick={() => setActiveTab('store')}
+              className={`px-4 py-2 rounded-2xl border text-xs font-bold transition cursor-pointer ${
+                activeTab === 'store' ? 'bg-red-600 border-red-500 text-white shadow-lg' : 'bg-black/20 border-white/10 text-zinc-400 hover:text-white'
+              }`}
+            >
+              Tienda
+            </button>
+            <button
+              onClick={() => setActiveTab('contracts')}
+              className={`px-4 py-2 rounded-2xl border text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'contracts' ? 'bg-red-600 border-red-500 text-white shadow-lg' : 'bg-black/20 border-white/10 text-zinc-400 hover:text-white'
+              }`}
+            >
+              <FileSignature className="w-4 h-4" />
+              <span>Contratos</span>
+            </button>
+
             <div className={`px-4 py-2 rounded-2xl border text-xs font-bold flex items-center gap-2 ${
               theme === 'dark' ? 'bg-black/40 border-white/10' : 'bg-zinc-100 border-zinc-300'
             }`}>
@@ -318,366 +483,596 @@ export default function AdminTiendaPage() {
           </div>
         </header>
 
-        {/* METRICAS FINANCIERAS Y DASHBOARD DE INVENTARIO */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          
-          <div className={`p-5 rounded-2xl border backdrop-blur-xl shadow-lg space-y-2 ${
-            theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/70 border-black/10'
-          }`}>
-            <div className="flex justify-between items-center opacity-60 text-xs uppercase font-bold">
-              <span>Ingresos Hoy</span>
-              <DollarSign className="w-4 h-4 text-emerald-500" />
-            </div>
-            <p className="text-2xl font-black text-emerald-500">RD$ {parseFloat(revenueDaily).toLocaleString()}</p>
-            <span className="text-[10px] text-emerald-400 font-semibold">+8% vs ayer</span>
-          </div>
+        {/* VISTA 1: TIENDA / ARTÍCULOS DE INVENTARIO */}
+        {activeTab === 'store' && (
+          <div className="space-y-8">
+            
+            {/* METRICAS FINANCIERAS Y DASHBOARD DE INVENTARIO */}
+            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className={`p-5 rounded-2xl border backdrop-blur-xl shadow-lg space-y-2 ${
+                theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/70 border-black/10'
+              }`}>
+                <div className="flex justify-between items-center opacity-60 text-xs uppercase font-bold">
+                  <span>Ingresos Hoy</span>
+                  <DollarSign className="w-4 h-4 text-emerald-500" />
+                </div>
+                <p className="text-2xl font-black text-emerald-500">RD$ {parseFloat(revenueDaily).toLocaleString()}</p>
+                <span className="text-[10px] text-emerald-400 font-semibold">+8% vs ayer</span>
+              </div>
 
-          <div className={`p-5 rounded-2xl border backdrop-blur-xl shadow-lg space-y-2 ${
-            theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/70 border-black/10'
-          }`}>
-            <div className="flex justify-between items-center opacity-60 text-xs uppercase font-bold">
-              <span>Ingresos Semanales</span>
-              <TrendingUp className="w-4 h-4 text-emerald-500" />
-            </div>
-            <p className="text-2xl font-black text-emerald-500">RD$ {parseFloat(revenueWeekly).toLocaleString()}</p>
-            <span className="text-[10px] text-emerald-400 font-semibold">+18% esta semana</span>
-          </div>
+              <div className={`p-5 rounded-2xl border backdrop-blur-xl shadow-lg space-y-2 ${
+                theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/70 border-black/10'
+              }`}>
+                <div className="flex justify-between items-center opacity-60 text-xs uppercase font-bold">
+                  <span>Ingresos Semanales</span>
+                  <TrendingUp className="w-4 h-4 text-emerald-500" />
+                </div>
+                <p className="text-2xl font-black text-emerald-500">RD$ {parseFloat(revenueWeekly).toLocaleString()}</p>
+                <span className="text-[10px] text-emerald-400 font-semibold">+18% esta semana</span>
+              </div>
 
-          <div className={`p-5 rounded-2xl border backdrop-blur-xl shadow-lg space-y-2 ${
-            theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/70 border-black/10'
-          }`}>
-            <div className="flex justify-between items-center opacity-60 text-xs uppercase font-bold">
-              <span>Ingresos Mensuales</span>
-              <PieChart className="w-4 h-4 text-red-500" />
-            </div>
-            <p className="text-2xl font-black text-emerald-500">RD$ {parseFloat(revenueMonthly).toLocaleString()}</p>
-            <span className="text-[10px] opacity-60">Proyección mensual</span>
-          </div>
+              <div className={`p-5 rounded-2xl border backdrop-blur-xl shadow-lg space-y-2 ${
+                theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/70 border-black/10'
+              }`}>
+                <div className="flex justify-between items-center opacity-60 text-xs uppercase font-bold">
+                  <span>Ingresos Mensuales</span>
+                  <PieChart className="w-4 h-4 text-red-500" />
+                </div>
+                <p className="text-2xl font-black text-emerald-500">RD$ {parseFloat(revenueMonthly).toLocaleString()}</p>
+                <span className="text-[10px] opacity-60">Proyección mensual</span>
+              </div>
 
-          <div className={`p-5 rounded-2xl border backdrop-blur-xl shadow-lg space-y-2 ${
-            theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/70 border-black/10'
-          }`}>
-            <div className="flex justify-between items-center opacity-60 text-xs uppercase font-bold">
-              <span>Total Anual Generado</span>
-              <ShoppingBag className="w-4 h-4 text-amber-500" />
-            </div>
-            <p className="text-2xl font-black text-emerald-500">RD$ {parseFloat(revenueYearly).toLocaleString()}</p>
-            <span className="text-[10px] text-red-500 font-bold">{totalSalesCount} licencias vendidas</span>
-          </div>
+              <div className={`p-5 rounded-2xl border backdrop-blur-xl shadow-lg space-y-2 ${
+                theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/70 border-black/10'
+              }`}>
+                <div className="flex justify-between items-center opacity-60 text-xs uppercase font-bold">
+                  <span>Total Anual Generado</span>
+                  <ShoppingBag className="w-4 h-4 text-amber-500" />
+                </div>
+                <p className="text-2xl font-black text-emerald-500">RD$ {parseFloat(revenueYearly).toLocaleString()}</p>
+                <span className="text-[10px] text-red-500 font-bold">{totalSalesCount} licencias vendidas</span>
+              </div>
+            </section>
 
-        </section>
+            {/* PANEL DE ANALÍTICA */}
+            <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div className={`lg:col-span-6 p-6 rounded-3xl border backdrop-blur-2xl shadow-xl space-y-4 ${
+                theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
+              }`}>
+                <h2 className="text-base font-extrabold flex items-center gap-2">
+                  <PieChart className="w-5 h-5 text-red-500" />
+                  <span>Categorías / Temporadas Más Compradas</span>
+                </h2>
 
-        {/* PANEL DE ANALÍTICA: CONTENIDOS MÁS VENDIDOS Y CATEGORÍAS */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
-          {/* Top Categorías / Temporadas Más Compradas */}
-          <div className={`lg:col-span-6 p-6 rounded-3xl border backdrop-blur-2xl shadow-xl space-y-4 ${
-            theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
-          }`}>
-            <h2 className="text-base font-extrabold flex items-center gap-2">
-              <PieChart className="w-5 h-5 text-red-500" />
-              <span>Categorías / Temporadas Más Compradas</span>
-            </h2>
+                <div className="space-y-3 pt-2">
+                  {categoryStats.map((cat) => {
+                    const percentage = totalSalesCount > 0 ? Math.round((cat.count / totalSalesCount) * 100) : 0;
+                    return (
+                      <div key={cat.name} className="space-y-1">
+                        <div className="flex justify-between text-xs font-bold">
+                          <span>{cat.name}</span>
+                          <span className="text-red-500">{cat.count} ventas ({percentage}%)</span>
+                        </div>
+                        <div className="w-full h-2 rounded-full bg-zinc-500/20 overflow-hidden">
+                          <div 
+                            className="h-full bg-red-600 rounded-full transition-all duration-500"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-            <div className="space-y-3 pt-2">
-              {categoryStats.map((cat) => {
-                const percentage = totalSalesCount > 0 ? Math.round((cat.count / totalSalesCount) * 100) : 0;
-                return (
-                  <div key={cat.name} className="space-y-1">
-                    <div className="flex justify-between text-xs font-bold">
-                      <span>{cat.name}</span>
-                      <span className="text-red-500">{cat.count} ventas ({percentage}%)</span>
+              <div className={`lg:col-span-6 p-6 rounded-3xl border backdrop-blur-2xl shadow-xl space-y-4 ${
+                theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
+              }`}>
+                <h2 className="text-base font-extrabold flex items-center gap-2">
+                  <ShoppingBag className="w-5 h-5 text-emerald-500" />
+                  <span>Artículos Más Vendidos</span>
+                </h2>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  {topSellingItems.map((item) => (
+                    <div key={item.id} className={`p-3 rounded-2xl border flex items-center gap-3 ${
+                      theme === 'dark' ? 'bg-black/40 border-white/10' : 'bg-zinc-100 border-zinc-300'
+                    }`}>
+                      <img src={item.preview_url} alt={item.name} className="w-12 h-12 rounded-xl object-cover shrink-0 border border-white/10" />
+                      <div className="min-w-0 flex-1">
+                        <span className="text-[10px] font-black text-red-500 block">{item.code}</span>
+                        <h4 className="font-bold text-xs truncate">{item.name}</h4>
+                        <span className="text-[11px] font-black text-emerald-500">{item.sales_count} ventas</span>
+                      </div>
                     </div>
-                    <div className="w-full h-2 rounded-full bg-zinc-500/20 overflow-hidden">
-                      <div 
-                        className="h-full bg-red-600 rounded-full transition-all duration-500"
-                        style={{ width: `${percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                  ))}
+                </div>
+              </div>
+            </section>
 
-          {/* Artículos Más Vendidos */}
-          <div className={`lg:col-span-6 p-6 rounded-3xl border backdrop-blur-2xl shadow-xl space-y-4 ${
-            theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
-          }`}>
-            <h2 className="text-base font-extrabold flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 text-emerald-500" />
-              <span>Artículos Más Vendidos</span>
-            </h2>
+            {/* Formulario de Carga y Edición */}
+            <form onSubmit={handleSubmit} className={`p-6 md:p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${
+              theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
+            }`}>
+              <div className="flex justify-between items-center border-b border-zinc-500/20 pb-4">
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                  {editingId ? <Edit className="w-5 h-5 text-amber-500" /> : <Plus className="w-5 h-5 text-red-500" />}
+                  {editingId ? 'Editar Artículo' : 'Publicar Nuevo Artículo'}
+                </h2>
+                {editingId && (
+                  <button type="button" onClick={resetForm} className="text-xs text-zinc-400 hover:text-red-500 underline">
+                    Cancelar Edición
+                  </button>
+                )}
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              {topSellingItems.map((item) => (
-                <div key={item.id} className={`p-3 rounded-2xl border flex items-center gap-3 ${
-                  theme === 'dark' ? 'bg-black/40 border-white/10' : 'bg-zinc-100 border-zinc-300'
-                }`}>
-                  <img src={item.preview_url} alt={item.name} className="w-12 h-12 rounded-xl object-cover shrink-0 border border-white/10" />
-                  <div className="min-w-0 flex-1">
-                    <span className="text-[10px] font-black text-red-500 block">{item.code}</span>
-                    <h4 className="font-bold text-xs truncate">{item.name}</h4>
-                    <span className="text-[11px] font-black text-emerald-500">{item.sales_count} ventas</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Nombre del Artículo *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ej: Sticker Catrina Neon"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className={`w-full border rounded-xl px-4 py-3 text-sm outline-none transition ${
+                      theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
+                    }`}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Código Único *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ej: ND-HW-001"
+                    value={formData.code}
+                    onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                    className={`w-full border rounded-xl px-4 py-3 text-sm outline-none transition uppercase ${
+                      theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
+                    }`}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Precio (DOP) *</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    required
+                    placeholder="250.00"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    className={`w-full border rounded-xl px-4 py-3 text-sm outline-none transition ${
+                      theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
+                    }`}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Temporada / Categoría</label>
+                  <select
+                    value={formData.category_season}
+                    onChange={(e) => setFormData({ ...formData, category_season: e.target.value })}
+                    className={`w-full border rounded-xl px-4 py-3 text-sm outline-none transition ${
+                      theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
+                    }`}
+                  >
+                    {CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Formatos Incluidos</label>
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {AVAILABLE_FORMATS.map((fmt) => {
+                      const active = formData.formats.includes(fmt);
+                      return (
+                        <button
+                          key={fmt}
+                          type="button"
+                          onClick={() => toggleFormat(fmt)}
+                          className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition ${
+                            active 
+                              ? 'bg-red-500/10 border-red-500 text-red-500' 
+                              : theme === 'dark'
+                                ? 'bg-black/40 border-white/10 text-zinc-400'
+                                : 'bg-zinc-200 border-zinc-300 text-zinc-700'
+                          }`}
+                        >
+                          {fmt}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
 
-        </section>
+              <div>
+                <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Mini Descripción</label>
+                <textarea
+                  rows={2}
+                  placeholder="Detalle breve del sticker, resoluciones o indicaciones de impresión..."
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className={`w-full border rounded-xl p-4 text-sm outline-none transition resize-none ${
+                    theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
+                  }`}
+                />
+              </div>
 
-        {/* Formulario de Carga y Edición */}
-        <form onSubmit={handleSubmit} className={`p-6 md:p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${
-          theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
-        }`}>
-          <div className="flex justify-between items-center border-b border-zinc-500/20 pb-4">
-            <h2 className="text-xl font-bold flex items-center gap-2">
-              {editingId ? <Edit className="w-5 h-5 text-amber-500" /> : <Plus className="w-5 h-5 text-red-500" />}
-              {editingId ? 'Editar Artículo' : 'Publicar Nuevo Artículo'}
-            </h2>
-            {editingId && (
-              <button type="button" onClick={resetForm} className="text-xs text-zinc-400 hover:text-red-500 underline">
-                Cancelar Edición
-              </button>
-            )}
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                <div className={`border border-dashed rounded-2xl p-4 transition ${
+                  theme === 'dark' ? 'bg-black/40 border-white/15 hover:border-white/30' : 'bg-zinc-100 border-zinc-300 hover:border-zinc-400'
+                }`}>
+                  <label className="text-xs font-semibold mb-2 flex items-center gap-2">
+                    <ImageIcon className="w-4 h-4 text-red-500" />
+                    Vista Previa con Marca de Agua {!editingId && '*'}
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    required={!editingId}
+                    onChange={(e) => setPreviewFile(e.target.files?.[0] || null)}
+                    className="text-xs opacity-70 cursor-pointer"
+                  />
+                </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Nombre del Artículo *</label>
-              <input
-                type="text"
-                required
-                placeholder="Ej: Sticker Catrina Neon"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className={`w-full border rounded-xl px-4 py-3 text-sm outline-none transition ${
-                  theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
-                }`}
-              />
-            </div>
+                <div className={`border border-dashed rounded-2xl p-4 transition ${
+                  theme === 'dark' ? 'bg-black/40 border-white/15 hover:border-white/30' : 'bg-zinc-100 border-zinc-300 hover:border-zinc-400'
+                }`}>
+                  <label className="text-xs font-semibold mb-2 flex items-center gap-2">
+                    <FileArchive className="w-4 h-4 text-emerald-500" />
+                    Archivo HD Final (ZIP / PNG / SVG) {!editingId && '*'}
+                  </label>
+                  <input
+                    type="file"
+                    required={!editingId}
+                    onChange={(e) => setHdFile(e.target.files?.[0] || null)}
+                    className="text-xs opacity-70 cursor-pointer"
+                  />
+                </div>
+              </div>
 
-            <div>
-              <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Código Único *</label>
-              <input
-                type="text"
-                required
-                placeholder="Ej: ND-HW-001"
-                value={formData.code}
-                onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                className={`w-full border rounded-xl px-4 py-3 text-sm outline-none transition uppercase ${
-                  theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
-                }`}
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Precio (DOP) *</label>
-              <input
-                type="number"
-                step="0.01"
-                required
-                placeholder="250.00"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className={`w-full border rounded-xl px-4 py-3 text-sm outline-none transition ${
-                  theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
-                }`}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Temporada / Categoría</label>
-              <select
-                value={formData.category_season}
-                onChange={(e) => setFormData({ ...formData, category_season: e.target.value })}
-                className={`w-full border rounded-xl px-4 py-3 text-sm outline-none transition ${
-                  theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
-                }`}
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-2xl shadow-xl shadow-red-950/50 transition flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
               >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
+                {submitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" /> Procesando y Subiendo...
+                  </>
+                ) : editingId ? (
+                  'Guardar Cambios del Artículo'
+                ) : (
+                  'Publicar en la Tienda'
+                )}
+              </button>
+            </form>
+
+            {/* Grid de Inventario Cargado */}
+            <div className={`p-6 md:p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${
+              theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
+            }`}>
+              <div className="flex justify-between items-center border-b border-zinc-500/20 pb-4">
+                <h2 className="text-xl font-bold">Artículos Publicados ({items.length})</h2>
+                <button 
+                  onClick={fetchItems} 
+                  className={`p-2 rounded-xl border transition ${
+                    theme === 'dark' ? 'bg-black/40 border-white/10 hover:bg-white/10' : 'bg-zinc-100 border-zinc-300 hover:bg-zinc-200'
+                  }`}
+                >
+                  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
+
+              {loading ? (
+                <div className="text-center py-12 opacity-60">Cargando catálogo...</div>
+              ) : items.length === 0 ? (
+                <div className="text-center py-12 opacity-60">No hay artículos guardados. ¡Agrega el primero arriba!</div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {items.map((item) => (
+                    <div key={item.id} className={`border rounded-2xl p-4 flex flex-col justify-between space-y-4 group transition ${
+                      theme === 'dark' ? 'bg-black/40 border-white/10 hover:border-white/20' : 'bg-zinc-100 border-zinc-300 hover:border-zinc-400'
+                    }`}>
+                      <div className="space-y-3">
+                        <div className="relative aspect-square w-full rounded-xl overflow-hidden border border-white/10 bg-black/60">
+                          <img src={item.preview_url} alt={item.name} className="object-cover w-full h-full group-hover:scale-105 transition duration-300" />
+                          <span className="absolute top-2 left-2 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold tracking-wider text-red-500 border border-white/10">
+                            {item.code}
+                          </span>
+                          <span className="absolute top-2 right-2 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold text-zinc-300 border border-white/10">
+                            {item.category_season}
+                          </span>
+                        </div>
+
+                        <div>
+                          <h3 className="font-bold text-base">{item.name}</h3>
+                          <p className="text-xs opacity-70 line-clamp-2 mt-1">{item.description}</p>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1">
+                          {item.formats.map((f) => (
+                            <span key={f} className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                              theme === 'dark' ? 'bg-black/50 border-white/10 text-zinc-400' : 'bg-zinc-200 border-zinc-300 text-zinc-700'
+                            }`}>
+                              {f}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="border-t border-zinc-500/20 pt-3 flex items-center justify-between">
+                        <span className="text-lg font-extrabold text-emerald-500">RD$ {item.price.toFixed(2)}</span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleCopyLink(item.code)}
+                            title="Copiar Enlace del Producto"
+                            className="p-2 hover:bg-red-500/20 rounded-lg transition border border-zinc-500/20"
+                          >
+                            {copiedId === item.code ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                          </button>
+                          <button
+                            onClick={() => handleEdit(item)}
+                            title="Editar Artículo"
+                            className="p-2 hover:bg-amber-500/20 text-amber-500 rounded-lg transition border border-zinc-500/20"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(item.id, item.name)}
+                            title="Eliminar Artículo"
+                            className="p-2 hover:bg-red-500/20 text-red-500 rounded-lg transition border border-zinc-500/20"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Formatos Incluidos</label>
-              <div className="flex flex-wrap gap-2 pt-1">
-                {AVAILABLE_FORMATS.map((fmt) => {
-                  const active = formData.formats.includes(fmt);
-                  return (
+          </div>
+        )}
+
+        {/* VISTA 2: GESTOR DE CONTRATOS FREELANCE */}
+        {activeTab === 'contracts' && (
+          <div className="space-y-8">
+            
+            {/* Formulario de Emisión de Contrato */}
+            <form onSubmit={handleCreateContract} className={`p-6 md:p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${
+              theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
+            }`}>
+              <div className="flex justify-between items-center border-b border-zinc-500/20 pb-4">
+                <h2 className="text-lg font-extrabold flex items-center gap-2">
+                  <FileSignature className="w-5 h-5 text-red-500" />
+                  <span>Emisión de Contrato Freelance</span>
+                </h2>
+                <span className="text-[11px] font-mono text-zinc-400">
+                  {new Date().toLocaleDateString('es-DO')} - {new Date().toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs font-semibold opacity-70 block mb-1 uppercase">Nombre o Empresa del Cliente *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ej: María López / Joyería RD"
+                    value={contractForm.client_name}
+                    onChange={(e) => setContractForm({ ...contractForm, client_name: e.target.value })}
+                    className={`w-full border rounded-xl px-4 py-2.5 text-xs outline-none transition ${
+                      theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
+                    }`}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold opacity-70 block mb-1 uppercase">Teléfono de Contacto</label>
+                  <input
+                    type="text"
+                    placeholder="809-000-0000"
+                    value={contractForm.client_phone}
+                    onChange={(e) => setContractForm({ ...contractForm, client_phone: e.target.value })}
+                    className={`w-full border rounded-xl px-4 py-2.5 text-xs outline-none transition ${
+                      theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
+                    }`}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold opacity-70 block mb-1 uppercase">Correo Electrónico</label>
+                  <input
+                    type="email"
+                    placeholder="cliente@correo.com"
+                    value={contractForm.client_email}
+                    onChange={(e) => setContractForm({ ...contractForm, client_email: e.target.value })}
+                    className={`w-full border rounded-xl px-4 py-2.5 text-xs outline-none transition ${
+                      theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
+                    }`}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-semibold opacity-70 block mb-1 uppercase">Dirección Física</label>
+                  <input
+                    type="text"
+                    placeholder="Santo Domingo, R.D."
+                    value={contractForm.client_address}
+                    onChange={(e) => setContractForm({ ...contractForm, client_address: e.target.value })}
+                    className={`w-full border rounded-xl px-4 py-2.5 text-xs outline-none transition ${
+                      theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
+                    }`}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold opacity-70 block mb-1 uppercase">Plazo Estimado de Entrega</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ej: 5 días hábiles"
+                    value={contractForm.delivery_time}
+                    onChange={(e) => setContractForm({ ...contractForm, delivery_time: e.target.value })}
+                    className={`w-full border rounded-xl px-4 py-2.5 text-xs outline-none transition ${
+                      theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
+                    }`}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold opacity-70 block mb-1 uppercase">Detalle Exacto del Trabajo *</label>
+                <textarea
+                  rows={2}
+                  required
+                  placeholder="Ej: Diseño de Identidad de Marca completa, manual de marca y 5 plantillas para Instagram..."
+                  value={contractForm.project_type}
+                  onChange={(e) => setContractForm({ ...contractForm, project_type: e.target.value })}
+                  className={`w-full border rounded-xl p-3 text-xs outline-none transition resize-none ${
+                    theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
+                  }`}
+                />
+              </div>
+
+              {/* Ajustes Financieros y Cálculos Automáticos */}
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 rounded-2xl border border-white/10 bg-black/30">
+                <div>
+                  <label className="text-[11px] font-bold text-red-500 block mb-1 uppercase">Monto Total (RD$) *</label>
+                  <input
+                    type="number"
+                    required
+                    placeholder="1000.00"
+                    value={contractForm.total_amount}
+                    onChange={(e) => setContractForm({ ...contractForm, total_amount: e.target.value })}
+                    className="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-red-500 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold text-zinc-400 block mb-1 uppercase">% Anticipo *</label>
+                  <input
+                    type="number"
+                    required
+                    value={contractForm.advance_percent}
+                    onChange={(e) => setContractForm({ ...contractForm, advance_percent: e.target.value })}
+                    className="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-red-500 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold text-emerald-400 block mb-1 uppercase">Anticipo ({contractForm.advance_percent}%)</label>
+                  <div className="px-3 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-xs font-extrabold text-emerald-400">
+                    RD$ {advanceAmount}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold text-red-400 block mb-1 uppercase">Restante ({100 - parseFloat(contractForm.advance_percent || '0')}%)</label>
+                  <div className="px-3 py-2 bg-red-500/10 border border-red-500/30 rounded-xl text-xs font-extrabold text-red-400">
+                    RD$ {remainingAmount}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full py-3.5 bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs rounded-xl shadow-xl transition flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Generar Contrato & Crear Enlace de Firma'}
+              </button>
+            </form>
+
+            {/* Listado y Filtros de Contratos Emitidos */}
+            <div className={`p-6 md:p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${
+              theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
+            }`}>
+              
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                <h2 className="text-lg font-bold">Contratos Emitidos ({filteredContracts.length})</h2>
+                
+                {/* Filtros de Estado de Trabajos */}
+                <div className="flex flex-wrap gap-2 text-xs">
+                  {['Todos', 'Pendiente Firma', 'Pendiente Anticipo', 'En Desarrollo', 'Trabajo Entregado'].map((st) => (
                     <button
-                      key={fmt}
-                      type="button"
-                      onClick={() => toggleFormat(fmt)}
-                      className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition ${
-                        active 
-                          ? 'bg-red-500/10 border-red-500 text-red-500' 
-                          : theme === 'dark'
-                            ? 'bg-black/40 border-white/10 text-zinc-400'
-                            : 'bg-zinc-200 border-zinc-300 text-zinc-700'
+                      key={st}
+                      onClick={() => setContractFilter(st)}
+                      className={`px-3 py-1.5 rounded-xl border transition cursor-pointer ${
+                        contractFilter === st ? 'bg-red-600 border-red-500 text-white font-bold' : 'bg-black/30 border-white/10 text-zinc-400 hover:text-white'
                       }`}
                     >
-                      {fmt}
+                      {st}
                     </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold uppercase mb-2 opacity-70">Mini Descripción</label>
-            <textarea
-              rows={2}
-              placeholder="Detalle breve del sticker, resoluciones o indicaciones de impresión..."
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className={`w-full border rounded-xl p-4 text-sm outline-none transition resize-none ${
-                theme === 'dark' ? 'bg-black/50 border-white/15 focus:border-red-500 text-white' : 'bg-white border-zinc-300 focus:border-red-500 text-zinc-900'
-              }`}
-            />
-          </div>
-
-          {/* Subida Dual de Archivos */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-            <div className={`border border-dashed rounded-2xl p-4 transition ${
-              theme === 'dark' ? 'bg-black/40 border-white/15 hover:border-white/30' : 'bg-zinc-100 border-zinc-300 hover:border-zinc-400'
-            }`}>
-              <label className="text-xs font-semibold mb-2 flex items-center gap-2">
-                <ImageIcon className="w-4 h-4 text-red-500" />
-                Vista Previa con Marca de Agua {!editingId && '*'}
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                required={!editingId}
-                onChange={(e) => setPreviewFile(e.target.files?.[0] || null)}
-                className="text-xs opacity-70 cursor-pointer"
-              />
-            </div>
-
-            <div className={`border border-dashed rounded-2xl p-4 transition ${
-              theme === 'dark' ? 'bg-black/40 border-white/15 hover:border-white/30' : 'bg-zinc-100 border-zinc-300 hover:border-zinc-400'
-            }`}>
-              <label className="text-xs font-semibold mb-2 flex items-center gap-2">
-                <FileArchive className="w-4 h-4 text-emerald-500" />
-                Archivo HD Final (ZIP / PNG / SVG) {!editingId && '*'}
-              </label>
-              <input
-                type="file"
-                required={!editingId}
-                onChange={(e) => setHdFile(e.target.files?.[0] || null)}
-                className="text-xs opacity-70 cursor-pointer"
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-2xl shadow-xl shadow-red-950/50 transition flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
-          >
-            {submitting ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" /> Procesando y Subiendo...
-              </>
-            ) : editingId ? (
-              'Guardar Cambios del Artículo'
-            ) : (
-              'Publicar en la Tienda'
-            )}
-          </button>
-        </form>
-
-        {/* Tabla / Grid de Inventario Cargado */}
-        <div className={`p-6 md:p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${
-          theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
-        }`}>
-          <div className="flex justify-between items-center border-b border-zinc-500/20 pb-4">
-            <h2 className="text-xl font-bold">Artículos Publicados ({items.length})</h2>
-            <button 
-              onClick={fetchItems} 
-              className={`p-2 rounded-xl border transition ${
-                theme === 'dark' ? 'bg-black/40 border-white/10 hover:bg-white/10' : 'bg-zinc-100 border-zinc-300 hover:bg-zinc-200'
-              }`}
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            </button>
-          </div>
-
-          {loading ? (
-            <div className="text-center py-12 opacity-60">Cargando catálogo...</div>
-          ) : items.length === 0 ? (
-            <div className="text-center py-12 opacity-60">No hay artículos guardados. ¡Agrega el primero arriba!</div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {items.map((item) => (
-                <div key={item.id} className={`border rounded-2xl p-4 flex flex-col justify-between space-y-4 group transition ${
-                  theme === 'dark' ? 'bg-black/40 border-white/10 hover:border-white/20' : 'bg-zinc-100 border-zinc-300 hover:border-zinc-400'
-                }`}>
-                  <div className="space-y-3">
-                    <div className="relative aspect-square w-full rounded-xl overflow-hidden border border-white/10 bg-black/60">
-                      <img src={item.preview_url} alt={item.name} className="object-cover w-full h-full group-hover:scale-105 transition duration-300" />
-                      <span className="absolute top-2 left-2 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold tracking-wider text-red-500 border border-white/10">
-                        {item.code}
-                      </span>
-                      <span className="absolute top-2 right-2 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-bold text-zinc-300 border border-white/10">
-                        {item.category_season}
-                      </span>
-                    </div>
-
-                    <div>
-                      <h3 className="font-bold text-base">{item.name}</h3>
-                      <p className="text-xs opacity-70 line-clamp-2 mt-1">{item.description}</p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1">
-                      {item.formats.map((f) => (
-                        <span key={f} className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
-                          theme === 'dark' ? 'bg-black/50 border-white/10 text-zinc-400' : 'bg-zinc-200 border-zinc-300 text-zinc-700'
-                        }`}>
-                          {f}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="border-t border-zinc-500/20 pt-3 flex items-center justify-between">
-                    <span className="text-lg font-extrabold text-emerald-500">RD$ {item.price.toFixed(2)}</span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleCopyLink(item.code)}
-                        title="Copiar Enlace del Producto"
-                        className="p-2 hover:bg-red-500/20 rounded-lg transition border border-zinc-500/20"
-                      >
-                        {copiedId === item.code ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                      </button>
-                      <button
-                        onClick={() => handleEdit(item)}
-                        title="Editar Artículo"
-                        className="p-2 hover:bg-amber-500/20 text-amber-500 rounded-lg transition border border-zinc-500/20"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item.id, item.name)}
-                        title="Eliminar Artículo"
-                        className="p-2 hover:bg-red-500/20 text-red-500 rounded-lg transition border border-zinc-500/20"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {filteredContracts.map((c) => (
+                  <div key={c.id} id={`contract-card-${c.id}`} className="bg-black/40 border border-white/10 rounded-2xl p-5 space-y-4">
+                    <div className="flex justify-between items-start gap-2">
+                      <div>
+                        <span className="text-[10px] font-black text-red-500 tracking-wider uppercase block">TOKEN: {c.token}</span>
+                        <h3 className="font-bold text-sm text-white">{c.client_name}</h3>
+                      </div>
+
+                      <select
+                        value={c.status}
+                        onChange={(e) => handleUpdateStatus(c.id, e.target.value)}
+                        className="bg-black border border-white/20 rounded-xl px-2.5 py-1 text-[11px] font-bold text-amber-400 outline-none cursor-pointer"
+                      >
+                        <option value="Pendiente Firma">🟡 Pendiente Firma</option>
+                        <option value="Pendiente Anticipo">🔵 Pendiente Anticipo</option>
+                        <option value="En Desarrollo">🟠 En Desarrollo</option>
+                        <option value="Trabajo Entregado">🟢 Trabajo Entregado</option>
+                      </select>
+                    </div>
+
+                    <p className="text-xs text-zinc-300 line-clamp-2">{c.project_type}</p>
+
+                    <div className="flex justify-between text-xs font-bold pt-2 border-t border-white/10">
+                      <span>Total: RD$ {c.total_amount.toFixed(2)}</span>
+                      <span className="text-emerald-400">Anticipo ({c.advance_percent}%): RD$ {c.advance_amount.toFixed(2)}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-2">
+                      <button
+                        onClick={() => handleCopyContractLink(c.token)}
+                        className="flex-1 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border border-white/10 transition cursor-pointer"
+                      >
+                        {copiedToken === c.token ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <LinkIcon className="w-3.5 h-3.5" />}
+                        <span>{copiedToken === c.token ? 'Enlace Copiado!' : 'Copiar Link para Cliente'}</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleDownloadImagePDF(c)}
+                        className="p-2 bg-red-600/20 hover:bg-red-600/40 text-red-400 rounded-xl border border-red-500/30 transition cursor-pointer"
+                        title="Descargar PDF No Editable (Imagen Canvas)"
+                      >
+                        <Download className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
             </div>
-          )}
-        </div>
+
+          </div>
+        )}
 
       </div>
     </div>
