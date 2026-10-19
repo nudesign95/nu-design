@@ -4,9 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import { useParams } from 'next/navigation';
 import SignatureCanvas from 'react-signature-canvas';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { ShieldCheck, CheckCircle2, FileText, Clock, AlertTriangle, Loader2, Download } from 'lucide-react';
+import { ShieldCheck, CheckCircle2, AlertTriangle, Loader2, Download } from 'lucide-react';
 import WordmarkLogo from '@/app/components/WordmarkLogo';
 
 export default function PublicContractPage() {
@@ -58,10 +56,8 @@ export default function PublicContractPage() {
 
     setSubmitting(true);
     try {
-      // 1. Convertir la firma en DataURL PNG
       const signatureDataUrl = sigCanvas.current?.getTrimmedCanvas().toDataURL('image/png');
 
-      // 2. Subir imagen de firma a Supabase Storage
       const res = await fetch(signatureDataUrl!);
       const blob = await res.blob();
       const fileName = `signatures/${contract.id}_${Date.now()}.png`;
@@ -76,7 +72,6 @@ export default function PublicContractPage() {
         .from('store-previews')
         .getPublicUrl(uploadData.path);
 
-      // 3. Actualizar contrato en la base de datos
       const { error: updateErr } = await supabase
         .from('contracts')
         .update({
@@ -103,29 +98,64 @@ export default function PublicContractPage() {
     }
   };
 
-  // Función para Descargar el Contrato Firmado en PDF (Imagen/Bitmap no editable)
+  // Convertir URL remota a Base64 para evitar bloqueos CORS en canvas móvil
+  const getBase64ImageFromUrl = async (imageUrl: string): Promise<string> => {
+    const res = await fetch(imageUrl);
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  // Función para Descargar el PDF sin errores de seguridad/CORS
   const handleDownloadPDF = async () => {
     const element = document.getElementById('contract-document');
     if (!element) return;
 
     setDownloadingPdf(true);
     try {
+      const html2canvas = (await import('html2canvas')).default;
+      const { jsPDF } = await import('jspdf');
+
+      // Si existe una firma en URL pública, la precargamos en formato DataURL
+      const signatureImgTag = document.getElementById('rendered-signature') as HTMLImageElement;
+      if (signatureImgTag && contract?.signature_url) {
+        try {
+          const base64Sig = await getBase64ImageFromUrl(contract.signature_url);
+          signatureImgTag.src = base64Sig;
+        } catch (e) {
+          console.warn('No se pudo convertir firma a base64:', e);
+        }
+      }
+
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
+        allowTaint: true,
         logging: false,
         backgroundColor: '#040001',
+        windowWidth: 800,
       });
 
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`Contrato_${contract.client_name.replace(/\s+/g, '_')}_${contract.token}.pdf`);
     } catch (err: any) {
-      alert('Error al generar el PDF. Por favor intenta de nuevo.');
+      console.error('Error al generar PDF:', err);
+      alert('Hubo un inconveniente al generar el archivo. Se abrirá la vista de impresión.');
+      window.print();
     } finally {
       setDownloadingPdf(false);
     }
@@ -153,7 +183,7 @@ export default function PublicContractPage() {
     <div className="min-h-screen bg-[#040001] text-zinc-100 p-4 md:p-8 font-sans">
       <div className="max-w-3xl mx-auto space-y-6">
         
-        {/* Contenedor Completo del Documento para Exportación a PDF */}
+        {/* Documento Completo */}
         <div id="contract-document" className="space-y-6 p-2 bg-[#040001] rounded-3xl">
           
           {/* Header */}
@@ -212,7 +242,7 @@ export default function PublicContractPage() {
               </ul>
             </div>
 
-            {/* Módulo de Firma o Mensaje de Confirmación */}
+            {/* Módulo de Firma o Confirmación */}
             <div className="border-t border-white/10 pt-6 space-y-4">
               <h2 className="font-bold text-sm text-white uppercase flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-red-500" />
@@ -224,11 +254,16 @@ export default function PublicContractPage() {
                   <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
                   <h3 className="font-bold text-emerald-400 text-sm">Contrato Firmado Correctamente</h3>
 
-                  {/* Visualización de la Firma Almacenada */}
                   {contract.signature_url && (
                     <div className="bg-white p-3 rounded-2xl max-w-xs mx-auto border border-white/20 shadow-inner">
                       <p className="text-[9px] text-zinc-500 uppercase font-extrabold mb-1">Firma Registrada:</p>
-                      <img src={contract.signature_url} alt="Firma del Cliente" className="h-16 object-contain mx-auto" />
+                      <img 
+                        id="rendered-signature"
+                        src={contract.signature_url} 
+                        alt="Firma del Cliente" 
+                        className="h-16 object-contain mx-auto" 
+                        crossOrigin="anonymous"
+                      />
                     </div>
                   )}
 
@@ -270,7 +305,7 @@ export default function PublicContractPage() {
 
         </div>
 
-        {/* Botón de Descarga de PDF (Aparece únicamente cuando el contrato está firmado) */}
+        {/* Botón de Descarga */}
         {signedSuccess && (
           <div className="text-center pt-2">
             <button
