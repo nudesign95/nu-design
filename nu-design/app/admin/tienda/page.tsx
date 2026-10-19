@@ -3,13 +3,11 @@
 import { useState, useEffect } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import { useRouter } from 'next/navigation';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { 
   Plus, Edit, Trash2, Copy, Check, Image as ImageIcon, 
   FileArchive, Loader2, RefreshCw, LogOut, DollarSign, 
   TrendingUp, ShoppingBag, PieChart, Layers, Sun, Moon,
-  FileSignature, Link as LinkIcon, Download, Clock, ShieldCheck
+  FileSignature, Link as LinkIcon, Download, ExternalLink
 } from 'lucide-react';
 import WordmarkLogo from '@/app/components/WordmarkLogo';
 
@@ -59,7 +57,6 @@ export default function AdminTiendaPage() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
-  // Estado del Tema (Light / Dark)
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('nudesign_theme');
@@ -68,7 +65,6 @@ export default function AdminTiendaPage() {
     return 'dark';
   });
 
-  // Modos de Vista: 'store' o 'contracts'
   const [activeTab, setActiveTab] = useState<'store' | 'contracts'>('store');
 
   const [items, setItems] = useState<StoreItem[]>([]);
@@ -78,10 +74,8 @@ export default function AdminTiendaPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
 
-  // Filtro de Contratos
   const [contractFilter, setContractFilter] = useState<string>('Todos');
 
-  // Estado del formulario de la tienda
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -95,7 +89,6 @@ export default function AdminTiendaPage() {
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [hdFile, setHdFile] = useState<File | null>(null);
 
-  // Estado del formulario de contratos
   const [contractForm, setContractForm] = useState({
     client_name: '',
     client_phone: '',
@@ -109,7 +102,6 @@ export default function AdminTiendaPage() {
     resource_limit_days: '5',
   });
 
-  // Persistencia de Tema
   useEffect(() => {
     localStorage.setItem('nudesign_theme', theme);
     if (theme === 'dark') {
@@ -152,7 +144,6 @@ export default function AdminTiendaPage() {
     }
   };
 
-  // Cierre de Sesión
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push('/admin/login');
@@ -291,13 +282,11 @@ export default function AdminTiendaPage() {
     }
   };
 
-  // Cálculos Automáticos Financieros para Contratos
   const totalNum = parseFloat(contractForm.total_amount || '0');
   const percentNum = parseFloat(contractForm.advance_percent || '50');
   const advanceAmount = (totalNum * (percentNum / 100)).toFixed(2);
   const remainingAmount = (totalNum - parseFloat(advanceAmount)).toFixed(2);
 
-  // Crear Nuevo Contrato
   const handleCreateContract = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -347,7 +336,6 @@ export default function AdminTiendaPage() {
     }
   };
 
-  // Copiar Enlace del Contrato
   const handleCopyContractLink = (token: string) => {
     const url = `${window.location.origin}/c/${token}`;
     navigator.clipboard.writeText(url);
@@ -355,29 +343,16 @@ export default function AdminTiendaPage() {
     setTimeout(() => setCopiedToken(null), 2000);
   };
 
-  // Descargar PDF como Imagen No Editable (Bitmap Canvas)
-  const handleDownloadImagePDF = async (contract: Contract) => {
-    const element = document.getElementById(`contract-card-${contract.id}`);
-    if (!element) return;
-
-    const canvas = await html2canvas(element, { scale: 2 });
-    const imgData = canvas.toDataURL('image/png');
-
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`Contrato_${contract.client_name.replace(/\s+/g, '_')}_${contract.token}.pdf`);
+  // Abre directamente el documento público firmado para que el admin descargue el PDF idéntico
+  const handleOpenContractPDF = (token: string) => {
+    window.open(`/c/${token}`, '_blank');
   };
 
-  // Actualizar Estado del Contrato
   const handleUpdateStatus = async (id: string, newStatus: string) => {
     await supabase.from('contracts').update({ status: newStatus }).eq('id', id);
     fetchContracts();
   };
 
-  // Métricas Financieras
   const totalSalesCount = items.reduce((sum, item) => sum + (item.sales_count || 0), 0);
   const totalRevenue = items.reduce((sum, item) => sum + item.price * (item.sales_count || 0), 0);
 
@@ -407,7 +382,7 @@ export default function AdminTiendaPage() {
       theme === 'dark' ? 'bg-[#040001] text-zinc-100' : 'bg-[#e3e3e3] text-zinc-900'
     }`}>
       
-      {/* Switcher Flotante de Tema (Dark / Light) */}
+      {/* Switcher Flotante de Tema */}
       <div className={`fixed right-3 md:right-6 top-1/2 -translate-y-1/2 flex flex-col space-y-2.5 z-50 p-1.5 rounded-full backdrop-blur-xl border shadow-2xl ${
         theme === 'dark' ? 'bg-white/10 border-white/20' : 'bg-black/5 border-black/10'
       }`}>
@@ -429,7 +404,7 @@ export default function AdminTiendaPage() {
 
       <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* Header Principal con Selector de Pestañas */}
+        {/* Header Principal */}
         <header className={`p-6 rounded-3xl border backdrop-blur-2xl shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 ${
           theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
         }`}>
@@ -443,8 +418,6 @@ export default function AdminTiendaPage() {
           </div>
 
           <div className="flex items-center gap-3 self-end md:self-auto">
-            
-            {/* Navegación entre Tienda e Inventario de Contratos */}
             <button
               onClick={() => setActiveTab('store')}
               className={`px-4 py-2 rounded-2xl border text-xs font-bold transition cursor-pointer ${
@@ -486,8 +459,6 @@ export default function AdminTiendaPage() {
         {/* VISTA 1: TIENDA / ARTÍCULOS DE INVENTARIO */}
         {activeTab === 'store' && (
           <div className="space-y-8">
-            
-            {/* METRICAS FINANCIERAS Y DASHBOARD DE INVENTARIO */}
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className={`p-5 rounded-2xl border backdrop-blur-xl shadow-lg space-y-2 ${
                 theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/70 border-black/10'
@@ -534,7 +505,6 @@ export default function AdminTiendaPage() {
               </div>
             </section>
 
-            {/* PANEL DE ANALÍTICA */}
             <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               <div className={`lg:col-span-6 p-6 rounded-3xl border backdrop-blur-2xl shadow-xl space-y-4 ${
                 theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
@@ -590,7 +560,6 @@ export default function AdminTiendaPage() {
               </div>
             </section>
 
-            {/* Formulario de Carga y Edición */}
             <form onSubmit={handleSubmit} className={`p-6 md:p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${
               theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
             }`}>
@@ -756,7 +725,6 @@ export default function AdminTiendaPage() {
               </button>
             </form>
 
-            {/* Grid de Inventario Cargado */}
             <div className={`p-6 md:p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${
               theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
             }`}>
@@ -847,8 +815,6 @@ export default function AdminTiendaPage() {
         {/* VISTA 2: GESTOR DE CONTRATOS FREELANCE */}
         {activeTab === 'contracts' && (
           <div className="space-y-8">
-            
-            {/* Formulario de Emisión de Contrato */}
             <form onSubmit={handleCreateContract} className={`p-6 md:p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${
               theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
             }`}>
@@ -947,7 +913,6 @@ export default function AdminTiendaPage() {
                 />
               </div>
 
-              {/* Ajustes Financieros y Cálculos Automáticos */}
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 rounded-2xl border border-white/10 bg-black/30">
                 <div>
                   <label className="text-[11px] font-bold text-red-500 block mb-1 uppercase">Monto Total (RD$) *</label>
@@ -996,7 +961,6 @@ export default function AdminTiendaPage() {
               </button>
             </form>
 
-            {/* Listado y Filtros de Contratos Emitidos */}
             <div className={`p-6 md:p-8 rounded-3xl border backdrop-blur-2xl shadow-2xl space-y-6 ${
               theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white/80 border-black/10'
             }`}>
@@ -1004,7 +968,6 @@ export default function AdminTiendaPage() {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
                 <h2 className="text-lg font-bold">Contratos Emitidos ({filteredContracts.length})</h2>
                 
-                {/* Filtros de Estado de Trabajos */}
                 <div className="flex flex-wrap gap-2 text-xs">
                   {['Todos', 'Pendiente Firma', 'Pendiente Anticipo', 'En Desarrollo', 'Trabajo Entregado'].map((st) => (
                     <button
@@ -1022,7 +985,7 @@ export default function AdminTiendaPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredContracts.map((c) => (
-                  <div key={c.id} id={`contract-card-${c.id}`} className="bg-black/40 border border-white/10 rounded-2xl p-5 space-y-4">
+                  <div key={c.id} className="bg-black/40 border border-white/10 rounded-2xl p-5 space-y-4">
                     <div className="flex justify-between items-start gap-2">
                       <div>
                         <span className="text-[10px] font-black text-red-500 tracking-wider uppercase block">TOKEN: {c.token}</span>
@@ -1054,15 +1017,16 @@ export default function AdminTiendaPage() {
                         className="flex-1 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border border-white/10 transition cursor-pointer"
                       >
                         {copiedToken === c.token ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <LinkIcon className="w-3.5 h-3.5" />}
-                        <span>{copiedToken === c.token ? 'Enlace Copiado!' : 'Copiar Link para Cliente'}</span>
+                        <span>{copiedToken === c.token ? 'Enlace Copiado!' : 'Copiar Link'}</span>
                       </button>
 
                       <button
-                        onClick={() => handleDownloadImagePDF(c)}
-                        className="p-2 bg-red-600/20 hover:bg-red-600/40 text-red-400 rounded-xl border border-red-500/30 transition cursor-pointer"
-                        title="Descargar PDF No Editable (Imagen Canvas)"
+                        onClick={() => handleOpenContractPDF(c.token)}
+                        className="p-2 bg-red-600/20 hover:bg-red-600/40 text-red-400 rounded-xl border border-red-500/30 transition cursor-pointer flex items-center gap-1 text-xs font-bold"
+                        title="Ver y Descargar Documento Oficial PDF"
                       >
                         <Download className="w-4 h-4" />
+                        <ExternalLink className="w-3 h-3 opacity-60" />
                       </button>
                     </div>
                   </div>
